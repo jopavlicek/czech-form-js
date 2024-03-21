@@ -243,9 +243,9 @@ export function PlaygroundRoot(config) {
     setShowEmbed(false);
   }, []);
 
-  const showEmbedModal = useCallback(() => {
-    setShowEmbed(true);
-  }, []);
+  // const showEmbedModal = useCallback(() => {
+  //   setShowEmbed(true);
+  // }, []);
 
   return (
     <div class={ classNames(
@@ -258,38 +258,38 @@ export function PlaygroundRoot(config) {
       <div class="fjs-pgl-palette-container" ref={ paletteContainerRef } />
       <div class="fjs-pgl-main">
 
-        <Section name="Form Definition">
+        <Section name="Definice formuláře">
 
           {
             displayActions && <Section.HeaderItem>
               <button
                 type="button"
                 class="fjs-pgl-button"
-                title="Download form definition"
+                title="Stáhnout vstupní schéma v JSON formátu"
                 onClick={ handleDownload }
-              >Download</button>
+              >Stáhnout</button>
             </Section.HeaderItem>
           }
 
-          {
+          {/* {
             displayActions && <Section.HeaderItem>
               <button
                 type="button"
                 class="fjs-pgl-button"
                 onClick={ showEmbedModal }
-              >Embed</button>
+              >Vložit</button>
             </Section.HeaderItem>
-          }
+          } */}
 
           <div ref={ editorContainerRef } class="fjs-pgl-form-container"></div>
         </Section>
-        <Section name="Form Preview">
+        <Section name="Náhled formuláře">
           <div ref={ viewerContainerRef } class="fjs-pgl-form-container"></div>
         </Section>
-        <Section name="Form Input">
+        <Section name="Vstupní schéma">
           <div ref={ inputDataContainerRef } class="fjs-pgl-text-container"></div>
         </Section>
-        <Section name="Form Output">
+        <Section name="Výstupní schéma">
           <div ref={ outputDataContainerRef } class="fjs-pgl-text-container"></div>
         </Section>
       </div>
