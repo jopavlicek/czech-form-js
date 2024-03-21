@@ -130,7 +130,7 @@ export function Checklist(props) {
 Checklist.config = {
   type,
   keyed: true,
-  label: 'Checkbox group',
+  label: 'Zaškrtávací seznam',
   group: 'selection',
   emptyValue: [],
   sanitizeValue: sanitizeMultiSelectValue,

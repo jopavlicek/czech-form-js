@@ -83,7 +83,7 @@ export function Textfield(props) {
 Textfield.config = {
   type,
   keyed: true,
-  label: 'Text field',
+  label: 'Text',
   group: 'basic-input',
   emptyValue: '',
   sanitizeValue: ({ value }) => {

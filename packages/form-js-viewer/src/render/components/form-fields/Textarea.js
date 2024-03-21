@@ -89,7 +89,7 @@ export function Textarea(props) {
 Textarea.config = {
   type,
   keyed: true,
-  label: 'Text area',
+  label: 'Dlouhý text',
   group: 'basic-input',
   emptyValue: '',
   sanitizeValue: ({ value }) => (isArray(value) || isObject(value) || isNil(value)) ? '' : String(value),

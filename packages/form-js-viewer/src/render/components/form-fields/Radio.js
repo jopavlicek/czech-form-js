@@ -122,7 +122,7 @@ export function Radio(props) {
 Radio.config = {
   type,
   keyed: true,
-  label: 'Radio group',
+  label: 'Výběr z možností',
   group: 'selection',
   emptyValue: null,
   sanitizeValue: sanitizeSingleSelectValue,

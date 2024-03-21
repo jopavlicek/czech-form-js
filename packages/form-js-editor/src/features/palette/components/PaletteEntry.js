@@ -31,7 +31,7 @@ export function PaletteEntry(props) {
       type="button"
       class="fjs-palette-field fjs-drag-copy fjs-no-drop"
       data-field-type={ type }
-      title={ `Create ${getIndefiniteArticle(type)} ${label} element` }
+      title={ `Vložit komponent "${label}"` }
       onKeyDown={ onKeyDown }
     >
       {
@@ -45,12 +45,12 @@ export function PaletteEntry(props) {
 
 // helpers ///////////
 
-function getIndefiniteArticle(type) {
-  if ([
-    'image'
-  ].includes(type)) {
-    return 'an';
-  }
+// function getIndefiniteArticle(type) {
+//   if ([
+//     'image'
+//   ].includes(type)) {
+//     return 'an';
+//   }
 
-  return 'a';
-}
+//   return 'a';
+// }

@@ -14,7 +14,7 @@ export function Spacer(props) {
 Spacer.config = {
   type,
   keyed: false,
-  label: 'Spacer',
+  label: 'Mezera',
   group: 'presentation',
   create: (options = {}) => ({
     height: 60,

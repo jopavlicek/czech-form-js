@@ -43,7 +43,7 @@ DynamicList.config = {
   type: 'dynamiclist',
   pathed: true,
   repeatable: true,
-  label: 'Dynamic list',
+  label: 'Dynamický seznam',
   group: 'container',
   create: (options = {}) => ({
     components: [],

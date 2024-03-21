@@ -257,7 +257,7 @@ export function Taglist(props) {
 Taglist.config = {
   type,
   keyed: true,
-  label: 'Tag list',
+  label: 'Seznam štítků',
   group: 'selection',
   emptyValue: [],
   sanitizeValue: sanitizeMultiSelectValue,

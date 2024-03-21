@@ -27,7 +27,7 @@ export function Button(props) {
 Button.config = {
   type,
   keyed: false,
-  label: 'Button',
+  label: 'Tlačítko',
   group: 'action',
   create: (options = {}) => ({
     action: 'submit',

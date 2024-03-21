@@ -26,23 +26,23 @@ import { PaletteEntry } from './PaletteEntry';
 
 export const PALETTE_GROUPS = [
   {
-    label: 'Input',
+    label: 'Základní',
     id: 'basic-input'
   },
   {
-    label: 'Selection',
+    label: 'Výběrové',
     id: 'selection'
   },
   {
-    label: 'Presentation',
+    label: 'Prezentační',
     id: 'presentation'
   },
   {
-    label: 'Containers',
+    label: 'Kontejnerové',
     id: 'container'
   },
   {
-    label: 'Action',
+    label: 'Akční',
     id: 'action'
   }
 ];
@@ -99,8 +99,8 @@ export function Palette(props) {
   }, [ inputRef, setSearchTerm ]);
 
   return <div class="fjs-palette">
-    <div class="fjs-palette-header" title="Components">
-      Components
+    <div class="fjs-palette-header" title="Komponenty">
+      Komponenty
     </div>
     <div class="fjs-palette-search-container">
       <span class="fjs-palette-search-icon">
@@ -109,7 +109,7 @@ export function Palette(props) {
       <input class="fjs-palette-search"
         ref={ inputRef }
         type="text"
-        placeholder="Search components"
+        placeholder="Hledat komponenty"
         value={ searchTerm }
         onInput={ handleInput } />
       {
@@ -142,7 +142,7 @@ export function Palette(props) {
       }
       {
         groups.length == 0 && (
-          <div class="fjs-palette-no-entries">No components found.</div>
+          <div class="fjs-palette-no-entries">Nebyly nalezeny žádné komponenty.</div>
         )
       }
     </div>

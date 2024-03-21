@@ -67,7 +67,7 @@ export function Checkbox(props) {
 Checkbox.config = {
   type,
   keyed: true,
-  label: 'Checkbox',
+  label: 'Zaškrtávací pole',
   group: 'selection',
   emptyValue: false,
   sanitizeValue: ({ value }) => value === true,

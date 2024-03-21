@@ -246,7 +246,7 @@ export function Numberfield(props) {
 Numberfield.config = {
   type,
   keyed: true,
-  label: 'Number',
+  label: 'Číslo',
   group: 'basic-input',
   emptyValue: null,
   sanitizeValue: ({ value, formField }) => {

@@ -14,7 +14,7 @@ export function Separator() {
 Separator.config = {
   type,
   keyed: false,
-  label: 'Separator',
+  label: 'Oddělovač',
   group: 'presentation',
   create: (options = {}) => ({
     ...options

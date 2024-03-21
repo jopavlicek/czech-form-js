@@ -197,7 +197,7 @@ export function Datetime(props) {
 Datetime.config = {
   type,
   keyed: true,
-  label: 'Date time',
+  label: 'Datum a čas',
   group: 'basic-input',
   emptyValue: null,
   sanitizeValue: sanitizeDateTimePickerValue,

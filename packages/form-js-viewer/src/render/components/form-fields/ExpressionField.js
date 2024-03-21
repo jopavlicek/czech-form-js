@@ -39,7 +39,7 @@ export function ExpressionField(props) {
 
 ExpressionField.config = {
   type,
-  label: 'Expression',
+  label: 'Výraz',
   group: 'basic-input',
   keyed: true,
   escapeGridRender: true,

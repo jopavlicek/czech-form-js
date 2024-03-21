@@ -74,7 +74,7 @@ export function Select(props) {
 Select.config = {
   type,
   keyed: true,
-  label: 'Select',
+  label: 'Rozbalovací nabídka',
   group: 'selection',
   emptyValue: null,
   sanitizeValue: sanitizeSingleSelectValue,

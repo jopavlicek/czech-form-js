@@ -64,7 +64,7 @@ export function Text(props) {
 Text.config = {
   type,
   keyed: false,
-  label: 'Text view',
+  label: 'Textový popis',
   group: 'presentation',
   create: (options = {}) => ({
     text: '# Text',

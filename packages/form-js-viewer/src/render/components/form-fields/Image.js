@@ -59,7 +59,7 @@ export function Image(props) {
 Image.config = {
   type,
   keyed: false,
-  label: 'Image view',
+  label: 'Obrázek',
   group: 'presentation',
   create: (options = {}) => ({
     ...options

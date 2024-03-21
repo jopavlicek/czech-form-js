@@ -215,7 +215,7 @@ export function Table(props) {
 Table.config = {
   type,
   keyed: false,
-  label: 'Table',
+  label: 'Tabulka',
   group: 'presentation',
   create: (options = {}) => {
     const {
