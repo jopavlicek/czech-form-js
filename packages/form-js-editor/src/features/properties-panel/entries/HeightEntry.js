@@ -59,7 +59,7 @@ function Height(props) {
   return NumberFieldEntry({
     debounce,
     description,
-    label: 'Height',
+    label: 'Výška',
     element: field,
     id,
     getValue,
@@ -76,15 +76,15 @@ function Height(props) {
   */
 const validate = (value) => {
   if (typeof value !== 'number') {
-    return 'A number is required.';
+    return 'Pole musí obsahovat číslo.';
   }
 
   if (!Number.isInteger(value)) {
-    return 'Should be an integer.';
+    return 'Hodnota musí být platné celé číslo.';
   }
 
   if (value < 1) {
-    return 'Should be greater than zero.';
+    return 'Hodnota musí být větší než 0.';
   }
 };
 

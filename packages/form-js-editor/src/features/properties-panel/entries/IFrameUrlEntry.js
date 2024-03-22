@@ -68,13 +68,13 @@ function getTooltip() {
   return (
     <>
       <p>
-        Enter a HTTPS URL to a source or populate it dynamically via a template or an expression (e.g., to pass a value from the variable).
+        Jako zdroj použijte HTTPS URL adresu, šablonu nebo výraz (pro předání hodnoty skrz proměnnou).
       </p>
       <p>
-        Please make sure that the URL is safe as it might impose security risks.
+        Ujistěte se, že je URL adresa bezpečná, protože může představovat bezpečnostní riziko.
       </p>
       <p>
-        Not all external sources can be displayed in the iFrame. Read more about it in the <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">X-FRAME-OPTIONS documentation</a>.
+        Ne všechny externí zdroje mohou být zobrazeny skrz iFrame. Více informací najdete v <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">dokumentaci X-FRAME-OPTIONS</a>.
       </p>
     </>
   );
@@ -90,6 +90,6 @@ const validate = (value) => {
   }
 
   if (!HTTPS_PATTERN.test(value)) {
-    return 'For security reasons the URL must start with "https".';
+    return 'Z bezpečnostních důvodů musí URL adresa začínat "https".';
   }
 };

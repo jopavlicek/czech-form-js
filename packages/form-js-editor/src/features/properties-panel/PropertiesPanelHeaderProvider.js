@@ -66,7 +66,7 @@ export const PropertiesPanelHeaderProvider = {
     } = field;
 
     if (type === 'default') {
-      return 'Form';
+      return 'Formulář';
     }
 
     // @Note: We know that we are inside the properties panel context,

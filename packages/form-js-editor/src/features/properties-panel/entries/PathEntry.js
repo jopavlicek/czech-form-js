@@ -106,16 +106,16 @@ function Path(props) {
   }, [ field, isRepeating, pathRegistry ]);
 
   const tooltip = isRepeating
-    ? 'Routes the children of this component into a form variable, may be left empty to route at the root level.'
-    : 'Routes the children of this component into a form variable.';
+    ? 'Směruje podřízené proměnné komponentu do proměnné v datovém schématu. Lze ponachat prázdné pro uložení na kořenové úrovni.'
+    : 'Směruje podřízené proměnné komponentu do proměnné v datovém schématu.';
 
   return TextFieldEntry({
     debounce,
-    description: 'Where the child variables of this component are pathed to.',
+    description: 'Cesta, kam se uloží podřízené proměnné komponentu.',
     element: field,
     getValue,
     id,
-    label: 'Path',
+    label: 'Cesta',
     tooltip,
     setValue,
     validate

@@ -54,7 +54,7 @@ function Description(props) {
     element: field,
     getValue,
     id,
-    label: 'Field description',
+    label: 'Popisek',
     singleLine: true,
     setValue,
     variables

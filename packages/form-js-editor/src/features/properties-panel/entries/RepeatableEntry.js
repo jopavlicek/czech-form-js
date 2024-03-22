@@ -20,7 +20,7 @@ export function RepeatableEntry(props) {
     simpleRangeIntegerEntryFactory({
       id: 'defaultRepetitions',
       path: [ 'defaultRepetitions' ],
-      label: 'Default number of items',
+      label: 'Výchozí počet položek',
       min: 1,
       max: 20,
       props
@@ -28,13 +28,13 @@ export function RepeatableEntry(props) {
     simpleBoolEntryFactory({
       id: 'allowAddRemove',
       path: [ 'allowAddRemove' ],
-      label: 'Allow add/delete items',
+      label: 'Povolit přidání/mazání',
       props
     }),
     simpleBoolEntryFactory({
       id: 'disableCollapse',
       path: [ 'disableCollapse' ],
-      label: 'Disable collapse',
+      label: 'Zakázat sbalení seznamu',
       props
     })
   ];
@@ -43,7 +43,7 @@ export function RepeatableEntry(props) {
     const nonCollapseItemsEntry = simpleRangeIntegerEntryFactory({
       id: 'nonCollapsedItems',
       path: [ 'nonCollapsedItems' ],
-      label: 'Number of non-collapsing items',
+      label: 'Počet rozbalených položek',
       min: 1,
       defaultValue: 5,
       props

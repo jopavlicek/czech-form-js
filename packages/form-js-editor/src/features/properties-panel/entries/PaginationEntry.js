@@ -48,7 +48,7 @@ function Pagination(props) {
     element: field,
     getValue,
     id,
-    label: 'Pagination',
+    label: 'Stránkování',
     inline: true,
     setValue,
   });

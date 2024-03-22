@@ -53,13 +53,13 @@ function Source(props) {
 
   return FeelTemplatingEntry({
     debounce,
-    description: 'Specify the source from which to populate the table',
+    description: 'Uveďte zdroj dat pro naplnění tabulky',
     element: field,
     feel: 'required',
     getValue,
     id,
-    label: 'Data source',
-    tooltip: 'Enter a form input variable that contains the data for the table or define an expression to populate the data dynamically.',
+    label: 'Zdroj dat',
+    tooltip: 'Zadejte vstupní proměnnou formuláře, která obsahuje data pro tabulku, nebo definujte výraz pro dynamické naplnění.',
     setValue,
     singleLine: true,
     variables,

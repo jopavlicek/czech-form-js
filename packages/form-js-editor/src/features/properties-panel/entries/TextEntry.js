@@ -58,4 +58,4 @@ function Text(props) {
   });
 }
 
-const description = <>Supports markdown and templating. <a href="https://docs.camunda.io/docs/components/modeler/forms/form-element-library/forms-element-library-text/" target="_blank">Learn more</a></>;
+const description = <>Podporuje formát markdown a šablonování. <a href="https://docs.camunda.io/docs/components/modeler/forms/form-element-library/forms-element-library-text/" target="_blank">Dokumentace</a></>;

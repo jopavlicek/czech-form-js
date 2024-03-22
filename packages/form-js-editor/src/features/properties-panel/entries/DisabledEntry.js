@@ -46,8 +46,8 @@ function Disabled(props) {
     element: field,
     getValue,
     id,
-    label: 'Disabled',
-    tooltip: 'Field cannot be edited by the end-user, and the data is not submitted. Takes precedence over read only.',
+    label: 'Deaktivováno',
+    tooltip: 'Obsah pole nelze upravit a data se neodešlou. Má přednost před volbou "pouze pro čtení".',
     inline: true,
     setValue
   });

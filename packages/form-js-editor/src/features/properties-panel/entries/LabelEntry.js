@@ -124,7 +124,7 @@ function DateLabel(props) {
     element: field,
     getValue,
     id,
-    label: 'Date label',
+    label: 'Nadpis datumu',
     singleLine: true,
     setValue,
     variables
@@ -157,7 +157,7 @@ function TimeLabel(props) {
     element: field,
     getValue,
     id,
-    label: 'Time label',
+    label: 'Nadpis času',
     singleLine: true,
     setValue,
     variables
@@ -174,12 +174,12 @@ function getLabelText(type) {
   switch (type) {
   case 'group':
   case 'dynamiclist':
-    return 'Group label';
+    return 'Nadpis skupiny';
   case 'table':
-    return 'Table label';
+    return 'Nadpis tabulky';
   case 'iframe':
-    return 'Title';
+    return 'Nadpis';
   default:
-    return 'Field label';
+    return 'Nadpis pole';
   }
 }

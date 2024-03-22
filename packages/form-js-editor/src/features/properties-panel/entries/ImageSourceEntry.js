@@ -46,13 +46,13 @@ function Source(props) {
 
   return FeelTemplatingEntry({
     debounce,
-    description: 'Expression or static value (link/data URI)',
+    description: 'Výraz, URL odkaz, nebo datové URI',
     element: field,
     feel: 'optional',
     getValue,
     id,
-    label: 'Image source',
-    tooltip: 'Link referring to a hosted image, or use a data URI directly to embed image data into the form.',
+    label: 'Zdroj obrázku',
+    tooltip: 'Jako zdroj lze použít URL odkaz nebo datové URI se zakódovaným obrázkem (např. ve formátu data:image/jpeg;base64,<zakódovaný obrázek>).',
     setValue,
     singleLine: true,
     variables

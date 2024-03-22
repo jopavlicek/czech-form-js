@@ -51,8 +51,8 @@ function AltText(props) {
     feel: 'optional',
     getValue,
     id,
-    label: 'Alternative text',
-    tooltip: 'Descriptive text for screen reader accessibility.',
+    label: 'Zástupný text',
+    tooltip: 'Popisný text pro přístupnost pomocí čtečky obrazovky.',
     setValue,
     singleLine: true,
     variables

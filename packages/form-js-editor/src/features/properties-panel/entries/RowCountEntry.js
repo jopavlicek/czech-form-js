@@ -53,7 +53,7 @@ function RowCount(props) {
 
   return NumberFieldEntry({
     debounce,
-    label: 'Number of rows per page',
+    label: 'Počet řádků na stránce',
     element: field,
     id,
     getValue,
@@ -76,15 +76,15 @@ const validate = (value) => {
   }
 
   if (!isNumber(value)) {
-    return 'Must be number';
+    return 'Hodnota musí být číslo.';
   }
 
   if (!Number.isInteger(value)) {
-    return 'Should be an integer.';
+    return 'Hodnota musí být platné celé číslo.';
   }
 
   if (value < 1) {
-    return 'Should be greater than zero.';
+    return 'Hodnota musí být větší než 0.';
   }
 
   return null;

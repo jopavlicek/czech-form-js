@@ -63,9 +63,9 @@ const SimpleRangeIntegerEntry = (props) => {
 
   const validate = useCallback((value) => {
     if (value === undefined || value === null || value === '') { return; }
-    if (!Number.isInteger(Number(value))) { return 'Should be an integer.'; }
-    if (Big(value).cmp(min) < 0) { return `Should be at least ${min}.`; }
-    if (Big(value).cmp(max) > 0) { return `Should be at most ${max}.`; }
+    if (!Number.isInteger(Number(value))) { return 'Hodnota musí být platné celé číslo.'; }
+    if (Big(value).cmp(min) < 0) { return `Hodnota musí být alespoň ${min}.`; }
+    if (Big(value).cmp(max) > 0) { return `Hodnota nesmí být větší než ${max}.`; }
   }, [ min, max ]);
 
   return TextFieldEntry({

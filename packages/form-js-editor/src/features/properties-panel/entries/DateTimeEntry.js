@@ -111,7 +111,7 @@ function DateTimeSubtypeSelect(props) {
   };
 
   return SelectEntry({
-    label: 'Subtype',
+    label: 'Typ',
     element: field,
     getOptions: getDatetimeSubtypes,
     getValue,
@@ -141,7 +141,7 @@ function Use24h(props) {
     element: field,
     getValue,
     id,
-    label: 'Use 24h',
+    label: '24h formát',
     setValue
   });
 }

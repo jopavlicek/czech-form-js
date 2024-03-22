@@ -58,7 +58,7 @@ function NumberDecimalDigits(props) {
 
   return NumberFieldEntry({
     debounce,
-    label: 'Decimal digits',
+    label: 'Desetinná místa',
     element: field,
     step: 'any',
     getValue,
@@ -115,22 +115,22 @@ function NumberArrowStep(props) {
       }
 
       if (!isValidNumber(value)) {
-        return 'Should be a valid number.';
+        return 'Hodnota musí být platné číslo.';
       }
 
       if (Big(value).cmp(0) <= 0) {
-        return 'Should be greater than zero.';
+        return 'Hodnota musí být větší než 0.';
       }
 
       if (decimalDigitsSet) {
         const minimumValue = Big(`1e-${decimalDigits}`);
 
         if (Big(value).cmp(minimumValue) < 0) {
-          return `Should be at least ${minimumValue.toString()}.`;
+          return `Hodnota musí být alespoň ${minimumValue.toString()}.`;
         }
 
         if (countDecimals(value) > decimalDigits) {
-          return `Should not contain more than ${decimalDigits} decimal digits.`;
+          return `Hodnota nesmí obsahovat více než ${decimalDigits} desetinných míst.`;
         }
       }
     },
@@ -139,7 +139,7 @@ function NumberArrowStep(props) {
 
   return TextFieldEntry({
     debounce,
-    label: 'Increment',
+    label: 'Krok',
     element: field,
     getValue,
     id,
@@ -160,10 +160,10 @@ const validateNumberEntries = (value) => {
   }
 
   if (!Number.isInteger(value)) {
-    return 'Should be an integer.';
+    return 'Hodnota musí být platné celé číslo.';
   }
 
   if (value < 0) {
-    return 'Should be greater than or equal to zero.';
+    return 'Hodnota musí být větší nebo rovna 0.';
   }
 };

@@ -47,7 +47,7 @@ export function DefaultValueEntry(props) {
     editField,
     field,
     id: 'defaultValue',
-    label: 'Default value'
+    label: 'Výchozí hodnota'
   };
 
   entries.push({
@@ -107,11 +107,11 @@ function DefaultValueCheckbox(props) {
   const getOptions = () => {
     return [
       {
-        label: 'Checked',
+        label: 'Zaškrtnuto',
         value: 'true'
       },
       {
-        label: 'Not checked',
+        label: 'Nezaškrtnuto',
         value: 'false'
       }
     ];
@@ -186,10 +186,10 @@ function DefaultValueNumber(props) {
       }
 
       if (!isValidNumber(value)) {
-        return 'Should be a valid number';
+        return 'Hodnota musí být platné číslo';
       }
       if (decimalDigitsSet && countDecimals(value) > decimalDigits) {
-        return `Should not contain more than ${decimalDigits} decimal digits`;
+        return `Hodnota nesmí obsahovat více než ${decimalDigits} desetinných míst`;
       }
     },
     [ decimalDigitsSet, decimalDigits ],
@@ -224,7 +224,7 @@ function DefaultValueSingleSelect(props) {
   const getOptions = () => {
     return [
       {
-        label: '<none>',
+        label: '<neurčeno>',
         value: EMPTY_OPTION
       },
       ...values

@@ -42,11 +42,11 @@ function Action(props) {
 
   const getOptions = () => [
     {
-      label: 'Submit',
+      label: 'Odeslat',
       value: 'submit'
     },
     {
-      label: 'Reset',
+      label: 'Resetovat',
       value: 'reset'
     }
   ];
@@ -56,7 +56,7 @@ function Action(props) {
     getOptions,
     getValue,
     id,
-    label: 'Action',
+    label: 'Akce',
     setValue
   });
 }

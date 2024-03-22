@@ -41,12 +41,12 @@ function ExpressionFieldExpression(props) {
 
   return FeelEntry({
     debounce,
-    description: 'Define an expression to calculate the value of this field',
+    description: 'Výraz pro výpočet hodnoty pole',
     element: field,
     feel: 'required',
     getValue,
     id,
-    label: 'Target value',
+    label: 'Cílová hodnota',
     setValue,
     variables
   });
@@ -62,13 +62,13 @@ function ExpressionFieldComputeOn(props) {
   };
 
   const getOptions = () => ([
-    { value: 'change', label: 'Value changes' },
-    { value: 'presubmit', label: 'Form submission' }
+    { value: 'change', label: 'Změna hodnoty' },
+    { value: 'presubmit', label: 'Odeslání formuláře' }
   ]);
 
   return SelectEntry({
     id,
-    label: 'Compute on',
+    label: 'Spouštěč výpočtu',
     getValue,
     setValue,
     getOptions

@@ -60,8 +60,8 @@ function Readonly(props) {
     feel: 'optional',
     getValue,
     id,
-    label: 'Read only',
-    tooltip: 'Field cannot be edited by the end-user, but the data will still be submitted.',
+    label: 'Pouze pro čtení',
+    tooltip: 'Obsah pole nelze upravit, ale data se odešlou.',
     setValue,
     variables
   });
