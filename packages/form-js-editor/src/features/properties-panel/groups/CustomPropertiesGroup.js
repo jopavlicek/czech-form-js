@@ -33,11 +33,11 @@ export function CustomPropertiesGroup(field, editField) {
       }
 
       if (typeof value !== 'string' || value.length === 0) {
-        return 'Must not be empty.';
+        return 'Hodnota nesmí být prázdná.';
       }
 
       if (has(properties, value)) {
-        return 'Must be unique.';
+        return 'Hodnota musí být unikátní.';
       }
     };
   };
@@ -71,8 +71,8 @@ export function CustomPropertiesGroup(field, editField) {
     component: ListGroup,
     id: 'custom-values',
     items,
-    label: 'Custom properties',
-    tooltip: 'Add properties directly to the form schema, useful to configure functionality in custom-built task applications and form renderers.',
+    label: 'Další vlastnosti',
+    tooltip: 'Přidejte další vlastnosti ve formátu klíč-hodnota přímo do schéma formuláře.',
     shouldSort: false
   };
 }

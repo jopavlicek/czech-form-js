@@ -75,7 +75,7 @@ function Key(props) {
     element: field,
     getValue,
     id,
-    label: 'Key',
+    label: 'Klíč',
     setValue,
     validate
   });
@@ -109,7 +109,7 @@ function Value(props) {
     element: field,
     getValue,
     id,
-    label: 'Value',
+    label: 'Hodnota',
     setValue,
     validate: validateFactory(getValue())
   });
