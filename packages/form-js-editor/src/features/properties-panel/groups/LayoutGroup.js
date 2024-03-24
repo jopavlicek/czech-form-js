@@ -17,7 +17,7 @@ export function LayoutGroup(field, editField) {
 
   return {
     id: 'layout',
-    label: 'Layout',
+    label: 'Rozložení',
     entries
   };
 }

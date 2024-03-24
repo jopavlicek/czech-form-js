@@ -46,13 +46,13 @@ function Condition(props) {
     return editField(field, 'conditional', { hide: value });
   };
 
-  let label = 'Hide if';
-  let description = 'Condition under which the field is hidden';
+  let label = 'Skrýt pokud';
+  let description = 'Podmínka, při které zůstane komponent skrytý.';
 
   // special case for expression fields which do not render
   if (field.type === 'expression') {
-    label = 'Deactivate if';
-    description = 'Condition under which the field is deactivated';
+    label = 'Deaktivovat pokud';
+    description = 'Podmínka, při které zůstane výraz deaktivovaný.';
   }
 
   return FeelEntry({
