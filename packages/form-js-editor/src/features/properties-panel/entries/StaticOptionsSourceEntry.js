@@ -36,13 +36,13 @@ export function StaticOptionsSourceEntry(props) {
       }
 
       if (typeof value !== 'string' || value.length === 0) {
-        return 'Must not be empty.';
+        return 'Hodnota nesmí být prázdná.';
       }
 
       const isValueAssigned = values.find(entry => getValue(entry) === value);
 
       if (isValueAssigned) {
-        return 'Must be unique.';
+        return 'Hodnota musí být unikátní.';
       }
     };
   };

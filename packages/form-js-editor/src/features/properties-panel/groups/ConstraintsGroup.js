@@ -15,7 +15,7 @@ export function ConstraintsGroup(field, editField) {
 
   return {
     id: 'constraints',
-    label: 'Constraints',
+    label: 'Omezení',
     entries
   };
 }

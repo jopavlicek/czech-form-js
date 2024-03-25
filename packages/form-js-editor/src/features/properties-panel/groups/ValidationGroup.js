@@ -20,7 +20,7 @@ import { INPUTS } from '../Util';
 const VALIDATION_TYPE_OPTIONS = {
   custom: {
     value: '',
-    label: 'Custom',
+    label: 'Vlastní',
   },
   email: {
     value: 'email',
@@ -28,7 +28,7 @@ const VALIDATION_TYPE_OPTIONS = {
   },
   phone: {
     value: 'phone',
-    label: 'Phone',
+    label: 'Telefon',
   },
 };
 
@@ -178,7 +178,7 @@ function MinLength(props) {
     feel: 'optional',
     getValue: getValue('minLength'),
     id,
-    label: 'Minimum length',
+    label: 'Minimální délka',
     min: 0,
     setValue: onChange('minLength'),
     variables
@@ -203,7 +203,7 @@ function MaxLength(props) {
     feel: 'optional',
     getValue: getValue('maxLength'),
     id,
-    label: 'Maximum length',
+    label: 'Maximální délka',
     min: 0,
     setValue: onChange('maxLength'),
     variables
@@ -225,7 +225,7 @@ function Pattern(props) {
     element: field,
     getValue: getValue('pattern'),
     id,
-    label: 'Custom regular expression',
+    label: 'Regulární výraz',
     setValue: onChange('pattern')
   });
 }
@@ -299,12 +299,12 @@ function ValidationType(props) {
     element: field,
     getValue: getValue('validationType'),
     id,
-    label: 'Validation pattern',
+    label: 'Vzor validace',
     setValue,
     getOptions: () => Object.values(VALIDATION_TYPE_OPTIONS),
     tooltip:
       getValue('validationType')() === VALIDATION_TYPE_OPTIONS.phone.value
-        ? 'The built-in phone validation pattern is based on the E.164 standard with no spaces. Ex: +491234567890'
+        ? 'Validace telefonního čísla je založena na standardu E.164 bez mezer. (např. +491234567890)'
         : undefined
   });
 }

@@ -57,7 +57,7 @@ function ColumnsExpression(props) {
   const schema = '[\n  {\n    "key": "column_1",\n    "label": "Column 1"\n  }\n]';
 
   const tooltip = <div>
-    The expression may result in an array of simple values or alternatively follow this schema:
+    Výsledek výrazu může být pole jednoduchých hodnot nebo musí podléhat následujícímu schématu:
     <pre><code>{schema}</code></pre>
   </div>;
 

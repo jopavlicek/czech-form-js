@@ -47,7 +47,7 @@ function TimeFormatSelect(props) {
   };
 
   return SelectEntry({
-    label: 'Time format',
+    label: 'Časový formát',
     element: field,
     getOptions: getTimeSerialisingFormats,
     getValue,

@@ -61,7 +61,7 @@ function ValuesSourceSelect(props) {
 
   return AutoFocusSelectEntry({
     autoFocusEntry: getAutoFocusEntryId(field),
-    label: 'Type',
+    label: 'Typ',
     element: field,
     getOptions: getOptionsSourceOptions,
     getValue,

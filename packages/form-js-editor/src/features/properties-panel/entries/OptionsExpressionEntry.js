@@ -37,7 +37,7 @@ function OptionsExpression(props) {
   const schema = '[\n  {\n    "label": "dollar",\n    "value": "$"\n  }\n]';
 
   const tooltip = <div>
-    The expression may result in an array of simple values or alternatively follow this schema:
+    Výsledek výrazu může být pole jednoduchých hodnot nebo musí podléhat následujícímu schématu:
     <pre><code>{schema}</code></pre>
   </div>;
 
@@ -47,13 +47,13 @@ function OptionsExpression(props) {
 
   return FeelEntry({
     debounce,
-    description: 'Define an expression to populate the options from.',
+    description: 'Výraz, který naplní seznam možností.',
     tooltip,
     element: field,
     feel: 'required',
     getValue,
     id,
-    label: 'Options expression',
+    label: 'Výraz s možnostmi',
     setValue,
     variables
   });

@@ -36,7 +36,7 @@ function InputValuesKey(props) {
   const schema = '[\n  {\n    "label": "dollar",\n    "value": "$"\n  }\n]';
 
   const tooltip = <div>
-    The input property may be an array of simple values or alternatively follow this schema:
+    Vstup může být pole jednoduchých hodnot nebo musí podléhat následujícímu schématu:
     <pre><code>{schema}</code></pre>
   </div>;
 
@@ -52,12 +52,12 @@ function InputValuesKey(props) {
 
   return TextFieldEntry({
     debounce,
-    description: 'Define which input property to populate the values from',
+    description: 'Klíč ze schématu formuláře obsahující možnosti.',
     tooltip,
     element: field,
     getValue,
     id,
-    label: 'Input values key',
+    label: 'Klíč vstupních hodnot',
     setValue,
     validate
   });
@@ -72,11 +72,11 @@ function InputValuesKey(props) {
   */
 const validate = (value) => {
   if (typeof value !== 'string' || value.length === 0) {
-    return 'Must not be empty.';
+    return 'Hodnota nesmí být prázdná.';
   }
 
   if (/\s/.test(value)) {
-    return 'Must not contain spaces.';
+    return 'Hodnota nesmí obsahovat mezery.';
   }
 
   return null;

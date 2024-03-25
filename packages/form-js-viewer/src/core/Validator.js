@@ -119,14 +119,14 @@ export class Validator {
     if ('minLength' in evaluatedValidation && value && value.trim().length < evaluatedValidation.minLength) {
       errors = [
         ...errors,
-        `Hodnota musí mít minimální délku ${ evaluatedValidation.minLength }.`
+        `Hodnota musí mít minimální délku ${ evaluatedValidation.minLength } znaků.`
       ];
     }
 
     if ('maxLength' in evaluatedValidation && value && value.trim().length > evaluatedValidation.maxLength) {
       errors = [
         ...errors,
-        `Hodnota musí mít maximální délku ${ evaluatedValidation.maxLength }.`
+        `Hodnota musí mít maximální délku ${ evaluatedValidation.maxLength } znaků.`
       ];
     }
 

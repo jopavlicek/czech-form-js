@@ -67,7 +67,7 @@ function DisallowPassedDates(props) {
     element: field,
     getValue,
     id,
-    label: 'Disallow past dates',
+    label: 'Zakázat data v minulosti',
     setValue
   });
 }
@@ -95,7 +95,7 @@ function TimeIntervalSelect(props) {
   };
 
   return SelectEntry({
-    label: 'Time interval',
+    label: 'Časový interval',
     element: field,
     getOptions: getTimeIntervals,
     getValue,

@@ -36,7 +36,7 @@ export function OptionsGroups(field, editField, getService) {
   const groups = [
     {
       id,
-      label: 'Options source',
+      label: 'Zdroj možností',
       tooltip: getValuesTooltip(),
       component: Group,
       entries: OptionsSourceSelectEntry({ ...context, id })
@@ -49,7 +49,7 @@ export function OptionsGroups(field, editField, getService) {
     const id = 'dynamicOptions';
     groups.push({
       id,
-      label: 'Dynamic options',
+      label: 'Dynamické možnosti',
       component: Group,
       entries: InputKeyOptionsSourceEntry({ ...context, id })
     });
@@ -57,7 +57,7 @@ export function OptionsGroups(field, editField, getService) {
     const id = 'staticOptions';
     groups.push({
       id,
-      label: 'Static options',
+      label: 'Statické možnosti',
       component: ListGroup,
       ...StaticOptionsSourceEntry({ ...context, id })
     });
@@ -65,7 +65,7 @@ export function OptionsGroups(field, editField, getService) {
     const id = 'optionsExpression';
     groups.push({
       id,
-      label: 'Options expression',
+      label: 'Výraz s možnostmi',
       component: Group,
       entries: OptionsExpressionEntry({ ...context, id })
     });
@@ -77,7 +77,7 @@ export function OptionsGroups(field, editField, getService) {
 // helpers //////////
 
 function getValuesTooltip() {
-  return '"Static" defines a constant, predefined set of form options.\n\n' +
-  '"Input data" defines options that are populated dynamically, adjusting based on variable data for flexible responses to different conditions or inputs.\n\n' +
-  '"Expression" defines options that are populated from a FEEL expression.';
+  return '"Staticky" - Možnosti existují ve formě předem definovaných konstant.\n\n' +
+  '"Dynamicky" - Možnosti jsou načítány z proměnné schématu, kterou lze plnit na základě podmínek.\n\n' +
+  '"Výraz" - Možnosti jsou načteny pomocí FEEL výrazu.';
 }

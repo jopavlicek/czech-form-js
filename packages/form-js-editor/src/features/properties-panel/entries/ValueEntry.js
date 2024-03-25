@@ -80,7 +80,7 @@ function Label(props) {
     element: field,
     getValue,
     id,
-    label: 'Label',
+    label: 'Název',
     setValue,
     validate
   });
@@ -124,7 +124,7 @@ function Value(props) {
     element: field,
     getValue,
     id,
-    label: 'Value',
+    label: 'Hodnota',
     setValue,
     validate
   });
