@@ -34,7 +34,7 @@ export class Validator {
 
         errors = [
           ...errors,
-          'Value is not a number.'
+          'Hodnota musí být platné číslo.'
         ];
 
       }
@@ -43,10 +43,10 @@ export class Validator {
         if (decimalDigits >= 0 && countDecimals(value) > decimalDigits) {
           errors = [
             ...errors,
-            'Value is expected to ' +
+            'Hodnota musí ' +
             (decimalDigits === 0
-              ? 'be an integer'
-              : `have at most ${decimalDigits} decimal digit${decimalDigits > 1 ? 's' : ''}`
+              ? 'být platné celé číslo'
+              : `obsahovat maximálně ${decimalDigits} desetinných míst`
             ) + '.'
           ];
         }
@@ -64,7 +64,7 @@ export class Validator {
 
             errors = [
               ...errors,
-              `Please select a valid value, the two nearest valid values are ${previousValue} and ${nextValue}.`
+              `Prosím, zvolte platnou hodnotu. Dvě nejbližší hodnoty jsou ${previousValue} a ${nextValue}.`
             ];
           }
         }
@@ -85,7 +85,7 @@ export class Validator {
     if (evaluatedValidation.pattern && value && !new RegExp(evaluatedValidation.pattern).test(value)) {
       errors = [
         ...errors,
-        `Field must match pattern ${ evaluatedValidation.pattern }.`
+        `Hodnota splňovat regulární výraz ${ evaluatedValidation.pattern }.`
       ];
     }
 
@@ -97,7 +97,7 @@ export class Validator {
       if (isUncheckedCheckbox || isUnsetValue || isEmptyMultiselect) {
         errors = [
           ...errors,
-          'Field is required.'
+          'Povinné pole.'
         ];
       }
     }
@@ -105,42 +105,42 @@ export class Validator {
     if ('min' in evaluatedValidation && (value || value === 0) && value < evaluatedValidation.min) {
       errors = [
         ...errors,
-        `Field must have minimum value of ${ evaluatedValidation.min }.`
+        `Hodnota musí být větší nebo rovna ${ evaluatedValidation.min }.`
       ];
     }
 
     if ('max' in evaluatedValidation && (value || value === 0) && value > evaluatedValidation.max) {
       errors = [
         ...errors,
-        `Field must have maximum value of ${ evaluatedValidation.max }.`
+        `Hodnota musí být menší nebo rovna ${ evaluatedValidation.max }.`
       ];
     }
 
     if ('minLength' in evaluatedValidation && value && value.trim().length < evaluatedValidation.minLength) {
       errors = [
         ...errors,
-        `Field must have minimum length of ${ evaluatedValidation.minLength }.`
+        `Hodnota musí mít minimální délku ${ evaluatedValidation.minLength }.`
       ];
     }
 
     if ('maxLength' in evaluatedValidation && value && value.trim().length > evaluatedValidation.maxLength) {
       errors = [
         ...errors,
-        `Field must have maximum length of ${ evaluatedValidation.maxLength }.`
+        `Hodnota musí mít maximální délku ${ evaluatedValidation.maxLength }.`
       ];
     }
 
     if ('validationType' in evaluatedValidation && value && evaluatedValidation.validationType === 'phone' && !PHONE_PATTERN.test(value)) {
       errors = [
         ...errors,
-        'Field must be a valid  international phone number. (e.g. +4930664040900)'
+        'Hodnota musí být platné mezinárodní telefonní číslo. (např. +4930664040900)'
       ];
     }
 
     if ('validationType' in evaluatedValidation && value && evaluatedValidation.validationType === 'email' && !EMAIL_PATTERN.test(value)) {
       errors = [
         ...errors,
-        'Field must be a valid email.'
+        'Hodnota musí být platný email.'
       ];
     }
 

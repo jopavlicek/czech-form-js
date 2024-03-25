@@ -56,8 +56,8 @@ function SerializeToString(props) {
     element: field,
     getValue,
     id,
-    label: 'Output as string',
-    description: 'Allows arbitrary precision values',
+    label: 'Uložit jako řetězec',
+    description: 'Umožňuje použití libovolné hodnoty přesnosti',
     setValue
   });
 }

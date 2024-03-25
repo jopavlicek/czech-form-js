@@ -138,7 +138,7 @@ export function ValidationGroup(field, editField) {
 
   return {
     id: 'validation',
-    label: 'Validation',
+    label: 'Validace',
     entries
   };
 }
@@ -155,7 +155,7 @@ function Required(props) {
     element: field,
     getValue: getValue('required'),
     id,
-    label: 'Required',
+    label: 'Povinné',
     setValue: onChange('required')
   });
 }
@@ -247,7 +247,7 @@ function Min(props) {
     element: field,
     feel: 'optional',
     id,
-    label: 'Minimum',
+    label: 'Minimální hodnota',
     step: 'any',
     getValue: getValue('min'),
     setValue: onChange('min'),
@@ -272,7 +272,7 @@ function Max(props) {
     element: field,
     feel: 'optional',
     id,
-    label: 'Maximum',
+    label: 'Maximální hodnota',
     step: 'any',
     getValue: getValue('max'),
     setValue: onChange('max'),

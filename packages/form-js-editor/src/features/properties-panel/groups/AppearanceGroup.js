@@ -19,7 +19,7 @@ export function AppearanceGroup(field, editField, getService) {
 
   return {
     id: 'appearance',
-    label: 'Appearance',
+    label: 'Vzhled',
     entries
   };
 }

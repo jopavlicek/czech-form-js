@@ -17,7 +17,7 @@ export function SerializationGroup(field, editField) {
 
   return {
     id: 'serialization',
-    label: 'Serialization',
+    label: 'Serializace',
     entries
   };
 }

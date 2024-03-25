@@ -68,7 +68,7 @@ function PrefixAdorner(props) {
     feel: 'optional',
     getValue: getValue('prefixAdorner'),
     id,
-    label: 'Prefix',
+    label: 'Předpona',
     setValue: onChange('prefixAdorner'),
     singleLine: true,
     variables
@@ -92,7 +92,7 @@ function SuffixAdorner(props) {
     element: field,
     getValue: getValue('suffixAdorner'),
     id,
-    label: 'Suffix',
+    label: 'Přípona',
     setValue: onChange('suffixAdorner'),
     singleLine: true,
     variables
