@@ -17,7 +17,7 @@ export function GroupAppearanceEntry(props) {
     simpleBoolEntryFactory({
       id: 'showOutline',
       path: [ 'showOutline' ],
-      label: 'Show outline',
+      label: 'Obrys sekce',
       props
     })
   ];

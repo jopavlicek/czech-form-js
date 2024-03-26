@@ -23,12 +23,12 @@ export class FormLayoutValidator {
 
       // allow minimum cols
       if (columns < MIN_COLUMNS) {
-        return `Minimum ${MIN_COLUMNS} columns are allowed`;
+        return `Minimální šířka je ${MIN_COLUMNS} sloupců`;
       }
 
       // allow maximum cols
       if (columns > MAX_COLUMNS) {
-        return `Maximum ${MAX_COLUMNS} columns are allowed`;
+        return `Maximální šířka je ${MAX_COLUMNS} sloupců`;
       }
     }
 
@@ -63,11 +63,11 @@ export class FormLayoutValidator {
       sumColumns > MAX_COLUMNS_PER_ROW ||
       (sumAutoCols > 0 && sumColumns > calculateMaxColumnsWithAuto(sumAutoCols)) ||
       (columns === MAX_COLUMNS_PER_ROW && sumFields > 1)) {
-      return `New value exceeds the maximum of ${MAX_COLUMNS_PER_ROW} columns per row`;
+      return `Nová hodnota předahuje maximum ${MAX_COLUMNS_PER_ROW} sloupců na řádek`;
     }
 
     if (sumFields > MAX_FIELDS_PER_ROW) {
-      return `Maximum ${MAX_FIELDS_PER_ROW} fields per row are allowed`;
+      return `Byl přesažen maximální počet polí na řádek ${MAX_FIELDS_PER_ROW}`;
     }
 
     return null;

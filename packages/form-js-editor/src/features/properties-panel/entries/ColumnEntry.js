@@ -75,7 +75,7 @@ function Label(props) {
     element: field,
     getValue,
     id,
-    label: 'Label',
+    label: 'Název',
     setValue
   });
 }
@@ -113,7 +113,7 @@ function Key(props) {
     element: field,
     getValue,
     id,
-    label: 'Key',
+    label: 'Klíč',
     setValue,
     validate
   });
@@ -128,7 +128,7 @@ function Key(props) {
   */
 function validate(value) {
   if (!isString(value) || value.length === 0) {
-    return 'Must not be empty.';
+    return 'Hodnota nesmí být prázdná.';
   }
 
   return null;

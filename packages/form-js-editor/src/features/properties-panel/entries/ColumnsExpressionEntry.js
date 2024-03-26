@@ -64,12 +64,12 @@ function ColumnsExpression(props) {
 
   return FeelTemplatingEntry({
     debounce,
-    description: 'Specify an expression to populate column items',
+    description: 'Výraz pro naplnění záhlaví',
     element: field,
     feel: 'required',
     getValue,
     id,
-    label: 'Expression',
+    label: 'Výraz',
     tooltip,
     setValue,
     singleLine: true,
@@ -88,7 +88,7 @@ function ColumnsExpression(props) {
 const validate = (value) => {
 
   if (!isString(value) || value.length === 0 || value === '=') {
-    return 'Must not be empty.';
+    return 'Hodnota nesmí být prázdná.';
   }
 
   return null;

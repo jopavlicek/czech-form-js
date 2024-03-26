@@ -7,11 +7,11 @@ import { get, isString, isArray } from 'min-dash';
 
 const OPTIONS = {
   static: {
-    label: 'List of items',
+    label: 'Seznam položek',
     value: 'static'
   },
   expression: {
-    label: 'Expression',
+    label: 'Výraz',
     value: 'expression'
   }
 };
@@ -94,7 +94,7 @@ function HeadersSourceSelect(props) {
 
   return AutoFocusSelectEntry({
     autoFocusEntry: getAutoFocusEntryId(field),
-    label: 'Type',
+    label: 'Typ',
     element: field,
     getOptions: getValuesSourceOptions,
     getValue,

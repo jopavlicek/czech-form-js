@@ -154,15 +154,15 @@ export class RepeatRenderManager {
     >
       {
         showAdd ? <button type="button" readOnly={ readonly } disabled={ disabled || readonly } class="fjs-repeat-render-add" ref={ addButtonRef } onClick={ onAddItem }>
-          <><AddSvg /> { 'Add new' }</>
+          <><AddSvg /> { 'Přidat' }</>
         </button> : null
       }
       {
         collapseEnabled ? <button type="button" class="fjs-repeat-render-collapse" onClick={ toggle }>
           {
             isCollapsed
-              ? <><ExpandSvg /> { `Expand all (${values.length})` }</>
-              : <><CollapseSvg /> { 'Collapse' }</>
+              ? <><ExpandSvg /> { `Rozbalit vše (${values.length})` }</>
+              : <><CollapseSvg /> { 'Sbalit' }</>
           }
         </button> : null
       }

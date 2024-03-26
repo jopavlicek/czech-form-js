@@ -26,7 +26,7 @@ export function TableHeaderGroups(field, editField) {
   const groups = [
     {
       id: `${fieldId}-columnsSource`,
-      label: 'Headers source',
+      label: 'Zdroj záhlaví',
       tooltip: TOOLTIP_TEXT,
       component: Group,
       entries: [
@@ -41,7 +41,7 @@ export function TableHeaderGroups(field, editField) {
 
     groups.push({
       id,
-      label: 'Header items',
+      label: 'Položky záhlaví',
       component: ListGroup,
       ...StaticColumnsSourceEntry({ field, editField, id })
     });
@@ -52,7 +52,7 @@ export function TableHeaderGroups(field, editField) {
 
 // helpers //////////
 
-const TOOLTIP_TEXT = `"List of items" defines a constant, predefined set of form options.
+const TOOLTIP_TEXT = `"Seznam položek" - Záhlaví je naplněno z předem definovaných statických položek.
 
-"Expression" defines options that are populated from a FEEL expression.
+"Výraz" - Záhlaví je naplněno pomocí výsledku FEEL výrazu.
 `;

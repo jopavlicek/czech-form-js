@@ -13,11 +13,11 @@ export function LayouterAppearanceEntry(props) {
     simpleSelectEntryFactory({
       id: 'verticalAlignment',
       path: [ 'verticalAlignment' ],
-      label: 'Vertical alignment',
+      label: 'Vertikální zarovnání',
       optionsArray: [
-        { value: 'start', label: 'Top' },
-        { value: 'center', label: 'Center' },
-        { value: 'end', label: 'Bottom' }
+        { value: 'start', label: 'Horní okraj' },
+        { value: 'center', label: 'Střed' },
+        { value: 'end', label: 'Dolní okraj' }
       ],
       props
     }),
