@@ -64,7 +64,7 @@ function DateTimeSubtypeSelect(props) {
   };
 
   const initTimeConfig = () => {
-    editField(field, TIME_LABEL_PATH, 'Time');
+    editField(field, TIME_LABEL_PATH, 'Čas');
     editField(field, TIME_SERIALISING_FORMAT_PATH, TIME_SERIALISING_FORMATS.UTC_OFFSET);
     editField(field, TIME_INTERVAL_PATH, 15);
   };
@@ -77,7 +77,7 @@ function DateTimeSubtypeSelect(props) {
   };
 
   const initDateConfig = () => {
-    editField(field, DATE_LABEL_PATH, 'Date');
+    editField(field, DATE_LABEL_PATH, 'Datum');
   };
 
   const setValue = (value) => {

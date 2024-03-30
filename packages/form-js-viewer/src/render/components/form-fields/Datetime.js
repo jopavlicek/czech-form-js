@@ -138,7 +138,7 @@ export function Datetime(props) {
   const allErrors = useMemo(() => {
     if (required || subtype !== DATETIME_SUBTYPES.DATETIME) return errors;
     const isOnlyOneFieldSet = (isValidDate(dateTime.date) && !isValidTime(dateTime.time)) || (!isValidDate(dateTime.date) && isValidTime(dateTime.time));
-    return isOnlyOneFieldSet ? [ 'Date and time must both be entered.', ...errors ] : errors;
+    return isOnlyOneFieldSet ? [ 'Pole pro datum i čas musí být vyplněné.', ...errors ] : errors;
   }, [ required, subtype, dateTime, errors ]);
 
   const setDate = useCallback((date) => {
@@ -204,7 +204,7 @@ Datetime.config = {
   create: (options = {}) => {
     const defaults = {};
     set(defaults, DATETIME_SUBTYPE_PATH, DATETIME_SUBTYPES.DATE);
-    set(defaults, DATE_LABEL_PATH, 'Date');
+    set(defaults, DATE_LABEL_PATH, 'Datum');
 
     return { ...defaults, ...options };
   }

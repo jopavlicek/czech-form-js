@@ -97,12 +97,12 @@ function Key(props) {
 
   return TextFieldEntry({
     debounce,
-    description: 'Proměnná pro datové schéma',
+    description: 'Klíč, pod kterým je uložená hodnota pole.',
     element: field,
     getValue,
     id,
     label: 'Klíč',
-    tooltip: 'Jedinečný klíč slouží k propojení pole s příslušnou proměnnou v datovém schématu.',
+    tooltip: 'Klíč slouží k identifikaci pole a jeho hodnoty v datovém schématu.',
     setValue,
     validate
   });

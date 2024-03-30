@@ -25,8 +25,8 @@ export const OPTIONS_SOURCES_PATHS = {
 export const OPTIONS_SOURCES_DEFAULTS = {
   [OPTIONS_SOURCES.STATIC]: [
     {
-      label: 'Value',
-      value: 'value'
+      label: 'Možnost',
+      value: 'moznost'
     }
   ],
   [OPTIONS_SOURCES.INPUT]: '',

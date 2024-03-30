@@ -48,8 +48,8 @@ function createEmptyOptions(options = {}) {
   if (!options.valuesKey && !options.valuesExpression) {
     defaults.values = [
       {
-        label: 'Value',
-        value: 'value'
+        label: 'Možnost',
+        value: 'moznost'
       }
     ];
   }

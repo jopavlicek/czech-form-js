@@ -26,7 +26,7 @@ export class EditorRepeatRenderManager {
   }
 
   RepeatFooter() {
-    return <div className="fjs-repeat-render-footer"><RepeatSvg /><span>Repeatable</span></div>;
+    return <div className="fjs-repeat-render-footer"><RepeatSvg /><span>Opakující</span></div>;
   }
 
 }

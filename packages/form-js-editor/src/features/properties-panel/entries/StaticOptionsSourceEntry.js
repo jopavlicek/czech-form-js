@@ -77,8 +77,8 @@ export function StaticOptionsSourceEntry(props) {
 
 function getIndexedEntry(index, values) {
   const entry = {
-    label: 'Value',
-    value: 'value'
+    label: 'Možnost',
+    value: 'moznost'
   };
 
   while (labelOrValueIsAlreadyAssignedForIndex(index, values)) {
@@ -95,6 +95,6 @@ function getIndexedEntry(index, values) {
 
 function labelOrValueIsAlreadyAssignedForIndex(index, values) {
   return values.some(existingEntry =>
-    existingEntry.label === `Value ${index}` ||
-    existingEntry.value === `value${index}`);
+    existingEntry.label === `Možnost ${index}` ||
+    existingEntry.value === `moznost${index}`);
 }

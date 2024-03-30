@@ -80,7 +80,7 @@ function Columns(props) {
     debounce,
     element: field,
     id,
-    label: 'Sloupce',
+    label: 'Šířka sloupce',
     getOptions,
     getValue,
     setValue,

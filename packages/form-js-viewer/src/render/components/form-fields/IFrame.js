@@ -45,7 +45,7 @@ export function IFrame(props) {
   return <div class={ formFieldClasses(type, { disabled, readonly }) }>
     <Label htmlFor={ domId } label={ evaluatedLabel } />
     {
-      !evaluatedUrl && <IFramePlaceholder text="No content to show." />
+      !evaluatedUrl && <IFramePlaceholder text="Žádný dostupný obsah." />
     }
     {
       evaluatedUrl && safeUrl &&

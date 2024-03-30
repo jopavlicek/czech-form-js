@@ -23,7 +23,7 @@ export function SecurityAttributesGroup(field, editField) {
 
   return {
     id: 'securityAttributes',
-    label: 'Security attributes',
+    label: 'Zabezpečení',
     entries,
     tooltip: getTooltip()
   };
@@ -63,13 +63,13 @@ function createEntries(props) {
 }
 
 const Advisory = (props) => {
-  return <div class="bio-properties-panel-description fjs-properties-panel-detached-description">These options can incur security risks, especially if used in combination with dynamic links. Ensure that you are aware of them, that you trust the source url and only enable what your use case requires.</div>;
+  return <div class="bio-properties-panel-description fjs-properties-panel-detached-description">Tyto možnosti mohou představovat bezpečnostní rizika, zejména pokud se používají v kombinaci s dynamickými odkazy. Ujistěte se, že o nich víte, že důvěřujete zdrojové adrese URL a povolíte pouze to, co váš případ použití vyžaduje.</div>;
 };
 
 // helpers //////////
 
 function getTooltip() {
   return <>
-    <p>Allow the iframe to access more functionality of your browser, details regarding the various options can be found in the <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">MDN iFrame documentation.</a></p>
+    <p>Povolte prvku iFrame přístup k dalším funkcím vašeho prohlížeče. Podrobnosti týkající se různých možností naleznete v <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">MDN dokumentaci iFrame.</a></p>
   </>;
 }

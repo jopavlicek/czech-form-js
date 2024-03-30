@@ -96,7 +96,7 @@ export function SimpleSelect(props) {
       onFocus={ onInputFocus }
       onBlur={ onInputBlur }
       onMouseDown={ onMouseDown }>
-      <div class={ classNames('fjs-select-display', { 'fjs-select-placeholder' : !value }) } id={ `${domId}-display` }>{ valueLabel || 'Select' }</div>
+      <div class={ classNames('fjs-select-display', { 'fjs-select-placeholder' : !value }) } id={ `${domId}-display` }>{ valueLabel || 'Výběr' }</div>
       { !disabled && <input
         ref={ inputRef }
         id={ domId }

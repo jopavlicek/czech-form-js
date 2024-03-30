@@ -57,7 +57,7 @@ function SerializeToString(props) {
     getValue,
     id,
     label: 'Uložit jako řetězec',
-    description: 'Umožňuje použití libovolné hodnoty přesnosti',
+    description: 'Umožňuje uložit číslo s libovolnou přesností',
     setValue
   });
 }

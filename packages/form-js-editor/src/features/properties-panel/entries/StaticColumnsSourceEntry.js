@@ -20,7 +20,7 @@ export function StaticColumnsSourceEntry(props) {
     event.stopPropagation();
 
     const entry = {
-      label: 'Column',
+      label: 'Sloupec',
       key: 'inputVariable'
     };
 

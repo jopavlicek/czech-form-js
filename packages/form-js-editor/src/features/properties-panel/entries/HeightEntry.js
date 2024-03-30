@@ -59,7 +59,7 @@ function Height(props) {
   return NumberFieldEntry({
     debounce,
     description,
-    label: 'Výška',
+    label: 'Výška v pixelech',
     element: field,
     id,
     getValue,

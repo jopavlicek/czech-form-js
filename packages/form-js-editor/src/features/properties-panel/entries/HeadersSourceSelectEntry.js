@@ -73,7 +73,7 @@ function HeadersSourceSelect(props) {
       editField(field, {
         columns: [
           {
-            label: 'Column',
+            label: 'Sloupec',
             key: 'inputVariable'
           }
         ]

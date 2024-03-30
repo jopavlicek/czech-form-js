@@ -69,7 +69,7 @@ function ContextPad(props) {
 function EmptyGroup() {
   return (
     <div class="fjs-empty-component">
-      <span class="fjs-empty-component-text">Drag and drop components here.</span>
+      <span class="fjs-empty-component-text">Komponenty přetáhněte zde.</span>
     </div>
   );
 }
@@ -79,9 +79,9 @@ function EmptyForm() {
     <div class="fjs-empty-editor">
       <div class="fjs-empty-editor-card">
         <EmptyFormIcon />
-        <h2>Build your form</h2>
-        <span>Drag and drop components here to start designing.</span>
-        <span>Use the preview window to test your form.</span>
+        <h2>Sestavte svůj formulář</h2>
+        <span>Přetáhněte komponenty z postranní nabídky a začnětě navrhovat.</span>
+        <span>Použijte náhledové okno pro otestování formuláře.</span>
       </div>
     </div>
   );

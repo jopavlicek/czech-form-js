@@ -53,7 +53,7 @@ function OptionsExpression(props) {
     feel: 'required',
     getValue,
     id,
-    label: 'Výraz s možnostmi',
+    label: 'Výraz',
     setValue,
     variables
   });
