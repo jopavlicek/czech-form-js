@@ -11,10 +11,10 @@ export function EditorExpressionField(props) {
   const Icon = iconsByType('expression');
   const expressionLanguage = useService('expressionLanguage');
 
-  let placeholderContent = 'Expression is empty';
+  let placeholderContent = 'Prázdný výraz';
 
   if (expression.trim() && expressionLanguage.isExpression(expression)) {
-    placeholderContent = 'Expression';
+    placeholderContent = 'Výraz';
   }
 
   return (
