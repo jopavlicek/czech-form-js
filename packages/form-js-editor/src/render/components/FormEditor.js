@@ -631,8 +631,8 @@ function getRemoveButtonTitle(formField, formFields) {
   const entry = findPaletteEntry(formField.type, formFields);
 
   if (!entry) {
-    return 'Remove form field';
+    return 'Odstranit komponent';
   }
 
-  return `Remove ${entry.label}`;
+  return `Odstranit ${entry.label}`;
 }
