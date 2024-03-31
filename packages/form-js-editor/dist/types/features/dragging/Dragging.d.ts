@@ -25,7 +25,7 @@ export class Dragging {
     _formFieldRegistry: import("../../core/FormFieldRegistry").FormFieldRegistry;
     _formLayouter: import("@bpmn-io/form-js-viewer").FormLayouter;
     _formLayoutValidator: import("../../core/FormLayoutValidator").FormLayoutValidator;
-    _eventBus: import("diagram-js/lib/core/EventBus").default<null>;
+    _eventBus: import("diagram-js/lib/core/EventBus").default;
     _modeling: import("../modeling/Modeling").Modeling;
     _pathRegistry: import("@bpmn-io/form-js-viewer").PathRegistry;
     /**

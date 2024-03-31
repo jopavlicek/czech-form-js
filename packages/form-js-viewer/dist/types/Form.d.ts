@@ -28,7 +28,6 @@ export class Form {
      */
     private _state;
     get: {
-        <Name extends never>(name: Name): null[Name];
         <T>(name: string): T;
         <T_1>(name: string, strict: true): T_1;
         <T_2>(name: string, strict: boolean): T_2;

@@ -380,7 +380,7 @@ class FeelersTemplating {
   /**
   * Extracts all feel expressions in the template along with their depth in the syntax tree.
   * The depth is incremented for child expressions of loops to account for context drilling.
-   * @name extractExpressionsWithDepth
+  * @name extractExpressionsWithDepth
   * @param {string} template - A feelers template string.
   * @returns {Array<ExpressionWithDepth>} An array of objects, each containing the depth and the extracted expression.
   *
@@ -7022,8 +7022,6 @@ var slice = Array.prototype.slice;
  * var sum = eventBus.fire('sum', 1, 2);
  * console.log(sum); // 3
  * ```
- *
- * @template [EventMap=null]
  */
 function EventBus() {
   /**
@@ -7037,8 +7035,6 @@ function EventBus() {
 }
 
 /**
- * @overlord
- *
  * Register an event listener for events with the given name.
  *
  * The callback will be invoked with `event, ...additionalArguments`
@@ -7055,25 +7051,6 @@ function EventBus() {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] listen priority
  * @param {EventBusEventCallback<T>} callback
- * @param {any} [that] callback context
- */
-/**
- * Register an event listener for events with the given name.
- *
- * The callback will be invoked with `event, ...additionalArguments`
- * that have been passed to {@link EventBus#fire}.
- *
- * Returning false from a listener will prevent the events default action
- * (if any is specified). To stop an event from being processed further in
- * other listeners execute {@link Event#stopPropagation}.
- *
- * Returning anything but `undefined` from a listener will stop the listener propagation.
- *
- * @template {keyof EventMap} EventName
- *
- * @param {EventName} events to subscribe to
- * @param {number} [priority=1000] listen priority
- * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.on = function (events, priority, callback, that) {
@@ -7106,8 +7083,6 @@ EventBus.prototype.on = function (events, priority, callback, that) {
 };
 
 /**
- * @overlord
- *
  * Register an event listener that is called only once.
  *
  * @template T
@@ -7115,16 +7090,6 @@ EventBus.prototype.on = function (events, priority, callback, that) {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] the listen priority
  * @param {EventBusEventCallback<T>} callback
- * @param {any} [that] callback context
- */
-/**
- * Register an event listener that is called only once.
- *
- * @template {keyof EventMap} EventName
- *
- * @param {EventName} events to subscribe to
- * @param {number} [priority=1000] listen priority
- * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.once = function (events, priority, callback, that) {

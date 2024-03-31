@@ -8311,19 +8311,16 @@
    * @typedef { import('./index.js').ModuleDeclaration } ModuleDeclaration
    * @typedef { import('./index.js').ModuleDefinition } ModuleDefinition
    * @typedef { import('./index.js').InjectorContext } InjectorContext
-   *
-   * @typedef { import('./index.js').TypedDeclaration<any, any> } TypedDeclaration
    */
 
   /**
    * Create a new injector with the given modules.
    *
    * @param {ModuleDefinition[]} modules
-   * @param {InjectorContext} [_parent]
+   * @param {InjectorContext} [parent]
    */
-  function Injector(modules, _parent) {
-
-    const parent = _parent || /** @type InjectorContext */ ({
+  function Injector(modules, parent) {
+    parent = parent || {
       get: function(name, strict) {
         currentlyResolving.push(name);
 
@@ -8333,7 +8330,7 @@
           throw error(`No provider for "${ name }"!`);
         }
       }
-    });
+    };
 
     const currentlyResolving = [];
     const providers = this._providers = Object.create(parent._providers || null);
@@ -8356,13 +8353,12 @@
      * @return {any}
      */
     function get(name, strict) {
-      if (!providers[name] && name.includes('.')) {
-
+      if (!providers[name] && name.indexOf('.') !== -1) {
         const parts = name.split('.');
-        let pivot = get(/** @type { string } */ (parts.shift()));
+        let pivot = get(parts.shift());
 
         while (parts.length) {
-          pivot = pivot[/** @type { string } */ (parts.shift())];
+          pivot = pivot[parts.shift()];
         }
 
         return pivot;
@@ -8402,9 +8398,6 @@
         }
       }
 
-      /**
-       * @type {string[]}
-       */
       const inject = fn.$inject || parseAnnotations(fn);
       const dependencies = inject.map(dep => {
         if (hasOwnProp(locals, dep)) {
@@ -8416,7 +8409,7 @@
 
       return {
         fn: fn,
-        dependencies
+        dependencies: dependencies
       };
     }
 
@@ -8436,7 +8429,7 @@
       } = fnDef(type);
 
       // instantiate var args constructor
-      const Constructor = Function.prototype.bind.call(fn, null, ...dependencies);
+      const Constructor = Function.prototype.bind.apply(fn, [ null ].concat(dependencies));
 
       return new Constructor();
     }
@@ -8616,17 +8609,13 @@
           return;
         }
 
-        const typeDeclaration = /** @type { TypedDeclaration } */ (
-          moduleDefinition[key]
-        );
-
-        if (typeDeclaration[2] === 'private') {
-          providers[key] = typeDeclaration;
+        if (moduleDefinition[key][2] === 'private') {
+          providers[key] = moduleDefinition[key];
           return;
         }
 
-        const type = typeDeclaration[0];
-        const value = typeDeclaration[1];
+        const type = moduleDefinition[key][0];
+        const value = moduleDefinition[key][1];
 
         providers[key] = [ factoryMap[type], arrayUnwrap(type, value), type ];
       });
@@ -43955,7 +43944,7 @@
     /**
     * Extracts all feel expressions in the template along with their depth in the syntax tree.
     * The depth is incremented for child expressions of loops to account for context drilling.
-     * @name extractExpressionsWithDepth
+    * @name extractExpressionsWithDepth
     * @param {string} template - A feelers template string.
     * @returns {Array<ExpressionWithDepth>} An array of objects, each containing the depth and the extracted expression.
     *
@@ -50597,8 +50586,6 @@
    * var sum = eventBus.fire('sum', 1, 2);
    * console.log(sum); // 3
    * ```
-   *
-   * @template [EventMap=null]
    */
   function EventBus() {
     /**
@@ -50612,8 +50599,6 @@
   }
 
   /**
-   * @overlord
-   *
    * Register an event listener for events with the given name.
    *
    * The callback will be invoked with `event, ...additionalArguments`
@@ -50630,25 +50615,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener for events with the given name.
-   *
-   * The callback will be invoked with `event, ...additionalArguments`
-   * that have been passed to {@link EventBus#fire}.
-   *
-   * Returning false from a listener will prevent the events default action
-   * (if any is specified). To stop an event from being processed further in
-   * other listeners execute {@link Event#stopPropagation}.
-   *
-   * Returning anything but `undefined` from a listener will stop the listener propagation.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.on = function (events, priority, callback, that) {
@@ -50681,8 +50647,6 @@
   };
 
   /**
-   * @overlord
-   *
    * Register an event listener that is called only once.
    *
    * @template T
@@ -50690,16 +50654,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] the listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener that is called only once.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.once = function (events, priority, callback, that) {

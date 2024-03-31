@@ -1,2 +1,2 @@
-export function createInjector(bootstrapModules: any): Injector<null>;
+export function createInjector(bootstrapModules: any): Injector;
 import { Injector } from 'didi';

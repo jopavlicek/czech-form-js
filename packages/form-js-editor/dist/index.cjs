@@ -147,8 +147,6 @@ var slice = Array.prototype.slice;
  * var sum = eventBus.fire('sum', 1, 2);
  * console.log(sum); // 3
  * ```
- *
- * @template [EventMap=null]
  */
 function EventBus() {
   /**
@@ -162,8 +160,6 @@ function EventBus() {
 }
 
 /**
- * @overlord
- *
  * Register an event listener for events with the given name.
  *
  * The callback will be invoked with `event, ...additionalArguments`
@@ -180,25 +176,6 @@ function EventBus() {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] listen priority
  * @param {EventBusEventCallback<T>} callback
- * @param {any} [that] callback context
- */
-/**
- * Register an event listener for events with the given name.
- *
- * The callback will be invoked with `event, ...additionalArguments`
- * that have been passed to {@link EventBus#fire}.
- *
- * Returning false from a listener will prevent the events default action
- * (if any is specified). To stop an event from being processed further in
- * other listeners execute {@link Event#stopPropagation}.
- *
- * Returning anything but `undefined` from a listener will stop the listener propagation.
- *
- * @template {keyof EventMap} EventName
- *
- * @param {EventName} events to subscribe to
- * @param {number} [priority=1000] listen priority
- * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.on = function (events, priority, callback, that) {
@@ -231,8 +208,6 @@ EventBus.prototype.on = function (events, priority, callback, that) {
 };
 
 /**
- * @overlord
- *
  * Register an event listener that is called only once.
  *
  * @template T
@@ -240,16 +215,6 @@ EventBus.prototype.on = function (events, priority, callback, that) {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] the listen priority
  * @param {EventBusEventCallback<T>} callback
- * @param {any} [that] callback context
- */
-/**
- * Register an event listener that is called only once.
- *
- * @template {keyof EventMap} EventName
- *
- * @param {EventName} events to subscribe to
- * @param {number} [priority=1000] listen priority
- * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.once = function (events, priority, callback, that) {
@@ -1187,9 +1152,9 @@ function EditorExpressionField(props) {
   } = field;
   const Icon = formJsViewer.iconsByType('expression');
   const expressionLanguage = useService$1('expressionLanguage');
-  let placeholderContent = 'Expression is empty';
+  let placeholderContent = 'Prázdný výraz';
   if (expression.trim() && expressionLanguage.isExpression(expression)) {
-    placeholderContent = 'Expression';
+    placeholderContent = 'Výraz';
   }
   return jsxRuntime.jsx("div", {
     class: editorFormFieldClasses(type),
@@ -2351,7 +2316,7 @@ function DebugColumns(props) {
     return null;
   }
   return jsxRuntime.jsx("div", {
-    style: "width: fit-content;\r padding: 2px 6px;\r height: 16px;\r background: var(--color-blue-205-100-95);\r display: flex;\r justify-content: center;\r align-items: center;\r position: absolute;\r bottom: -2px;\r z-index: 2;\r font-size: 10px;\r right: 3px;",
+    style: "width: fit-content; padding: 2px 6px; height: 16px; background: var(--color-blue-205-100-95); display: flex; justify-content: center; align-items: center; position: absolute; bottom: -2px; z-index: 2; font-size: 10px; right: 3px;",
     class: "fjs-debug-columns",
     children: (field.layout || {}).columns || 'auto'
   });
@@ -2657,9 +2622,9 @@ function defaultPropertiesPanel(propertiesPanelConfig) {
 function getRemoveButtonTitle(formField, formFields) {
   const entry = findPaletteEntry(formField.type, formFields);
   if (!entry) {
-    return 'Remove form field';
+    return 'Odstranit komponent';
   }
-  return `Remove ${entry.label}`;
+  return `Odstranit ${entry.label}`;
 }
 
 class Renderer {
@@ -2926,9 +2891,9 @@ EditorActions.prototype.unregister = function (action) {
 };
 
 /**
- * Returns the identifiers of all currently registered editor actions
+ * Returns the number of actions that are currently registered
  *
- * @return {string[]}
+ * @return {number}
  */
 EditorActions.prototype.getActions = function () {
   return Object.keys(this._actions);
@@ -3181,7 +3146,7 @@ Keyboard.prototype._isEventIgnored = function (event) {
   if (event.defaultPrevented) {
     return true;
   }
-  return (isInput(event.target) || isButton(event.target) && isKey([' ', 'Enter'], event)) && this._isModifiedKeyIgnored(event);
+  return isInput(event.target) && this._isModifiedKeyIgnored(event);
 };
 Keyboard.prototype._isModifiedKeyIgnored = function (event) {
   if (!isCmd(event)) {
@@ -3277,9 +3242,6 @@ Keyboard.prototype.isKey = isKey;
 
 function isInput(target) {
   return target && (minDom.matches(target, 'input, textarea') || target.contentEditable === 'true');
-}
-function isButton(target) {
-  return target && minDom.matches(target, 'button, input[type=submit], input[type=button], a[href], [aria-role=button]');
 }
 
 var LOW_PRIORITY$1 = 500;

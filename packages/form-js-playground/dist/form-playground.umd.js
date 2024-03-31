@@ -304,22 +304,22 @@
    * Expose `parse`.
    */
 
-  var domify$4 = parse$4;
+  var domify$3 = parse$5;
 
   /**
    * Tests for browser support.
    */
 
-  var innerHTMLBug$1 = false;
-  var bugTestDiv$1;
+  var innerHTMLBug$2 = false;
+  var bugTestDiv$3;
   if (typeof document !== 'undefined') {
-    bugTestDiv$1 = document.createElement('div');
+    bugTestDiv$3 = document.createElement('div');
     // Setup
-    bugTestDiv$1.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    bugTestDiv$3.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
     // Make sure that link elements get serialized correctly by innerHTML
     // This requires a wrapper element in IE
-    innerHTMLBug$1 = !bugTestDiv$1.getElementsByTagName('link').length;
-    bugTestDiv$1 = undefined;
+    innerHTMLBug$2 = !bugTestDiv$3.getElementsByTagName('link').length;
+    bugTestDiv$3 = undefined;
   }
 
   /**
@@ -332,7 +332,7 @@
     col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
     // for script/link/style tags to work in IE6-8, you have to wrap
     // in a div with a non-whitespace character in front, ha!
-    _default: innerHTMLBug$1 ? [1, 'X<div>', '</div>'] : [0, '', '']
+    _default: innerHTMLBug$2 ? [1, 'X<div>', '</div>'] : [0, '', '']
   };
   map$1$1.td = map$1$1.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
   map$1$1.option = map$1$1.optgroup = [1, '<select multiple="multiple">', '</select>'];
@@ -350,7 +350,7 @@
    * @api private
    */
 
-  function parse$4(html, doc) {
+  function parse$5(html, doc) {
     if ('string' != typeof html) throw new TypeError('String expected');
 
     // default to the global `document` object
@@ -559,7 +559,7 @@
   }
   function createOverlay(label) {
     var markup = OVERLAY_HTML.replace('{label}', label);
-    return domify$4(markup);
+    return domify$3(markup);
   }
   function preventDrop(event) {
     event.preventDefault();
@@ -1306,7 +1306,7 @@
    *
    * @return {Array} transformed collection
    */
-  function map$2(collection, fn) {
+  function map$3(collection, fn) {
     let result = [];
     forEach$1(collection, function (val, key) {
       result.push(fn(val, key));
@@ -1322,7 +1322,7 @@
    * @return {Array}
    */
   function values(collection) {
-    return map$2(collection, val => val);
+    return map$3(collection, val => val);
   }
 
   /**
@@ -1349,7 +1349,7 @@
     extractor = toExtractor$1(extractor);
     let grouped = {};
     forEach$1(collections, c => groupBy$1(c, extractor, grouped));
-    let result = map$2(grouped, function (val, key) {
+    let result = map$3(grouped, function (val, key) {
       return val[0];
     });
     return result;
@@ -1581,7 +1581,7 @@
           // Minus zero?
           n = n === 0 && 1 / n < 0 ? '-0' : String(n);
         }
-        parse$3(x, n);
+        parse$4(x, n);
       }
 
       // Retain a reference to this Big constructor.
@@ -1607,7 +1607,7 @@
    * x {Big} A Big number instance.
    * n {number|string} A numeric value.
    */
-  function parse$3(x, n) {
+  function parse$4(x, n) {
     var e, i, nl;
     if (!NUMERIC$1.test(n)) {
       throw Error(INVALID$4 + 'number');
@@ -8632,18 +8632,16 @@
    * @typedef { import('./index.js').ModuleDeclaration } ModuleDeclaration
    * @typedef { import('./index.js').ModuleDefinition } ModuleDefinition
    * @typedef { import('./index.js').InjectorContext } InjectorContext
-   *
-   * @typedef { import('./index.js').TypedDeclaration<any, any> } TypedDeclaration
    */
 
   /**
    * Create a new injector with the given modules.
    *
    * @param {ModuleDefinition[]} modules
-   * @param {InjectorContext} [_parent]
+   * @param {InjectorContext} [parent]
    */
-  function Injector(modules, _parent) {
-    const parent = _parent || /** @type InjectorContext */{
+  function Injector(modules, parent) {
+    parent = parent || {
       get: function (name, strict) {
         currentlyResolving.push(name);
         if (strict === false) {
@@ -8672,11 +8670,11 @@
      * @return {any}
      */
     function get(name, strict) {
-      if (!providers[name] && name.includes('.')) {
+      if (!providers[name] && name.indexOf('.') !== -1) {
         const parts = name.split('.');
-        let pivot = get( /** @type { string } */parts.shift());
+        let pivot = get(parts.shift());
         while (parts.length) {
-          pivot = pivot[/** @type { string } */parts.shift()];
+          pivot = pivot[parts.shift()];
         }
         return pivot;
       }
@@ -8706,10 +8704,6 @@
           throw error(`Cannot invoke "${fn}". Expected a function!`);
         }
       }
-
-      /**
-       * @type {string[]}
-       */
       const inject = fn.$inject || parseAnnotations(fn);
       const dependencies = inject.map(dep => {
         if (hasOwnProp(locals, dep)) {
@@ -8720,7 +8714,7 @@
       });
       return {
         fn: fn,
-        dependencies
+        dependencies: dependencies
       };
     }
 
@@ -8740,7 +8734,7 @@
       } = fnDef(type);
 
       // instantiate var args constructor
-      const Constructor = Function.prototype.bind.call(fn, null, ...dependencies);
+      const Constructor = Function.prototype.bind.apply(fn, [null].concat(dependencies));
       return new Constructor();
     }
 
@@ -8894,14 +8888,12 @@
         if (key === '__init__' || key === '__depends__') {
           return;
         }
-        const typeDeclaration = /** @type { TypedDeclaration } */
-        moduleDefinition[key];
-        if (typeDeclaration[2] === 'private') {
-          providers[key] = typeDeclaration;
+        if (moduleDefinition[key][2] === 'private') {
+          providers[key] = moduleDefinition[key];
           return;
         }
-        const type = typeDeclaration[0];
-        const value = typeDeclaration[1];
+        const type = moduleDefinition[key][0];
+        const value = moduleDefinition[key][1];
         providers[key] = [factoryMap[type], arrayUnwrap(type, value), type];
       });
       return createInitializer(moduleDefinition, self);
@@ -11380,7 +11372,7 @@
       }, zone || mergedZone, next];
     }, [{}, null, 1]).slice(0, 2);
   }
-  function parse$2(s, ...patterns) {
+  function parse$3(s, ...patterns) {
     if (s == null) {
       return [null, null];
     }
@@ -11551,26 +11543,26 @@
    */
 
   function parseISODate(s) {
-    return parse$2(s, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
+    return parse$3(s, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
   }
   function parseRFC2822Date(s) {
-    return parse$2(preprocessRFC2822(s), [rfc2822, extractRFC2822]);
+    return parse$3(preprocessRFC2822(s), [rfc2822, extractRFC2822]);
   }
   function parseHTTPDate(s) {
-    return parse$2(s, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
+    return parse$3(s, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
   }
   function parseISODuration(s) {
-    return parse$2(s, [isoDuration, extractISODuration]);
+    return parse$3(s, [isoDuration, extractISODuration]);
   }
   const extractISOTimeOnly = combineExtractors(extractISOTime);
   function parseISOTimeOnly(s) {
-    return parse$2(s, [isoTimeOnly, extractISOTimeOnly]);
+    return parse$3(s, [isoTimeOnly, extractISOTimeOnly]);
   }
   const sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
   const sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
   const extractISOTimeOffsetAndIANAZone = combineExtractors(extractISOTime, extractISOOffset, extractIANAZone);
   function parseSQL(s) {
-    return parse$2(s, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
+    return parse$3(s, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
   }
 
   const INVALID$3 = "Invalid Duration";
@@ -50544,7 +50536,7 @@
     /**
     * Extracts all feel expressions in the template along with their depth in the syntax tree.
     * The depth is incremented for child expressions of loops to account for context drilling.
-     * @name extractExpressionsWithDepth
+    * @name extractExpressionsWithDepth
     * @param {string} template - A feelers template string.
     * @returns {Array<ExpressionWithDepth>} An array of objects, each containing the depth and the extracted expression.
     *
@@ -57505,8 +57497,6 @@
    * var sum = eventBus.fire('sum', 1, 2);
    * console.log(sum); // 3
    * ```
-   *
-   * @template [EventMap=null]
    */
   function EventBus$1() {
     /**
@@ -57520,8 +57510,6 @@
   }
 
   /**
-   * @overlord
-   *
    * Register an event listener for events with the given name.
    *
    * The callback will be invoked with `event, ...additionalArguments`
@@ -57538,25 +57526,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener for events with the given name.
-   *
-   * The callback will be invoked with `event, ...additionalArguments`
-   * that have been passed to {@link EventBus#fire}.
-   *
-   * Returning false from a listener will prevent the events default action
-   * (if any is specified). To stop an event from being processed further in
-   * other listeners execute {@link Event#stopPropagation}.
-   *
-   * Returning anything but `undefined` from a listener will stop the listener propagation.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus$1.prototype.on = function (events, priority, callback, that) {
@@ -57589,8 +57558,6 @@
   };
 
   /**
-   * @overlord
-   *
    * Register an event listener that is called only once.
    *
    * @template T
@@ -57598,16 +57565,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] the listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener that is called only once.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus$1.prototype.once = function (events, priority, callback, that) {
@@ -59535,7 +59492,7 @@
    *
    * @return {Array} transformed collection
    */
-  function map$1(collection, fn) {
+  function map$2(collection, fn) {
     let result = [];
     forEach(collection, function (val, key) {
       result.push(fn(val, key));
@@ -59567,7 +59524,7 @@
     extractor = toExtractor(extractor);
     let grouped = {};
     forEach(collections, c => groupBy(c, extractor, grouped));
-    let result = map$1(grouped, function (val, key) {
+    let result = map$2(grouped, function (val, key) {
       return val[0];
     });
     return result;
@@ -59605,7 +59562,7 @@
       // not inserted, append (!)
       sorted.push(entry);
     });
-    return map$1(sorted, e => e.v);
+    return map$2(sorted, e => e.v);
   }
 
   /**
@@ -60295,69 +60252,6 @@
     return e in r && !(e in i) && r[e] in i && (e = r[e]), i[e];
   }
 
-  const wrapMap = {
-    legend: [1, '<fieldset>', '</fieldset>'],
-    tr: [2, '<table><tbody>', '</tbody></table>'],
-    col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
-    _default: [0, '', '']
-  };
-  wrapMap.td = wrapMap.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
-  wrapMap.option = wrapMap.optgroup = [1, '<select multiple="multiple">', '</select>'];
-  wrapMap.thead = wrapMap.tbody = wrapMap.colgroup = wrapMap.caption = wrapMap.tfoot = [1, '<table>', '</table>'];
-  wrapMap.polyline = wrapMap.ellipse = wrapMap.polygon = wrapMap.circle = wrapMap.text = wrapMap.line = wrapMap.path = wrapMap.rect = wrapMap.g = [1, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">', '</svg>'];
-  function domify$2(htmlString, document = globalThis.document) {
-    if (typeof htmlString !== 'string') {
-      throw new TypeError('String expected');
-    }
-
-    // Handle comment nodes
-    const commentMatch = /^<!--(.*?)-->$/s.exec(htmlString);
-    if (commentMatch) {
-      return document.createComment(commentMatch[1]);
-    }
-    const tagName = /<([\w:]+)/.exec(htmlString)?.[1];
-    if (!tagName) {
-      return document.createTextNode(htmlString);
-    }
-    htmlString = htmlString.trim();
-
-    // Body support
-    if (tagName === 'body') {
-      const element = document.createElement('html');
-      element.innerHTML = htmlString;
-      const {
-        lastChild
-      } = element;
-      lastChild.remove();
-      return lastChild;
-    }
-
-    // Wrap map
-    let [depth, prefix, suffix] = Object.hasOwn(wrapMap, tagName) ? wrapMap[tagName] : wrapMap._default;
-    let element = document.createElement('div');
-    element.innerHTML = prefix + htmlString + suffix;
-    while (depth--) {
-      element = element.lastChild;
-    }
-
-    // One element
-    if (element.firstChild === element.lastChild) {
-      const {
-        firstChild
-      } = element;
-      firstChild.remove();
-      return firstChild;
-    }
-
-    // Several elements
-    const fragment = document.createDocumentFragment();
-    fragment.append(...element.childNodes);
-    return fragment;
-  }
-  var domify_1 = domify$2;
-
-  var domify$3 = /*@__PURE__*/getDefaultExportFromCjs(domify_1);
-
   function _mergeNamespaces$1(n, m) {
     m.forEach(function (e) {
       e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
@@ -60580,9 +60474,102 @@
   var event = /*#__PURE__*/_mergeNamespaces$1({
     __proto__: null,
     bind: bind_1,
-    default: componentEvent,
-    unbind: unbind_1
+    unbind: unbind_1,
+    'default': componentEvent
   }, [componentEvent]);
+
+  /**
+   * Expose `parse`.
+   */
+
+  var domify$2 = parse$2;
+
+  /**
+   * Tests for browser support.
+   */
+
+  var innerHTMLBug$1 = false;
+  var bugTestDiv$2;
+  if (typeof document !== 'undefined') {
+    bugTestDiv$2 = document.createElement('div');
+    // Setup
+    bugTestDiv$2.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    // Make sure that link elements get serialized correctly by innerHTML
+    // This requires a wrapper element in IE
+    innerHTMLBug$1 = !bugTestDiv$2.getElementsByTagName('link').length;
+    bugTestDiv$2 = undefined;
+  }
+
+  /**
+   * Wrap map from jquery.
+   */
+
+  var map$1 = {
+    legend: [1, '<fieldset>', '</fieldset>'],
+    tr: [2, '<table><tbody>', '</tbody></table>'],
+    col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
+    // for script/link/style tags to work in IE6-8, you have to wrap
+    // in a div with a non-whitespace character in front, ha!
+    _default: innerHTMLBug$1 ? [1, 'X<div>', '</div>'] : [0, '', '']
+  };
+  map$1.td = map$1.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
+  map$1.option = map$1.optgroup = [1, '<select multiple="multiple">', '</select>'];
+  map$1.thead = map$1.tbody = map$1.colgroup = map$1.caption = map$1.tfoot = [1, '<table>', '</table>'];
+  map$1.polyline = map$1.ellipse = map$1.polygon = map$1.circle = map$1.text = map$1.line = map$1.path = map$1.rect = map$1.g = [1, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">', '</svg>'];
+
+  /**
+   * Parse `html` and return a DOM Node instance, which could be a TextNode,
+   * HTML DOM Node of some kind (<div> for example), or a DocumentFragment
+   * instance, depending on the contents of the `html` string.
+   *
+   * @param {String} html - HTML string to "domify"
+   * @param {Document} doc - The `document` instance to create the Node for
+   * @return {DOMNode} the TextNode, DOM Node, or DocumentFragment instance
+   * @api private
+   */
+
+  function parse$2(html, doc) {
+    if ('string' != typeof html) throw new TypeError('String expected');
+
+    // default to the global `document` object
+    if (!doc) doc = document;
+
+    // tag name
+    var m = /<([\w:]+)/.exec(html);
+    if (!m) return doc.createTextNode(html);
+    html = html.replace(/^\s+|\s+$/g, ''); // Remove leading/trailing whitespace
+
+    var tag = m[1];
+
+    // body support
+    if (tag == 'body') {
+      var el = doc.createElement('html');
+      el.innerHTML = html;
+      return el.removeChild(el.lastChild);
+    }
+
+    // wrap map
+    var wrap = Object.prototype.hasOwnProperty.call(map$1, tag) ? map$1[tag] : map$1._default;
+    var depth = wrap[0];
+    var prefix = wrap[1];
+    var suffix = wrap[2];
+    var el = doc.createElement('div');
+    el.innerHTML = prefix + html + suffix;
+    while (depth--) el = el.lastChild;
+
+    // one element
+    if (el.firstChild == el.lastChild) {
+      return el.removeChild(el.firstChild);
+    }
+
+    // several elements
+    var fragment = doc.createDocumentFragment();
+    while (el.firstChild) {
+      fragment.appendChild(el.removeChild(el.firstChild));
+    }
+    return fragment;
+  }
+  var domify$1$1 = domify$2;
   function query(selector, el) {
     el = el || document;
     return el.querySelector(selector);
@@ -60808,15 +60795,15 @@
    */
 
   var innerHTMLBug = false;
-  var bugTestDiv;
+  var bugTestDiv$1;
   if (typeof document !== 'undefined') {
-    bugTestDiv = document.createElement('div');
+    bugTestDiv$1 = document.createElement('div');
     // Setup
-    bugTestDiv.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    bugTestDiv$1.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
     // Make sure that link elements get serialized correctly by innerHTML
     // This requires a wrapper element in IE
-    innerHTMLBug = !bugTestDiv.getElementsByTagName('link').length;
-    bugTestDiv = undefined;
+    innerHTMLBug = !bugTestDiv$1.getElementsByTagName('link').length;
+    bugTestDiv$1 = undefined;
   }
 
   /**
@@ -64182,8 +64169,6 @@
    * var sum = eventBus.fire('sum', 1, 2);
    * console.log(sum); // 3
    * ```
-   *
-   * @template [EventMap=null]
    */
   function EventBus() {
     /**
@@ -64197,8 +64182,6 @@
   }
 
   /**
-   * @overlord
-   *
    * Register an event listener for events with the given name.
    *
    * The callback will be invoked with `event, ...additionalArguments`
@@ -64215,25 +64198,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener for events with the given name.
-   *
-   * The callback will be invoked with `event, ...additionalArguments`
-   * that have been passed to {@link EventBus#fire}.
-   *
-   * Returning false from a listener will prevent the events default action
-   * (if any is specified). To stop an event from being processed further in
-   * other listeners execute {@link Event#stopPropagation}.
-   *
-   * Returning anything but `undefined` from a listener will stop the listener propagation.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.on = function (events, priority, callback, that) {
@@ -64266,8 +64230,6 @@
   };
 
   /**
-   * @overlord
-   *
    * Register an event listener that is called only once.
    *
    * @template T
@@ -64275,16 +64237,6 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] the listen priority
    * @param {EventBusEventCallback<T>} callback
-   * @param {any} [that] callback context
-   */
-  /**
-   * Register an event listener that is called only once.
-   *
-   * @template {keyof EventMap} EventName
-   *
-   * @param {EventName} events to subscribe to
-   * @param {number} [priority=1000] listen priority
-   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.once = function (events, priority, callback, that) {
@@ -65248,9 +65200,9 @@
     } = field;
     const Icon = iconsByType('expression');
     const expressionLanguage = useService$1('expressionLanguage');
-    let placeholderContent = 'Expression is empty';
+    let placeholderContent = 'Prázdný výraz';
     if (expression.trim() && expressionLanguage.isExpression(expression)) {
-      placeholderContent = 'Expression';
+      placeholderContent = 'Výraz';
     }
     return e("div", {
       class: editorFormFieldClasses(type),
@@ -66397,7 +66349,7 @@
       return null;
     }
     return e("div", {
-      style: "width: fit-content;\r padding: 2px 6px;\r height: 16px;\r background: var(--color-blue-205-100-95);\r display: flex;\r justify-content: center;\r align-items: center;\r position: absolute;\r bottom: -2px;\r z-index: 2;\r font-size: 10px;\r right: 3px;",
+      style: "width: fit-content; padding: 2px 6px; height: 16px; background: var(--color-blue-205-100-95); display: flex; justify-content: center; align-items: center; position: absolute; bottom: -2px; z-index: 2; font-size: 10px; right: 3px;",
       class: "fjs-debug-columns",
       children: (field.layout || {}).columns || 'auto'
     });
@@ -66703,9 +66655,9 @@
   function getRemoveButtonTitle(formField, formFields) {
     const entry = findPaletteEntry(formField.type, formFields);
     if (!entry) {
-      return 'Remove form field';
+      return 'Odstranit komponent';
     }
-    return `Remove ${entry.label}`;
+    return `Odstranit ${entry.label}`;
   }
   class Renderer {
     constructor(renderConfig, eventBus, formEditor, injector) {
@@ -66969,9 +66921,9 @@
   };
 
   /**
-   * Returns the identifiers of all currently registered editor actions
+   * Returns the number of actions that are currently registered
    *
-   * @return {string[]}
+   * @return {number}
    */
   EditorActions.prototype.getActions = function () {
     return Object.keys(this._actions);
@@ -67219,7 +67171,7 @@
     if (event.defaultPrevented) {
       return true;
     }
-    return (isInput(event.target) || isButton(event.target) && isKey([' ', 'Enter'], event)) && this._isModifiedKeyIgnored(event);
+    return isInput(event.target) && this._isModifiedKeyIgnored(event);
   };
   Keyboard.prototype._isModifiedKeyIgnored = function (event) {
     if (!isCmd(event)) {
@@ -67315,9 +67267,6 @@
 
   function isInput(target) {
     return target && (matches$1(target, 'input, textarea') || target.contentEditable === 'true');
-  }
-  function isButton(target) {
-    return target && matches$1(target, 'button, input[type=submit], input[type=button], a[href], [aria-role=button]');
   }
   var LOW_PRIORITY$1 = 500;
 
@@ -70388,7 +70337,7 @@
     event.stopPropagation();
   }
   function emptyCanvas() {
-    return domify$3('<canvas width="0" height="0" />');
+    return domify$1$1('<canvas width="0" height="0" />');
   }
   const noop$3 = () => {};
 
@@ -73241,7 +73190,7 @@
       } = propertiesPanelConfig || {};
       this._eventBus = eventBus;
       this._injector = injector;
-      this._container = domify$3('<div class="fjs-properties-container" input-handle-modified-keys="y,z"></div>');
+      this._container = domify$1$1('<div class="fjs-properties-container" input-handle-modified-keys="y,z"></div>');
       if (parent) {
         this.attachTo(parent);
       }
@@ -79243,6 +79192,16 @@
   ClassList.prototype.has = ClassList.prototype.contains = function (name) {
     return this.list.contains(name);
   };
+  var bugTestDiv;
+  if (typeof document !== 'undefined') {
+    bugTestDiv = document.createElement('div');
+    // Setup
+    bugTestDiv.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    // Make sure that link elements get serialized correctly by innerHTML
+    // This requires a wrapper element in IE
+    !bugTestDiv.getElementsByTagName('link').length;
+    bugTestDiv = undefined;
+  }
 
   const NO_LINT_CLS = 'fjs-cm-no-lint';
 
