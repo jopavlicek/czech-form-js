@@ -8,7 +8,7 @@ import { createContext, createElement, Fragment as Fragment$1, render } from 'pr
 import isEqual from 'lodash/isEqual';
 import flatpickr from 'flatpickr';
 import * as React from 'preact/compat';
-import { useEffect as useEffect$1, createPortal } from 'preact/compat';
+import { createPortal } from 'preact/compat';
 import DOMPurify from 'dompurify';
 import { Injector } from 'didi';
 import { parseExpression, parseUnaryTests, evaluate, unaryTest } from 'feelin';
@@ -1300,17 +1300,6 @@ function useFlushDebounce(func) {
   return [debounceFunc, flushFunc];
 }
 
-function useEffectOnChange(value, callback, dependencies = []) {
-  const previousValue = usePrevious(value);
-  useEffect$1(() => {
-    if (value !== previousValue) {
-      callback();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, ...dependencies]);
-}
-
 /**
  * Template a string reactively based on form data. If the string is not a template, it is returned as is.
  * Memoised to minimize re-renders
@@ -1500,6 +1489,18 @@ function formatTimezoneOffset(minutes) {
 }
 function isInvalidDateString(value) {
   return isNaN(new Date(Date.parse(value)).getTime());
+}
+function getNullDateTime() {
+  return {
+    date: new Date(Date.parse(null)),
+    time: null
+  };
+}
+function isValidDate(date) {
+  return date && !isNaN(date.getTime());
+}
+function isValidTime(time) {
+  return !isNaN(parseInt(time));
 }
 function _getSignedPaddedHours(minutes) {
   if (minutes > 0) {
@@ -1991,7 +1992,8 @@ function FormField(props) {
     };
   }, [eventBus, viewerCommands]);
   useEffect(() => {
-    if (initialValidationTrigger && initialValue) {
+    const hasInitialValue = initialValue && !isEqual(initialValue, []);
+    if (initialValidationTrigger && hasInitialValue) {
       setInitialValidationTrigger(false);
       viewerCommands.updateFieldValidation(field, initialValue, indexes);
     }
@@ -2482,7 +2484,7 @@ function Datepicker(props) {
   });
 }
 
-var _path$v, _path2$5;
+var _path$v, _path2$4;
 function _extends$w() { _extends$w = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$w.apply(this, arguments); }
 var SvgClock = function SvgClock(props) {
   return /*#__PURE__*/React.createElement("svg", _extends$w({
@@ -2494,7 +2496,7 @@ var SvgClock = function SvgClock(props) {
   }, props), _path$v || (_path$v = /*#__PURE__*/React.createElement("path", {
     fill: "currentColor",
     d: "M13 14.41 18.59 20 20 18.59l-5-5.01V5h-2v9.41Z"
-  })), _path2$5 || (_path2$5 = /*#__PURE__*/React.createElement("path", {
+  })), _path2$4 || (_path2$4 = /*#__PURE__*/React.createElement("path", {
     fill: "currentColor",
     fillRule: "evenodd",
     d: "M6.222 25.64A14 14 0 1 0 21.778 2.36 14 14 0 0 0 6.222 25.64ZM7.333 4.023a12 12 0 1 1 13.334 19.955A12 12 0 0 1 7.333 4.022Z",
@@ -2795,14 +2797,8 @@ function Datetime(props) {
     formId
   } = useContext(FormContext);
   const dateTimeGroupRef = useRef();
-  const getNullDateTime = () => ({
-    date: new Date(Date.parse(null)),
-    time: null
-  });
   const [dateTime, setDateTime] = useState(getNullDateTime());
   const [dateTimeUpdateRequest, setDateTimeUpdateRequest] = useState(null);
-  const isValidDate = date => date && !isNaN(date.getTime());
-  const isValidTime = time => !isNaN(parseInt(time));
   const useDatePicker = useMemo(() => subtype === DATETIME_SUBTYPES.DATE || subtype === DATETIME_SUBTYPES.DATETIME, [subtype]);
   const useTimePicker = useMemo(() => subtype === DATETIME_SUBTYPES.TIME || subtype === DATETIME_SUBTYPES.DATETIME, [subtype]);
   const onDateTimeBlur = useCallback(e => {
@@ -2857,11 +2853,14 @@ function Datetime(props) {
     } else if (subtype === DATETIME_SUBTYPES.DATETIME && isValidDate(date) && isValidTime(time)) {
       newDateTimeValue = serializeDateTime(date, time, timeSerializingFormat);
     }
+    if (value === newDateTimeValue) {
+      return;
+    }
     onChange({
       value: newDateTimeValue,
       field
     });
-  }, [field, onChange, subtype, timeSerializingFormat]);
+  }, [value, field, onChange, subtype, timeSerializingFormat]);
   useEffect(() => {
     if (dateTimeUpdateRequest) {
       if (dateTimeUpdateRequest.refreshOnly) {
@@ -3143,7 +3142,7 @@ var SvgChecklist = function SvgChecklist(props) {
 };
 var ChecklistIcon = SvgChecklist;
 
-var _path$r, _path2$4, _path3;
+var _path$r, _path2$3, _path3;
 function _extends$s() { _extends$s = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$s.apply(this, arguments); }
 var SvgDatetime = function SvgDatetime(props) {
   return /*#__PURE__*/React.createElement("svg", _extends$s({
@@ -3154,7 +3153,7 @@ var SvgDatetime = function SvgDatetime(props) {
   }, props), _path$r || (_path$r = /*#__PURE__*/React.createElement("path", {
     fillRule: "evenodd",
     d: "M37.908 13.418h-5.004v-2.354h-1.766v2.354H21.13v-2.354h-1.766v2.354H14.36a2.07 2.07 0 0 0-2.06 2.06v23.549a2.07 2.07 0 0 0 2.06 2.06h6.77v-1.766h-6.358a.707.707 0 0 1-.706-.706V15.89c0-.39.316-.707.706-.707h4.592v2.355h1.766v-2.355h10.008v2.355h1.766v-2.355h4.592a.71.71 0 0 1 .707.707v6.358h1.765v-6.77c0-1.133-.927-2.06-2.06-2.06z"
-  })), _path2$4 || (_path2$4 = /*#__PURE__*/React.createElement("path", {
+  })), _path2$3 || (_path2$3 = /*#__PURE__*/React.createElement("path", {
     d: "m35.13 37.603 1.237-1.237-3.468-3.475v-5.926h-1.754v6.654l3.984 3.984Z"
   })), _path3 || (_path3 = /*#__PURE__*/React.createElement("path", {
     fillRule: "evenodd",
@@ -3163,7 +3162,7 @@ var SvgDatetime = function SvgDatetime(props) {
 };
 var DatetimeIcon = SvgDatetime;
 
-var _path$q, _path2$3;
+var _path$q, _path2$2;
 function _extends$r() { _extends$r = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$r.apply(this, arguments); }
 var SvgTaglist = function SvgTaglist(props) {
   return /*#__PURE__*/React.createElement("svg", _extends$r({
@@ -3174,7 +3173,7 @@ var SvgTaglist = function SvgTaglist(props) {
   }, props), _path$q || (_path$q = /*#__PURE__*/React.createElement("path", {
     fillRule: "evenodd",
     d: "M45 16a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V19a3 3 0 0 1 3-3h36Zm0 2H9a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h36a1 1 0 0 0 1-1V19a1 1 0 0 0-1-1Z"
-  })), _path2$3 || (_path2$3 = /*#__PURE__*/React.createElement("path", {
+  })), _path2$2 || (_path2$2 = /*#__PURE__*/React.createElement("path", {
     d: "M11 22a1 1 0 0 1 1-1h19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H12a1 1 0 0 1-1-1V22Z"
   })));
 };
@@ -3216,10 +3215,12 @@ var SvgGroup = function SvgGroup(props) {
     xmlns: "http://www.w3.org/2000/svg",
     width: 54,
     height: 54,
-    fill: "currentcolor"
+    fill: "none"
   }, props), _path$p || (_path$p = /*#__PURE__*/React.createElement("path", {
+    fill: "#000",
     fillRule: "evenodd",
-    d: "M8 33v5a1 1 0 0 0 1 1h4v2H9a3 3 0 0 1-3-3v-5h2Zm18 6v2H15v-2h11Zm13 0v2H28v-2h11Zm9-6v5a3 3 0 0 1-3 3h-4v-2h4a1 1 0 0 0 .993-.883L46 38v-5h2ZM8 22v9H6v-9h2Zm40 0v9h-2v-9h2Zm-35-9v2H9a1 1 0 0 0-.993.883L8 16v4H6v-4a3 3 0 0 1 3-3h4Zm32 0a3 3 0 0 1 3 3v4h-2v-4a1 1 0 0 0-.883-.993L45 15h-4v-2h4Zm-6 0v2H28v-2h11Zm-13 0v2H15v-2h11Z"
+    d: "M4.05 42.132v1.164c0 .693.604 1.254 1.35 1.254h1.35v-2.507h-2.7v.09Zm0-2.328h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7V32.82h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656v.09h2.7V9.45H5.4c-.746 0-1.35.561-1.35 1.254v1.164Zm5.4-2.418v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7v-1.253c0-.693-.604-1.254-1.35-1.254h-1.35Zm2.7 4.746h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7V32.82Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656v-.09h-2.7v2.508h1.35c.746 0 1.35-.561 1.35-1.254v-1.164Zm-5.4 2.418v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Z",
+    clipRule: "evenodd"
   })));
 };
 var GroupIcon = SvgGroup;
@@ -3309,7 +3310,7 @@ var SvgDynamicList = function SvgDynamicList(props) {
   }, props), _path$j || (_path$j = /*#__PURE__*/React.createElement("path", {
     fill: "currentColor",
     fillRule: "evenodd",
-    d: "M2.7 43.296v1.254c0 .746.604 1.35 1.35 1.35h1.275v-1.795c.049.14.075.29.075.445v-1.254h-.075V43.2H4.05c.177 0 .347.034.502.096H2.7Zm2.7-2.507v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.015V23.24H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014V13.21H2.7v2.507h2.7Zm-2.7-5.014h1.852a1.346 1.346 0 0 1-.502.096h1.275v-.096H5.4V9.45c0 .156-.026.306-.075.445V8.1H4.05A1.35 1.35 0 0 0 2.7 9.45v1.254Zm5.175.096h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1-2.7v1.795a1.348 1.348 0 0 1-.075-.445v1.254h.075v.096h1.275c-.177 0-.347-.034-.502-.096H51.3V9.45a1.35 1.35 0 0 0-1.35-1.35h-1.275Zm-.075 5.11v2.508h2.7V13.21h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7V23.24h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm2.7 5.014h-1.852c.155-.062.325-.096.502-.096h-1.275v.096H48.6v1.254c0-.156.026-.305.075-.445V45.9h1.275a1.35 1.35 0 0 0 1.35-1.35v-1.254Zm-5.175-.096h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7ZM16.2 17.55a4.05 4.05 0 0 1 4.05 4.05v1.35A4.05 4.05 0 0 1 16.2 27h-1.35a4.05 4.05 0 0 1-4.05-4.05V21.6a4.05 4.05 0 0 1 4.05-4.05h1.35Zm0 2.7h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35c0 .746.604 1.35 1.35 1.35h1.35a1.35 1.35 0 0 0 1.35-1.35V21.6a1.35 1.35 0 0 0-1.35-1.35Zm27 1.35a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35A4.05 4.05 0 0 0 29.7 27h9.45a4.05 4.05 0 0 0 4.05-4.05V21.6Zm-13.5-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35a1.35 1.35 0 0 1-1.35 1.35H29.7a1.35 1.35 0 0 1-1.35-1.35V21.6c0-.746.604-1.35 1.35-1.35ZM43.2 37.8a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35h2.7V37.8c0-.746.604-1.35 1.35-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35h2.7V37.8Zm-27-4.05a4.05 4.05 0 0 1 4.05 4.05v1.35h-2.7V37.8a1.35 1.35 0 0 0-1.35-1.35h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35h-2.7V37.8a4.05 4.05 0 0 1 4.05-4.05h1.35Z",
+    d: "M2.7 43.296v1.254c0 .746.604 1.35 1.35 1.35h1.275v-1.795c.049.14.075.29.075.445v-1.254h-.075V43.2H4.05c.177 0 .347.034.502.096H2.7Zm2.7-2.507v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.015V23.24H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014V13.21H2.7v2.507h2.7Zm-2.7-5.014h1.852a1.346 1.346 0 0 1-.502.096h1.275v-.096H5.4V9.45c0 .156-.026.306-.075.445V8.1H4.05A1.35 1.35 0 0 0 2.7 9.45v1.254Zm5.175.096h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1-2.7v1.795a1.348 1.348 0 0 1-.075-.445v1.254h.075v.096h1.275a1.35 1.35 0 0 1-.502-.096H51.3V9.45a1.35 1.35 0 0 0-1.35-1.35h-1.275Zm-.075 5.11v2.508h2.7V13.21h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7V23.24h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm2.7 5.014h-1.852a1.35 1.35 0 0 1 .502-.096h-1.275v.096H48.6v1.254c0-.156.026-.305.075-.445V45.9h1.275a1.35 1.35 0 0 0 1.35-1.35v-1.254Zm-5.175-.096h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7ZM16.2 17.55a4.05 4.05 0 0 1 4.05 4.05v1.35A4.05 4.05 0 0 1 16.2 27h-1.35a4.05 4.05 0 0 1-4.05-4.05V21.6a4.05 4.05 0 0 1 4.05-4.05h1.35Zm0 2.7h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35c0 .746.604 1.35 1.35 1.35h1.35a1.35 1.35 0 0 0 1.35-1.35V21.6a1.35 1.35 0 0 0-1.35-1.35Zm27 1.35a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35A4.05 4.05 0 0 0 29.7 27h9.45a4.05 4.05 0 0 0 4.05-4.05V21.6Zm-13.5-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35a1.35 1.35 0 0 1-1.35 1.35H29.7a1.35 1.35 0 0 1-1.35-1.35V21.6c0-.746.604-1.35 1.35-1.35ZM43.2 37.8a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35h2.7V37.8c0-.746.604-1.35 1.35-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35h2.7V37.8Zm-27-4.05a4.05 4.05 0 0 1 4.05 4.05v1.35h-2.7V37.8a1.35 1.35 0 0 0-1.35-1.35h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35h-2.7V37.8a4.05 4.05 0 0 1 4.05-4.05h1.35Z",
     clipRule: "evenodd"
   })));
 };
@@ -3393,7 +3394,7 @@ var SvgTextarea = function SvgTextarea(props) {
 };
 var TextareaIcon = SvgTextarea;
 
-var _path$d, _path2$2;
+var _path$d;
 function _extends$d() { _extends$d = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$d.apply(this, arguments); }
 var SvgIFrame = function SvgIFrame(props) {
   return /*#__PURE__*/React.createElement("svg", _extends$d({
@@ -3402,12 +3403,9 @@ var SvgIFrame = function SvgIFrame(props) {
     height: 54,
     fill: "none"
   }, props), _path$d || (_path$d = /*#__PURE__*/React.createElement("path", {
-    fill: "currentcolor",
-    d: "M34.467 37.3 41 31l-6.533-6.3-1.32 1.273L38.36 31l-5.213 5.027 1.32 1.273ZM19.533 24.7 13 31l6.533 6.3 1.32-1.273L15.64 31l5.214-5.027-1.32-1.273Zm4.127 14.832 1.805.468 4.875-17.532L28.535 22 23.66 39.532Z"
-  })), _path2$2 || (_path2$2 = /*#__PURE__*/React.createElement("path", {
-    fill: "currentcolor",
+    fill: "currentColor",
     fillRule: "evenodd",
-    d: "M46 9a3 3 0 0 1 3 3v30a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V12a3 3 0 0 1 3-3h38Zm0 2H8a1 1 0 0 0-1 1v4h40v-4a1 1 0 0 0-1-1ZM7 42V18h40v24a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1Z",
+    d: "M45.658 9.45c1.625 0 2.942 1.36 2.942 3.039V22.95h-1.961v-4.383H7.36V41.51c0 .56.44 1.013.98 1.013H27v2.026H8.342c-1.625 0-2.942-1.36-2.942-3.039V12.489c0-1.678 1.317-3.039 2.942-3.039h37.316Zm0 2.026H8.342c-.542 0-.98.454-.98 1.013v4.052h39.277v-4.052c0-.56-.44-1.013-.98-1.013ZM31.05 35.775A8.768 8.768 0 0 1 39.825 27a8.768 8.768 0 0 1 8.775 8.775 8.768 8.768 0 0 1-8.775 8.775 8.768 8.768 0 0 1-8.775-8.775Zm12.388-.516h3.097c-.206-2.581-1.858-4.646-4.026-5.678.62 1.548.93 3.613.93 5.678Zm-5.162 2.065c.207 3.303 1.136 4.955 1.549 5.161.413-.206 1.239-1.858 1.445-5.161h-2.994Zm1.446-8.26c-.31.207-1.342 2.272-1.446 6.195h2.994c-.103-3.923-1.135-5.988-1.548-6.194Zm-3.51 6.195c.103-2.065.31-4.13.929-5.678-2.168 1.032-3.82 3.097-4.026 5.678h3.097Zm0 2.065h-2.89c.515 2.064 1.96 3.82 3.819 4.645-.516-1.342-.826-2.994-.93-4.645Zm7.226 0c-.103 1.755-.413 3.303-.929 4.645 1.858-.826 3.304-2.58 3.923-4.645h-2.994Z",
     clipRule: "evenodd"
   })));
 };
@@ -4940,7 +4938,8 @@ const type$3 = 'expression';
 function ExpressionField(props) {
   const {
     field,
-    onChange
+    onChange,
+    value
   } = props;
   const {
     computeOn,
@@ -4955,12 +4954,12 @@ function ExpressionField(props) {
       value: evaluationMemo
     });
   }, [field, evaluationMemo, onChange]);
-  useEffectOnChange(evaluationMemo, () => {
-    if (computeOn !== 'change') {
+  useEffect(() => {
+    if (computeOn !== 'change' || evaluationMemo === value) {
       return;
     }
     sendValue();
-  }, [computeOn, sendValue]);
+  }, [computeOn, evaluationMemo, sendValue, value]);
   useEffect(() => {
     if (computeOn === 'presubmit') {
       eventBus.on('presubmit', sendValue);
@@ -4974,6 +4973,7 @@ ExpressionField.config = {
   label: 'Výraz',
   group: 'basic-input',
   keyed: true,
+  emptyValue: null,
   escapeGridRender: true,
   create: (options = {}) => ({
     computeOn: 'change',
@@ -5714,7 +5714,12 @@ function FormComponent(props) {
   });
 }
 
-const formFields = [Button, Checkbox, Checklist, Default, DynamicList, Numberfield, Datetime, Radio, Select, Taglist, Textfield, Textarea, ExpressionField, Text, Image, Table, Html, Spacer, Separator, Group, DynamicList, IFrame];
+const formFields = [/* Input */
+Textfield, Textarea, Numberfield, Datetime, ExpressionField, /* Selection */
+Checkbox, Checklist, Radio, Select, Taglist, /* Presentation */
+Text, Image, Table, Html, Spacer, Separator, /* Containers */
+Group, DynamicList, IFrame, /* Other */
+Button, Default];
 
 class FormFields {
   constructor() {
@@ -7002,6 +7007,8 @@ var slice = Array.prototype.slice;
  * var sum = eventBus.fire('sum', 1, 2);
  * console.log(sum); // 3
  * ```
+ *
+ * @template [EventMap=null]
  */
 function EventBus() {
   /**
@@ -7015,6 +7022,8 @@ function EventBus() {
 }
 
 /**
+ * @overlord
+ *
  * Register an event listener for events with the given name.
  *
  * The callback will be invoked with `event, ...additionalArguments`
@@ -7031,6 +7040,25 @@ function EventBus() {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] listen priority
  * @param {EventBusEventCallback<T>} callback
+ * @param {any} [that] callback context
+ */
+/**
+ * Register an event listener for events with the given name.
+ *
+ * The callback will be invoked with `event, ...additionalArguments`
+ * that have been passed to {@link EventBus#fire}.
+ *
+ * Returning false from a listener will prevent the events default action
+ * (if any is specified). To stop an event from being processed further in
+ * other listeners execute {@link Event#stopPropagation}.
+ *
+ * Returning anything but `undefined` from a listener will stop the listener propagation.
+ *
+ * @template {keyof EventMap} EventName
+ *
+ * @param {EventName} events to subscribe to
+ * @param {number} [priority=1000] listen priority
+ * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.on = function (events, priority, callback, that) {
@@ -7063,6 +7091,8 @@ EventBus.prototype.on = function (events, priority, callback, that) {
 };
 
 /**
+ * @overlord
+ *
  * Register an event listener that is called only once.
  *
  * @template T
@@ -7070,6 +7100,16 @@ EventBus.prototype.on = function (events, priority, callback, that) {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] the listen priority
  * @param {EventBusEventCallback<T>} callback
+ * @param {any} [that] callback context
+ */
+/**
+ * Register an event listener that is called only once.
+ *
+ * @template {keyof EventMap} EventName
+ *
+ * @param {EventName} events to subscribe to
+ * @param {number} [priority=1000] listen priority
+ * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.once = function (events, priority, callback, that) {

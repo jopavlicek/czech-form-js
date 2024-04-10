@@ -9,4 +9,10 @@ export function isDateInputInformationMatching(value: any): boolean;
 export function serializeDateTime(date: any, time: any, timeSerializingFormat: any): string;
 export function formatTimezoneOffset(minutes: any): string;
 export function isInvalidDateString(value: any): boolean;
+export function getNullDateTime(): {
+    date: Date;
+    time: any;
+};
+export function isValidDate(date: any): boolean;
+export function isValidTime(time: any): boolean;
 export const ENTER_KEYDOWN_EVENT: KeyboardEvent;

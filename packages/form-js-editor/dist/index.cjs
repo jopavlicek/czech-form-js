@@ -147,6 +147,8 @@ var slice = Array.prototype.slice;
  * var sum = eventBus.fire('sum', 1, 2);
  * console.log(sum); // 3
  * ```
+ *
+ * @template [EventMap=null]
  */
 function EventBus() {
   /**
@@ -160,6 +162,8 @@ function EventBus() {
 }
 
 /**
+ * @overlord
+ *
  * Register an event listener for events with the given name.
  *
  * The callback will be invoked with `event, ...additionalArguments`
@@ -176,6 +180,25 @@ function EventBus() {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] listen priority
  * @param {EventBusEventCallback<T>} callback
+ * @param {any} [that] callback context
+ */
+/**
+ * Register an event listener for events with the given name.
+ *
+ * The callback will be invoked with `event, ...additionalArguments`
+ * that have been passed to {@link EventBus#fire}.
+ *
+ * Returning false from a listener will prevent the events default action
+ * (if any is specified). To stop an event from being processed further in
+ * other listeners execute {@link Event#stopPropagation}.
+ *
+ * Returning anything but `undefined` from a listener will stop the listener propagation.
+ *
+ * @template {keyof EventMap} EventName
+ *
+ * @param {EventName} events to subscribe to
+ * @param {number} [priority=1000] listen priority
+ * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.on = function (events, priority, callback, that) {
@@ -208,6 +231,8 @@ EventBus.prototype.on = function (events, priority, callback, that) {
 };
 
 /**
+ * @overlord
+ *
  * Register an event listener that is called only once.
  *
  * @template T
@@ -215,6 +240,16 @@ EventBus.prototype.on = function (events, priority, callback, that) {
  * @param {string|string[]} events to subscribe to
  * @param {number} [priority=1000] the listen priority
  * @param {EventBusEventCallback<T>} callback
+ * @param {any} [that] callback context
+ */
+/**
+ * Register an event listener that is called only once.
+ *
+ * @template {keyof EventMap} EventName
+ *
+ * @param {EventName} events to subscribe to
+ * @param {number} [priority=1000] listen priority
+ * @param {EventBusEventCallback<EventMap[EventName]>} callback
  * @param {any} [that] callback context
  */
 EventBus.prototype.once = function (events, priority, callback, that) {
@@ -1045,7 +1080,7 @@ function EditorHtml(props) {
         class: "fjs-form-field-placeholder",
         children: [jsxRuntime.jsx(Icon, {
           viewBox: "0 0 54 54"
-        }), "Html is empty"]
+        }), "HTML obsah je pr\xE1zdn\xFD"]
       })
     });
   }
@@ -1056,7 +1091,7 @@ function EditorHtml(props) {
         class: "fjs-form-field-placeholder",
         children: [jsxRuntime.jsx(Icon, {
           viewBox: "0 0 54 54"
-        }), "Html is populated by an expression"]
+        }), "HTML obsah je zapln\u011Bn v\xFDrazem"]
       })
     });
   }
@@ -1067,7 +1102,7 @@ function EditorHtml(props) {
         class: "fjs-form-field-placeholder",
         children: [jsxRuntime.jsx(Icon, {
           viewBox: "0 0 54 54"
-        }), "Html is templated"]
+        }), "HTML obsah je \u0161ablonov\xE1n"]
       })
     });
   }
@@ -1148,13 +1183,14 @@ function EditorExpressionField(props) {
     field
   } = props;
   const {
-    expression = ''
+    expression = '',
+    key
   } = field;
   const Icon = formJsViewer.iconsByType('expression');
   const expressionLanguage = useService$1('expressionLanguage');
   let placeholderContent = 'Prázdný výraz';
   if (expression.trim() && expressionLanguage.isExpression(expression)) {
-    placeholderContent = 'Výraz';
+    placeholderContent = `Výraz pro '${key}'`;
   }
   return jsxRuntime.jsx("div", {
     class: editorFormFieldClasses(type),
@@ -2891,9 +2927,9 @@ EditorActions.prototype.unregister = function (action) {
 };
 
 /**
- * Returns the number of actions that are currently registered
+ * Returns the identifiers of all currently registered editor actions
  *
- * @return {number}
+ * @return {string[]}
  */
 EditorActions.prototype.getActions = function () {
   return Object.keys(this._actions);
@@ -3146,7 +3182,7 @@ Keyboard.prototype._isEventIgnored = function (event) {
   if (event.defaultPrevented) {
     return true;
   }
-  return isInput(event.target) && this._isModifiedKeyIgnored(event);
+  return (isInput(event.target) || isButton(event.target) && isKey([' ', 'Enter'], event)) && this._isModifiedKeyIgnored(event);
 };
 Keyboard.prototype._isModifiedKeyIgnored = function (event) {
   if (!isCmd(event)) {
@@ -3242,6 +3278,9 @@ Keyboard.prototype.isKey = isKey;
 
 function isInput(target) {
   return target && (minDom.matches(target, 'input, textarea') || target.contentEditable === 'true');
+}
+function isButton(target) {
+  return target && minDom.matches(target, 'button, input[type=submit], input[type=button], a[href], [aria-role=button]');
 }
 
 var LOW_PRIORITY$1 = 500;
@@ -6133,6 +6172,7 @@ const useBufferedFocus = function (editor, ref) {
 };
 const CodeEditor = React.forwardRef((props, ref) => {
   const {
+    contentAttributes,
     enableGutters,
     value,
     onInput,
@@ -6178,7 +6218,8 @@ const CodeEditor = React.forwardRef((props, ref) => {
       tooltipContainer: tooltipContainer,
       value: localValue,
       variables: variables,
-      extensions: [...(enableGutters ? [view.lineNumbers()] : []), view.EditorView.lineWrapping]
+      extensions: [...(enableGutters ? [view.lineNumbers()] : []), view.EditorView.lineWrapping],
+      contentAttributes
     });
     setEditor(editor);
     return () => {
@@ -7261,9 +7302,12 @@ function FeelTextfieldComponent(props) {
         disabled: feel !== 'optional' || disabled,
         onClick: handleFeelToggle
       }), feelActive ? jsxRuntime.jsx(CodeEditor, {
-        id: prefixId$5(id),
         name: id,
         onInput: handleLocalInput,
+        contentAttributes: {
+          'id': prefixId$5(id),
+          'aria-label': label
+        },
         disabled: disabled,
         popupOpen: popuOpen,
         onFeelToggle: () => {
@@ -10698,8 +10742,8 @@ function Content(props) {
 // helpers //////////
 
 const description = jsxRuntime.jsxs(jsxRuntime.Fragment, {
-  children: ["Podporuje HTML, styly a \u0161ablonov\xE1n\xED. ", jsxRuntime.jsx("a", {
-    href: "https://docs.camunda.io/docs/next/components/modeler/forms/form-element-library/forms-element-library-html/",
+  children: ["Podporuje HTML, styly a \u0161ablony. Styly jsou automaticky omezeny pro HTML komponent. ", jsxRuntime.jsx("a", {
+    href: "https://docs.camunda.io/docs/components/modeler/forms/form-element-library/forms-element-library-html/",
     target: "_blank",
     children: "Dokumentace"
   })]
@@ -13207,7 +13251,7 @@ class PropertiesProvider {
         return groups;
       }
       const getService = (type, strict = true) => this._injector.get(type, strict);
-      groups = [...groups, GeneralGroup(field, editField, getService), ...TableHeaderGroups(field, editField), SecurityAttributesGroup(field, editField), ConditionGroup(field, editField), LayoutGroup(field, editField), AppearanceGroup(field, editField), SerializationGroup(field, editField), ...OptionsGroups(field, editField, getService), ConstraintsGroup(field, editField), ValidationGroup(field, editField), CustomPropertiesGroup(field, editField)].filter(group => group != null);
+      groups = [...groups, GeneralGroup(field, editField, getService), ...OptionsGroups(field, editField, getService), ...TableHeaderGroups(field, editField), SecurityAttributesGroup(field, editField), ConditionGroup(field, editField), LayoutGroup(field, editField), AppearanceGroup(field, editField), SerializationGroup(field, editField), ConstraintsGroup(field, editField), ValidationGroup(field, editField), CustomPropertiesGroup(field, editField)].filter(group => group != null);
       this._filterVisibleEntries(groups, field, getService);
 
       // contract: if a group has no entries or items, it should not be displayed at all

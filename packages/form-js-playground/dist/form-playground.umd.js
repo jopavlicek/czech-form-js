@@ -304,22 +304,22 @@
    * Expose `parse`.
    */
 
-  var domify$3 = parse$5;
+  var domify$4 = parse$4;
 
   /**
    * Tests for browser support.
    */
 
-  var innerHTMLBug$2 = false;
-  var bugTestDiv$3;
+  var innerHTMLBug$1 = false;
+  var bugTestDiv$1;
   if (typeof document !== 'undefined') {
-    bugTestDiv$3 = document.createElement('div');
+    bugTestDiv$1 = document.createElement('div');
     // Setup
-    bugTestDiv$3.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    bugTestDiv$1.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
     // Make sure that link elements get serialized correctly by innerHTML
     // This requires a wrapper element in IE
-    innerHTMLBug$2 = !bugTestDiv$3.getElementsByTagName('link').length;
-    bugTestDiv$3 = undefined;
+    innerHTMLBug$1 = !bugTestDiv$1.getElementsByTagName('link').length;
+    bugTestDiv$1 = undefined;
   }
 
   /**
@@ -332,7 +332,7 @@
     col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
     // for script/link/style tags to work in IE6-8, you have to wrap
     // in a div with a non-whitespace character in front, ha!
-    _default: innerHTMLBug$2 ? [1, 'X<div>', '</div>'] : [0, '', '']
+    _default: innerHTMLBug$1 ? [1, 'X<div>', '</div>'] : [0, '', '']
   };
   map$1$1.td = map$1$1.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
   map$1$1.option = map$1$1.optgroup = [1, '<select multiple="multiple">', '</select>'];
@@ -350,7 +350,7 @@
    * @api private
    */
 
-  function parse$5(html, doc) {
+  function parse$4(html, doc) {
     if ('string' != typeof html) throw new TypeError('String expected');
 
     // default to the global `document` object
@@ -559,7 +559,7 @@
   }
   function createOverlay(label) {
     var markup = OVERLAY_HTML.replace('{label}', label);
-    return domify$3(markup);
+    return domify$4(markup);
   }
   function preventDrop(event) {
     event.preventDefault();
@@ -1306,7 +1306,7 @@
    *
    * @return {Array} transformed collection
    */
-  function map$3(collection, fn) {
+  function map$2(collection, fn) {
     let result = [];
     forEach$1(collection, function (val, key) {
       result.push(fn(val, key));
@@ -1322,7 +1322,7 @@
    * @return {Array}
    */
   function values(collection) {
-    return map$3(collection, val => val);
+    return map$2(collection, val => val);
   }
 
   /**
@@ -1349,7 +1349,7 @@
     extractor = toExtractor$1(extractor);
     let grouped = {};
     forEach$1(collections, c => groupBy$1(c, extractor, grouped));
-    let result = map$3(grouped, function (val, key) {
+    let result = map$2(grouped, function (val, key) {
       return val[0];
     });
     return result;
@@ -1581,7 +1581,7 @@
           // Minus zero?
           n = n === 0 && 1 / n < 0 ? '-0' : String(n);
         }
-        parse$4(x, n);
+        parse$3(x, n);
       }
 
       // Retain a reference to this Big constructor.
@@ -1607,7 +1607,7 @@
    * x {Big} A Big number instance.
    * n {number|string} A numeric value.
    */
-  function parse$4(x, n) {
+  function parse$3(x, n) {
     var e, i, nl;
     if (!NUMERIC$1.test(n)) {
       throw Error(INVALID$4 + 'number');
@@ -8632,16 +8632,18 @@
    * @typedef { import('./index.js').ModuleDeclaration } ModuleDeclaration
    * @typedef { import('./index.js').ModuleDefinition } ModuleDefinition
    * @typedef { import('./index.js').InjectorContext } InjectorContext
+   *
+   * @typedef { import('./index.js').TypedDeclaration<any, any> } TypedDeclaration
    */
 
   /**
    * Create a new injector with the given modules.
    *
    * @param {ModuleDefinition[]} modules
-   * @param {InjectorContext} [parent]
+   * @param {InjectorContext} [_parent]
    */
-  function Injector(modules, parent) {
-    parent = parent || {
+  function Injector(modules, _parent) {
+    const parent = _parent || /** @type InjectorContext */{
       get: function (name, strict) {
         currentlyResolving.push(name);
         if (strict === false) {
@@ -8670,11 +8672,11 @@
      * @return {any}
      */
     function get(name, strict) {
-      if (!providers[name] && name.indexOf('.') !== -1) {
+      if (!providers[name] && name.includes('.')) {
         const parts = name.split('.');
-        let pivot = get(parts.shift());
+        let pivot = get( /** @type { string } */parts.shift());
         while (parts.length) {
-          pivot = pivot[parts.shift()];
+          pivot = pivot[/** @type { string } */parts.shift()];
         }
         return pivot;
       }
@@ -8704,6 +8706,10 @@
           throw error(`Cannot invoke "${fn}". Expected a function!`);
         }
       }
+
+      /**
+       * @type {string[]}
+       */
       const inject = fn.$inject || parseAnnotations(fn);
       const dependencies = inject.map(dep => {
         if (hasOwnProp(locals, dep)) {
@@ -8714,7 +8720,7 @@
       });
       return {
         fn: fn,
-        dependencies: dependencies
+        dependencies
       };
     }
 
@@ -8734,7 +8740,7 @@
       } = fnDef(type);
 
       // instantiate var args constructor
-      const Constructor = Function.prototype.bind.apply(fn, [null].concat(dependencies));
+      const Constructor = Function.prototype.bind.call(fn, null, ...dependencies);
       return new Constructor();
     }
 
@@ -8888,12 +8894,14 @@
         if (key === '__init__' || key === '__depends__') {
           return;
         }
-        if (moduleDefinition[key][2] === 'private') {
-          providers[key] = moduleDefinition[key];
+        const typeDeclaration = /** @type { TypedDeclaration } */
+        moduleDefinition[key];
+        if (typeDeclaration[2] === 'private') {
+          providers[key] = typeDeclaration;
           return;
         }
-        const type = moduleDefinition[key][0];
-        const value = moduleDefinition[key][1];
+        const type = typeDeclaration[0];
+        const value = typeDeclaration[1];
         providers[key] = [factoryMap[type], arrayUnwrap(type, value), type];
       });
       return createInitializer(moduleDefinition, self);
@@ -11372,7 +11380,7 @@
       }, zone || mergedZone, next];
     }, [{}, null, 1]).slice(0, 2);
   }
-  function parse$3(s, ...patterns) {
+  function parse$2(s, ...patterns) {
     if (s == null) {
       return [null, null];
     }
@@ -11543,26 +11551,26 @@
    */
 
   function parseISODate(s) {
-    return parse$3(s, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
+    return parse$2(s, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
   }
   function parseRFC2822Date(s) {
-    return parse$3(preprocessRFC2822(s), [rfc2822, extractRFC2822]);
+    return parse$2(preprocessRFC2822(s), [rfc2822, extractRFC2822]);
   }
   function parseHTTPDate(s) {
-    return parse$3(s, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
+    return parse$2(s, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
   }
   function parseISODuration(s) {
-    return parse$3(s, [isoDuration, extractISODuration]);
+    return parse$2(s, [isoDuration, extractISODuration]);
   }
   const extractISOTimeOnly = combineExtractors(extractISOTime);
   function parseISOTimeOnly(s) {
-    return parse$3(s, [isoTimeOnly, extractISOTimeOnly]);
+    return parse$2(s, [isoTimeOnly, extractISOTimeOnly]);
   }
   const sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
   const sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
   const extractISOTimeOffsetAndIANAZone = combineExtractors(extractISOTime, extractISOOffset, extractIANAZone);
   function parseSQL(s) {
-    return parse$3(s, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
+    return parse$2(s, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
   }
 
   const INVALID$3 = "Invalid Duration";
@@ -51437,16 +51445,6 @@
     }, [func]);
     return [debounceFunc, flushFunc];
   }
-  function useEffectOnChange(value, callback, dependencies = []) {
-    const previousValue = usePrevious$1(value);
-    y(() => {
-      if (value !== previousValue) {
-        callback();
-      }
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [value, ...dependencies]);
-  }
 
   /**
    * Template a string reactively based on form data. If the string is not a template, it is returned as is.
@@ -51636,6 +51634,18 @@
   }
   function isInvalidDateString(value) {
     return isNaN(new Date(Date.parse(value)).getTime());
+  }
+  function getNullDateTime() {
+    return {
+      date: new Date(Date.parse(null)),
+      time: null
+    };
+  }
+  function isValidDate(date) {
+    return date && !isNaN(date.getTime());
+  }
+  function isValidTime(time) {
+    return !isNaN(parseInt(time));
   }
   function _getSignedPaddedHours(minutes) {
     if (minutes > 0) {
@@ -52118,7 +52128,8 @@
       };
     }, [eventBus, viewerCommands]);
     y(() => {
-      if (initialValidationTrigger && initialValue) {
+      const hasInitialValue = initialValue && !isEqual$1(initialValue, []);
+      if (initialValidationTrigger && hasInitialValue) {
         setInitialValidationTrigger(false);
         viewerCommands.updateFieldValidation(field, initialValue, indexes);
       }
@@ -52616,7 +52627,7 @@
       })]
     });
   }
-  var _path$v, _path2$5;
+  var _path$v, _path2$4;
   function _extends$w() {
     _extends$w = Object.assign ? Object.assign.bind() : function (target) {
       for (var i = 1; i < arguments.length; i++) {
@@ -52641,7 +52652,7 @@
     }, props), _path$v || (_path$v = /*#__PURE__*/v$1("path", {
       fill: "currentColor",
       d: "M13 14.41 18.59 20 20 18.59l-5-5.01V5h-2v9.41Z"
-    })), _path2$5 || (_path2$5 = /*#__PURE__*/v$1("path", {
+    })), _path2$4 || (_path2$4 = /*#__PURE__*/v$1("path", {
       fill: "currentColor",
       fillRule: "evenodd",
       d: "M6.222 25.64A14 14 0 1 0 21.778 2.36 14 14 0 0 0 6.222 25.64ZM7.333 4.023a12 12 0 1 1 13.334 19.955A12 12 0 0 1 7.333 4.022Z",
@@ -52940,14 +52951,8 @@
       formId
     } = F$1(FormContext);
     const dateTimeGroupRef = s$1();
-    const getNullDateTime = () => ({
-      date: new Date(Date.parse(null)),
-      time: null
-    });
     const [dateTime, setDateTime] = l$1(getNullDateTime());
     const [dateTimeUpdateRequest, setDateTimeUpdateRequest] = l$1(null);
-    const isValidDate = date => date && !isNaN(date.getTime());
-    const isValidTime = time => !isNaN(parseInt(time));
     const useDatePicker = d(() => subtype === DATETIME_SUBTYPES.DATE || subtype === DATETIME_SUBTYPES.DATETIME, [subtype]);
     const useTimePicker = d(() => subtype === DATETIME_SUBTYPES.TIME || subtype === DATETIME_SUBTYPES.DATETIME, [subtype]);
     const onDateTimeBlur = A$1(e => {
@@ -53002,11 +53007,14 @@
       } else if (subtype === DATETIME_SUBTYPES.DATETIME && isValidDate(date) && isValidTime(time)) {
         newDateTimeValue = serializeDateTime(date, time, timeSerializingFormat);
       }
+      if (value === newDateTimeValue) {
+        return;
+      }
       onChange({
         value: newDateTimeValue,
         field
       });
-    }, [field, onChange, subtype, timeSerializingFormat]);
+    }, [value, field, onChange, subtype, timeSerializingFormat]);
     y(() => {
       if (dateTimeUpdateRequest) {
         if (dateTimeUpdateRequest.refreshOnly) {
@@ -53321,7 +53329,7 @@
     })));
   };
   var ChecklistIcon = SvgChecklist;
-  var _path$r, _path2$4, _path3$1;
+  var _path$r, _path2$3, _path3$1;
   function _extends$s() {
     _extends$s = Object.assign ? Object.assign.bind() : function (target) {
       for (var i = 1; i < arguments.length; i++) {
@@ -53345,7 +53353,7 @@
     }, props), _path$r || (_path$r = /*#__PURE__*/v$1("path", {
       fillRule: "evenodd",
       d: "M37.908 13.418h-5.004v-2.354h-1.766v2.354H21.13v-2.354h-1.766v2.354H14.36a2.07 2.07 0 0 0-2.06 2.06v23.549a2.07 2.07 0 0 0 2.06 2.06h6.77v-1.766h-6.358a.707.707 0 0 1-.706-.706V15.89c0-.39.316-.707.706-.707h4.592v2.355h1.766v-2.355h10.008v2.355h1.766v-2.355h4.592a.71.71 0 0 1 .707.707v6.358h1.765v-6.77c0-1.133-.927-2.06-2.06-2.06z"
-    })), _path2$4 || (_path2$4 = /*#__PURE__*/v$1("path", {
+    })), _path2$3 || (_path2$3 = /*#__PURE__*/v$1("path", {
       d: "m35.13 37.603 1.237-1.237-3.468-3.475v-5.926h-1.754v6.654l3.984 3.984Z"
     })), _path3$1 || (_path3$1 = /*#__PURE__*/v$1("path", {
       fillRule: "evenodd",
@@ -53353,7 +53361,7 @@
     })));
   };
   var DatetimeIcon = SvgDatetime;
-  var _path$q, _path2$3;
+  var _path$q, _path2$2;
   function _extends$r() {
     _extends$r = Object.assign ? Object.assign.bind() : function (target) {
       for (var i = 1; i < arguments.length; i++) {
@@ -53377,7 +53385,7 @@
     }, props), _path$q || (_path$q = /*#__PURE__*/v$1("path", {
       fillRule: "evenodd",
       d: "M45 16a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V19a3 3 0 0 1 3-3h36Zm0 2H9a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h36a1 1 0 0 0 1-1V19a1 1 0 0 0-1-1Z"
-    })), _path2$3 || (_path2$3 = /*#__PURE__*/v$1("path", {
+    })), _path2$2 || (_path2$2 = /*#__PURE__*/v$1("path", {
       d: "M11 22a1 1 0 0 1 1-1h19a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H12a1 1 0 0 1-1-1V22Z"
     })));
   };
@@ -53443,10 +53451,12 @@
       xmlns: "http://www.w3.org/2000/svg",
       width: 54,
       height: 54,
-      fill: "currentcolor"
+      fill: "none"
     }, props), _path$p || (_path$p = /*#__PURE__*/v$1("path", {
+      fill: "#000",
       fillRule: "evenodd",
-      d: "M8 33v5a1 1 0 0 0 1 1h4v2H9a3 3 0 0 1-3-3v-5h2Zm18 6v2H15v-2h11Zm13 0v2H28v-2h11Zm9-6v5a3 3 0 0 1-3 3h-4v-2h4a1 1 0 0 0 .993-.883L46 38v-5h2ZM8 22v9H6v-9h2Zm40 0v9h-2v-9h2Zm-35-9v2H9a1 1 0 0 0-.993.883L8 16v4H6v-4a3 3 0 0 1 3-3h4Zm32 0a3 3 0 0 1 3 3v4h-2v-4a1 1 0 0 0-.883-.993L45 15h-4v-2h4Zm-6 0v2H28v-2h11Zm-13 0v2H15v-2h11Z"
+      d: "M4.05 42.132v1.164c0 .693.604 1.254 1.35 1.254h1.35v-2.507h-2.7v.09Zm0-2.328h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7V32.82h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656h2.7v-2.328h-2.7v2.328Zm0-4.656v.09h2.7V9.45H5.4c-.746 0-1.35.561-1.35 1.254v1.164Zm5.4-2.418v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7V9.45h-2.7Zm5.4 0v2.507h2.7v-1.253c0-.693-.604-1.254-1.35-1.254h-1.35Zm2.7 4.746h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656h-2.7v2.328h2.7V32.82Zm0 4.656h-2.7v2.328h2.7v-2.328Zm0 4.656v-.09h-2.7v2.508h1.35c.746 0 1.35-.561 1.35-1.254v-1.164Zm-5.4 2.418v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Zm-5.4 0v-2.507h-2.7v2.507h2.7Z",
+      clipRule: "evenodd"
     })));
   };
   var GroupIcon = SvgGroup;
@@ -53608,7 +53618,7 @@
     }, props), _path$j || (_path$j = /*#__PURE__*/v$1("path", {
       fill: "currentColor",
       fillRule: "evenodd",
-      d: "M2.7 43.296v1.254c0 .746.604 1.35 1.35 1.35h1.275v-1.795c.049.14.075.29.075.445v-1.254h-.075V43.2H4.05c.177 0 .347.034.502.096H2.7Zm2.7-2.507v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.015V23.24H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014V13.21H2.7v2.507h2.7Zm-2.7-5.014h1.852a1.346 1.346 0 0 1-.502.096h1.275v-.096H5.4V9.45c0 .156-.026.306-.075.445V8.1H4.05A1.35 1.35 0 0 0 2.7 9.45v1.254Zm5.175.096h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1-2.7v1.795a1.348 1.348 0 0 1-.075-.445v1.254h.075v.096h1.275c-.177 0-.347-.034-.502-.096H51.3V9.45a1.35 1.35 0 0 0-1.35-1.35h-1.275Zm-.075 5.11v2.508h2.7V13.21h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7V23.24h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm2.7 5.014h-1.852c.155-.062.325-.096.502-.096h-1.275v.096H48.6v1.254c0-.156.026-.305.075-.445V45.9h1.275a1.35 1.35 0 0 0 1.35-1.35v-1.254Zm-5.175-.096h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7ZM16.2 17.55a4.05 4.05 0 0 1 4.05 4.05v1.35A4.05 4.05 0 0 1 16.2 27h-1.35a4.05 4.05 0 0 1-4.05-4.05V21.6a4.05 4.05 0 0 1 4.05-4.05h1.35Zm0 2.7h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35c0 .746.604 1.35 1.35 1.35h1.35a1.35 1.35 0 0 0 1.35-1.35V21.6a1.35 1.35 0 0 0-1.35-1.35Zm27 1.35a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35A4.05 4.05 0 0 0 29.7 27h9.45a4.05 4.05 0 0 0 4.05-4.05V21.6Zm-13.5-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35a1.35 1.35 0 0 1-1.35 1.35H29.7a1.35 1.35 0 0 1-1.35-1.35V21.6c0-.746.604-1.35 1.35-1.35ZM43.2 37.8a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35h2.7V37.8c0-.746.604-1.35 1.35-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35h2.7V37.8Zm-27-4.05a4.05 4.05 0 0 1 4.05 4.05v1.35h-2.7V37.8a1.35 1.35 0 0 0-1.35-1.35h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35h-2.7V37.8a4.05 4.05 0 0 1 4.05-4.05h1.35Z",
+      d: "M2.7 43.296v1.254c0 .746.604 1.35 1.35 1.35h1.275v-1.795c.049.14.075.29.075.445v-1.254h-.075V43.2H4.05c.177 0 .347.034.502.096H2.7Zm2.7-2.507v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.015V23.24H2.7v2.507h2.7Zm0-5.014v-2.507H2.7v2.507h2.7Zm0-5.014V13.21H2.7v2.507h2.7Zm-2.7-5.014h1.852a1.346 1.346 0 0 1-.502.096h1.275v-.096H5.4V9.45c0 .156-.026.306-.075.445V8.1H4.05A1.35 1.35 0 0 0 2.7 9.45v1.254Zm5.175.096h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1 0h2.55V8.1h-2.55v2.7Zm5.1-2.7v1.795a1.348 1.348 0 0 1-.075-.445v1.254h.075v.096h1.275a1.35 1.35 0 0 1-.502-.096H51.3V9.45a1.35 1.35 0 0 0-1.35-1.35h-1.275Zm-.075 5.11v2.508h2.7V13.21h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7V23.24h-2.7Zm0 5.015v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm0 5.014v2.507h2.7v-2.507h-2.7Zm2.7 5.014h-1.852a1.35 1.35 0 0 1 .502-.096h-1.275v.096H48.6v1.254c0-.156.026-.305.075-.445V45.9h1.275a1.35 1.35 0 0 0 1.35-1.35v-1.254Zm-5.175-.096h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7Zm-5.1 0h-2.55v2.7h2.55v-2.7ZM16.2 17.55a4.05 4.05 0 0 1 4.05 4.05v1.35A4.05 4.05 0 0 1 16.2 27h-1.35a4.05 4.05 0 0 1-4.05-4.05V21.6a4.05 4.05 0 0 1 4.05-4.05h1.35Zm0 2.7h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35c0 .746.604 1.35 1.35 1.35h1.35a1.35 1.35 0 0 0 1.35-1.35V21.6a1.35 1.35 0 0 0-1.35-1.35Zm27 1.35a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35A4.05 4.05 0 0 0 29.7 27h9.45a4.05 4.05 0 0 0 4.05-4.05V21.6Zm-13.5-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35a1.35 1.35 0 0 1-1.35 1.35H29.7a1.35 1.35 0 0 1-1.35-1.35V21.6c0-.746.604-1.35 1.35-1.35ZM43.2 37.8a4.05 4.05 0 0 0-4.05-4.05H29.7a4.05 4.05 0 0 0-4.05 4.05v1.35h2.7V37.8c0-.746.604-1.35 1.35-1.35h9.45c.746 0 1.35.604 1.35 1.35v1.35h2.7V37.8Zm-27-4.05a4.05 4.05 0 0 1 4.05 4.05v1.35h-2.7V37.8a1.35 1.35 0 0 0-1.35-1.35h-1.35a1.35 1.35 0 0 0-1.35 1.35v1.35h-2.7V37.8a4.05 4.05 0 0 1 4.05-4.05h1.35Z",
       clipRule: "evenodd"
     })));
   };
@@ -53751,7 +53761,7 @@
     })));
   };
   var TextareaIcon = SvgTextarea;
-  var _path$d, _path2$2;
+  var _path$d;
   function _extends$d() {
     _extends$d = Object.assign ? Object.assign.bind() : function (target) {
       for (var i = 1; i < arguments.length; i++) {
@@ -53773,12 +53783,9 @@
       height: 54,
       fill: "none"
     }, props), _path$d || (_path$d = /*#__PURE__*/v$1("path", {
-      fill: "currentcolor",
-      d: "M34.467 37.3 41 31l-6.533-6.3-1.32 1.273L38.36 31l-5.213 5.027 1.32 1.273ZM19.533 24.7 13 31l6.533 6.3 1.32-1.273L15.64 31l5.214-5.027-1.32-1.273Zm4.127 14.832 1.805.468 4.875-17.532L28.535 22 23.66 39.532Z"
-    })), _path2$2 || (_path2$2 = /*#__PURE__*/v$1("path", {
-      fill: "currentcolor",
+      fill: "currentColor",
       fillRule: "evenodd",
-      d: "M46 9a3 3 0 0 1 3 3v30a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V12a3 3 0 0 1 3-3h38Zm0 2H8a1 1 0 0 0-1 1v4h40v-4a1 1 0 0 0-1-1ZM7 42V18h40v24a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1Z",
+      d: "M45.658 9.45c1.625 0 2.942 1.36 2.942 3.039V22.95h-1.961v-4.383H7.36V41.51c0 .56.44 1.013.98 1.013H27v2.026H8.342c-1.625 0-2.942-1.36-2.942-3.039V12.489c0-1.678 1.317-3.039 2.942-3.039h37.316Zm0 2.026H8.342c-.542 0-.98.454-.98 1.013v4.052h39.277v-4.052c0-.56-.44-1.013-.98-1.013ZM31.05 35.775A8.768 8.768 0 0 1 39.825 27a8.768 8.768 0 0 1 8.775 8.775 8.768 8.768 0 0 1-8.775 8.775 8.768 8.768 0 0 1-8.775-8.775Zm12.388-.516h3.097c-.206-2.581-1.858-4.646-4.026-5.678.62 1.548.93 3.613.93 5.678Zm-5.162 2.065c.207 3.303 1.136 4.955 1.549 5.161.413-.206 1.239-1.858 1.445-5.161h-2.994Zm1.446-8.26c-.31.207-1.342 2.272-1.446 6.195h2.994c-.103-3.923-1.135-5.988-1.548-6.194Zm-3.51 6.195c.103-2.065.31-4.13.929-5.678-2.168 1.032-3.82 3.097-4.026 5.678h3.097Zm0 2.065h-2.89c.515 2.064 1.96 3.82 3.819 4.645-.516-1.342-.826-2.994-.93-4.645Zm7.226 0c-.103 1.755-.413 3.303-.929 4.645 1.858-.826 3.304-2.58 3.923-4.645h-2.994Z",
       clipRule: "evenodd"
     })));
   };
@@ -55354,7 +55361,8 @@
   function ExpressionField(props) {
     const {
       field,
-      onChange
+      onChange,
+      value
     } = props;
     const {
       computeOn,
@@ -55369,12 +55377,12 @@
         value: evaluationMemo
       });
     }, [field, evaluationMemo, onChange]);
-    useEffectOnChange(evaluationMemo, () => {
-      if (computeOn !== 'change') {
+    y(() => {
+      if (computeOn !== 'change' || evaluationMemo === value) {
         return;
       }
       sendValue();
-    }, [computeOn, sendValue]);
+    }, [computeOn, evaluationMemo, sendValue, value]);
     y(() => {
       if (computeOn === 'presubmit') {
         eventBus.on('presubmit', sendValue);
@@ -55388,6 +55396,7 @@
     label: 'Výraz',
     group: 'basic-input',
     keyed: true,
+    emptyValue: null,
     escapeGridRender: true,
     create: (options = {}) => ({
       computeOn: 'change',
@@ -56171,7 +56180,12 @@
       }), e(PoweredBy, {})]
     });
   }
-  const formFields = [Button, Checkbox$1, Checklist, Default, DynamicList, Numberfield, Datetime, Radio, Select$1, Taglist, Textfield$1, Textarea, ExpressionField, Text$1, Image$1, Table, Html, Spacer, Separator, Group$1, DynamicList, IFrame];
+  const formFields = [/* Input */
+  Textfield$1, Textarea, Numberfield, Datetime, ExpressionField, /* Selection */
+  Checkbox$1, Checklist, Radio, Select$1, Taglist, /* Presentation */
+  Text$1, Image$1, Table, Html, Spacer, Separator, /* Containers */
+  Group$1, DynamicList, IFrame, /* Other */
+  Button, Default];
   class FormFields {
     constructor() {
       this._formFields = {};
@@ -57097,7 +57111,7 @@
     })));
   };
   var CollapseSvg = SvgCollapse;
-  var _path$1$1, _path2$6;
+  var _path$1$1, _path2$5;
   function _extends$1$1() {
     _extends$1$1 = Object.assign ? Object.assign.bind() : function (target) {
       for (var i = 1; i < arguments.length; i++) {
@@ -57121,7 +57135,7 @@
     }, props), _path$1$1 || (_path$1$1 = /*#__PURE__*/v$1("path", {
       fill: "currentColor",
       d: "M8 2c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6Zm0-1C4.15 1 1 4.15 1 8s3.15 7 7 7 7-3.15 7-7-3.15-7-7-7Z"
-    })), _path2$6 || (_path2$6 = /*#__PURE__*/v$1("path", {
+    })), _path2$5 || (_path2$5 = /*#__PURE__*/v$1("path", {
       fill: "currentColor",
       d: "M12 7.5H8.5V4h-1v3.5H4v1h3.5V12h1V8.5H12v-1Z"
     })));
@@ -57497,6 +57511,8 @@
    * var sum = eventBus.fire('sum', 1, 2);
    * console.log(sum); // 3
    * ```
+   *
+   * @template [EventMap=null]
    */
   function EventBus$1() {
     /**
@@ -57510,6 +57526,8 @@
   }
 
   /**
+   * @overlord
+   *
    * Register an event listener for events with the given name.
    *
    * The callback will be invoked with `event, ...additionalArguments`
@@ -57526,6 +57544,25 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] listen priority
    * @param {EventBusEventCallback<T>} callback
+   * @param {any} [that] callback context
+   */
+  /**
+   * Register an event listener for events with the given name.
+   *
+   * The callback will be invoked with `event, ...additionalArguments`
+   * that have been passed to {@link EventBus#fire}.
+   *
+   * Returning false from a listener will prevent the events default action
+   * (if any is specified). To stop an event from being processed further in
+   * other listeners execute {@link Event#stopPropagation}.
+   *
+   * Returning anything but `undefined` from a listener will stop the listener propagation.
+   *
+   * @template {keyof EventMap} EventName
+   *
+   * @param {EventName} events to subscribe to
+   * @param {number} [priority=1000] listen priority
+   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus$1.prototype.on = function (events, priority, callback, that) {
@@ -57558,6 +57595,8 @@
   };
 
   /**
+   * @overlord
+   *
    * Register an event listener that is called only once.
    *
    * @template T
@@ -57565,6 +57604,16 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] the listen priority
    * @param {EventBusEventCallback<T>} callback
+   * @param {any} [that] callback context
+   */
+  /**
+   * Register an event listener that is called only once.
+   *
+   * @template {keyof EventMap} EventName
+   *
+   * @param {EventName} events to subscribe to
+   * @param {number} [priority=1000] listen priority
+   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus$1.prototype.once = function (events, priority, callback, that) {
@@ -59492,7 +59541,7 @@
    *
    * @return {Array} transformed collection
    */
-  function map$2(collection, fn) {
+  function map$1(collection, fn) {
     let result = [];
     forEach(collection, function (val, key) {
       result.push(fn(val, key));
@@ -59524,7 +59573,7 @@
     extractor = toExtractor(extractor);
     let grouped = {};
     forEach(collections, c => groupBy(c, extractor, grouped));
-    let result = map$2(grouped, function (val, key) {
+    let result = map$1(grouped, function (val, key) {
       return val[0];
     });
     return result;
@@ -59562,7 +59611,7 @@
       // not inserted, append (!)
       sorted.push(entry);
     });
-    return map$2(sorted, e => e.v);
+    return map$1(sorted, e => e.v);
   }
 
   /**
@@ -60252,6 +60301,69 @@
     return e in r && !(e in i) && r[e] in i && (e = r[e]), i[e];
   }
 
+  const wrapMap = {
+    legend: [1, '<fieldset>', '</fieldset>'],
+    tr: [2, '<table><tbody>', '</tbody></table>'],
+    col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
+    _default: [0, '', '']
+  };
+  wrapMap.td = wrapMap.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
+  wrapMap.option = wrapMap.optgroup = [1, '<select multiple="multiple">', '</select>'];
+  wrapMap.thead = wrapMap.tbody = wrapMap.colgroup = wrapMap.caption = wrapMap.tfoot = [1, '<table>', '</table>'];
+  wrapMap.polyline = wrapMap.ellipse = wrapMap.polygon = wrapMap.circle = wrapMap.text = wrapMap.line = wrapMap.path = wrapMap.rect = wrapMap.g = [1, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">', '</svg>'];
+  function domify$2(htmlString, document = globalThis.document) {
+    if (typeof htmlString !== 'string') {
+      throw new TypeError('String expected');
+    }
+
+    // Handle comment nodes
+    const commentMatch = /^<!--(.*?)-->$/s.exec(htmlString);
+    if (commentMatch) {
+      return document.createComment(commentMatch[1]);
+    }
+    const tagName = /<([\w:]+)/.exec(htmlString)?.[1];
+    if (!tagName) {
+      return document.createTextNode(htmlString);
+    }
+    htmlString = htmlString.trim();
+
+    // Body support
+    if (tagName === 'body') {
+      const element = document.createElement('html');
+      element.innerHTML = htmlString;
+      const {
+        lastChild
+      } = element;
+      lastChild.remove();
+      return lastChild;
+    }
+
+    // Wrap map
+    let [depth, prefix, suffix] = Object.hasOwn(wrapMap, tagName) ? wrapMap[tagName] : wrapMap._default;
+    let element = document.createElement('div');
+    element.innerHTML = prefix + htmlString + suffix;
+    while (depth--) {
+      element = element.lastChild;
+    }
+
+    // One element
+    if (element.firstChild === element.lastChild) {
+      const {
+        firstChild
+      } = element;
+      firstChild.remove();
+      return firstChild;
+    }
+
+    // Several elements
+    const fragment = document.createDocumentFragment();
+    fragment.append(...element.childNodes);
+    return fragment;
+  }
+  var domify_1 = domify$2;
+
+  var domify$3 = /*@__PURE__*/getDefaultExportFromCjs(domify_1);
+
   function _mergeNamespaces$1(n, m) {
     m.forEach(function (e) {
       e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
@@ -60474,102 +60586,9 @@
   var event = /*#__PURE__*/_mergeNamespaces$1({
     __proto__: null,
     bind: bind_1,
-    unbind: unbind_1,
-    'default': componentEvent
+    default: componentEvent,
+    unbind: unbind_1
   }, [componentEvent]);
-
-  /**
-   * Expose `parse`.
-   */
-
-  var domify$2 = parse$2;
-
-  /**
-   * Tests for browser support.
-   */
-
-  var innerHTMLBug$1 = false;
-  var bugTestDiv$2;
-  if (typeof document !== 'undefined') {
-    bugTestDiv$2 = document.createElement('div');
-    // Setup
-    bugTestDiv$2.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
-    // Make sure that link elements get serialized correctly by innerHTML
-    // This requires a wrapper element in IE
-    innerHTMLBug$1 = !bugTestDiv$2.getElementsByTagName('link').length;
-    bugTestDiv$2 = undefined;
-  }
-
-  /**
-   * Wrap map from jquery.
-   */
-
-  var map$1 = {
-    legend: [1, '<fieldset>', '</fieldset>'],
-    tr: [2, '<table><tbody>', '</tbody></table>'],
-    col: [2, '<table><tbody></tbody><colgroup>', '</colgroup></table>'],
-    // for script/link/style tags to work in IE6-8, you have to wrap
-    // in a div with a non-whitespace character in front, ha!
-    _default: innerHTMLBug$1 ? [1, 'X<div>', '</div>'] : [0, '', '']
-  };
-  map$1.td = map$1.th = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
-  map$1.option = map$1.optgroup = [1, '<select multiple="multiple">', '</select>'];
-  map$1.thead = map$1.tbody = map$1.colgroup = map$1.caption = map$1.tfoot = [1, '<table>', '</table>'];
-  map$1.polyline = map$1.ellipse = map$1.polygon = map$1.circle = map$1.text = map$1.line = map$1.path = map$1.rect = map$1.g = [1, '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">', '</svg>'];
-
-  /**
-   * Parse `html` and return a DOM Node instance, which could be a TextNode,
-   * HTML DOM Node of some kind (<div> for example), or a DocumentFragment
-   * instance, depending on the contents of the `html` string.
-   *
-   * @param {String} html - HTML string to "domify"
-   * @param {Document} doc - The `document` instance to create the Node for
-   * @return {DOMNode} the TextNode, DOM Node, or DocumentFragment instance
-   * @api private
-   */
-
-  function parse$2(html, doc) {
-    if ('string' != typeof html) throw new TypeError('String expected');
-
-    // default to the global `document` object
-    if (!doc) doc = document;
-
-    // tag name
-    var m = /<([\w:]+)/.exec(html);
-    if (!m) return doc.createTextNode(html);
-    html = html.replace(/^\s+|\s+$/g, ''); // Remove leading/trailing whitespace
-
-    var tag = m[1];
-
-    // body support
-    if (tag == 'body') {
-      var el = doc.createElement('html');
-      el.innerHTML = html;
-      return el.removeChild(el.lastChild);
-    }
-
-    // wrap map
-    var wrap = Object.prototype.hasOwnProperty.call(map$1, tag) ? map$1[tag] : map$1._default;
-    var depth = wrap[0];
-    var prefix = wrap[1];
-    var suffix = wrap[2];
-    var el = doc.createElement('div');
-    el.innerHTML = prefix + html + suffix;
-    while (depth--) el = el.lastChild;
-
-    // one element
-    if (el.firstChild == el.lastChild) {
-      return el.removeChild(el.firstChild);
-    }
-
-    // several elements
-    var fragment = doc.createDocumentFragment();
-    while (el.firstChild) {
-      fragment.appendChild(el.removeChild(el.firstChild));
-    }
-    return fragment;
-  }
-  var domify$1$1 = domify$2;
   function query(selector, el) {
     el = el || document;
     return el.querySelector(selector);
@@ -60795,15 +60814,15 @@
    */
 
   var innerHTMLBug = false;
-  var bugTestDiv$1;
+  var bugTestDiv;
   if (typeof document !== 'undefined') {
-    bugTestDiv$1 = document.createElement('div');
+    bugTestDiv = document.createElement('div');
     // Setup
-    bugTestDiv$1.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
+    bugTestDiv.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
     // Make sure that link elements get serialized correctly by innerHTML
     // This requires a wrapper element in IE
-    innerHTMLBug = !bugTestDiv$1.getElementsByTagName('link').length;
-    bugTestDiv$1 = undefined;
+    innerHTMLBug = !bugTestDiv.getElementsByTagName('link').length;
+    bugTestDiv = undefined;
   }
 
   /**
@@ -61542,6 +61561,7 @@
   function FeelEditor({
     extensions: editorExtensions = [],
     container,
+    contentAttributes = {},
     tooltipContainer,
     onChange = () => {},
     onKeyDown = () => {},
@@ -61574,7 +61594,7 @@
         return tooltipContainer.getBoundingClientRect();
       }
     }) : [];
-    const extensions = [autocompletionConf.of(variablesFacet$1.of(variables)), autocompletion(), bracketMatching(), changeHandler, closeBrackets(), indentOnInput(), keyHandler, keymap.of([...defaultKeymap]), language(), linter, lintHandler, tooltipLayout, theme, ...editorExtensions];
+    const extensions = [autocompletionConf.of(variablesFacet$1.of(variables)), autocompletion(), bracketMatching(), changeHandler, closeBrackets(), EditorView.contentAttributes.of(contentAttributes), indentOnInput(), keyHandler, keymap.of([...defaultKeymap]), language(), linter, lintHandler, tooltipLayout, theme, ...editorExtensions];
     if (readOnly) {
       extensions.push(EditorView.editable.of(false));
     }
@@ -64169,6 +64189,8 @@
    * var sum = eventBus.fire('sum', 1, 2);
    * console.log(sum); // 3
    * ```
+   *
+   * @template [EventMap=null]
    */
   function EventBus() {
     /**
@@ -64182,6 +64204,8 @@
   }
 
   /**
+   * @overlord
+   *
    * Register an event listener for events with the given name.
    *
    * The callback will be invoked with `event, ...additionalArguments`
@@ -64198,6 +64222,25 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] listen priority
    * @param {EventBusEventCallback<T>} callback
+   * @param {any} [that] callback context
+   */
+  /**
+   * Register an event listener for events with the given name.
+   *
+   * The callback will be invoked with `event, ...additionalArguments`
+   * that have been passed to {@link EventBus#fire}.
+   *
+   * Returning false from a listener will prevent the events default action
+   * (if any is specified). To stop an event from being processed further in
+   * other listeners execute {@link Event#stopPropagation}.
+   *
+   * Returning anything but `undefined` from a listener will stop the listener propagation.
+   *
+   * @template {keyof EventMap} EventName
+   *
+   * @param {EventName} events to subscribe to
+   * @param {number} [priority=1000] listen priority
+   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.on = function (events, priority, callback, that) {
@@ -64230,6 +64273,8 @@
   };
 
   /**
+   * @overlord
+   *
    * Register an event listener that is called only once.
    *
    * @template T
@@ -64237,6 +64282,16 @@
    * @param {string|string[]} events to subscribe to
    * @param {number} [priority=1000] the listen priority
    * @param {EventBusEventCallback<T>} callback
+   * @param {any} [that] callback context
+   */
+  /**
+   * Register an event listener that is called only once.
+   *
+   * @template {keyof EventMap} EventName
+   *
+   * @param {EventName} events to subscribe to
+   * @param {number} [priority=1000] listen priority
+   * @param {EventBusEventCallback<EventMap[EventName]>} callback
    * @param {any} [that] callback context
    */
   EventBus.prototype.once = function (events, priority, callback, that) {
@@ -65095,7 +65150,7 @@
           class: "fjs-form-field-placeholder",
           children: [e(Icon, {
             viewBox: "0 0 54 54"
-          }), "Html is empty"]
+          }), "HTML obsah je pr\xE1zdn\xFD"]
         })
       });
     }
@@ -65106,7 +65161,7 @@
           class: "fjs-form-field-placeholder",
           children: [e(Icon, {
             viewBox: "0 0 54 54"
-          }), "Html is populated by an expression"]
+          }), "HTML obsah je zapln\u011Bn v\xFDrazem"]
         })
       });
     }
@@ -65117,7 +65172,7 @@
           class: "fjs-form-field-placeholder",
           children: [e(Icon, {
             viewBox: "0 0 54 54"
-          }), "Html is templated"]
+          }), "HTML obsah je \u0161ablonov\xE1n"]
         })
       });
     }
@@ -65196,13 +65251,14 @@
       field
     } = props;
     const {
-      expression = ''
+      expression = '',
+      key
     } = field;
     const Icon = iconsByType('expression');
     const expressionLanguage = useService$1('expressionLanguage');
     let placeholderContent = 'Prázdný výraz';
     if (expression.trim() && expressionLanguage.isExpression(expression)) {
-      placeholderContent = 'Výraz';
+      placeholderContent = `Výraz pro '${key}'`;
     }
     return e("div", {
       class: editorFormFieldClasses(type),
@@ -66921,9 +66977,9 @@
   };
 
   /**
-   * Returns the number of actions that are currently registered
+   * Returns the identifiers of all currently registered editor actions
    *
-   * @return {number}
+   * @return {string[]}
    */
   EditorActions.prototype.getActions = function () {
     return Object.keys(this._actions);
@@ -67171,7 +67227,7 @@
     if (event.defaultPrevented) {
       return true;
     }
-    return isInput(event.target) && this._isModifiedKeyIgnored(event);
+    return (isInput(event.target) || isButton(event.target) && isKey([' ', 'Enter'], event)) && this._isModifiedKeyIgnored(event);
   };
   Keyboard.prototype._isModifiedKeyIgnored = function (event) {
     if (!isCmd(event)) {
@@ -67267,6 +67323,9 @@
 
   function isInput(target) {
     return target && (matches$1(target, 'input, textarea') || target.contentEditable === 'true');
+  }
+  function isButton(target) {
+    return target && matches$1(target, 'button, input[type=submit], input[type=button], a[href], [aria-role=button]');
   }
   var LOW_PRIORITY$1 = 500;
 
@@ -70129,6 +70188,7 @@
   };
   const CodeEditor = x$1((props, ref) => {
     const {
+      contentAttributes,
       enableGutters,
       value,
       onInput,
@@ -70174,7 +70234,8 @@
         tooltipContainer: tooltipContainer,
         value: localValue,
         variables: variables,
-        extensions: [...(enableGutters ? [lineNumbers()] : []), EditorView.lineWrapping]
+        extensions: [...(enableGutters ? [lineNumbers()] : []), EditorView.lineWrapping],
+        contentAttributes
       });
       setEditor(editor);
       return () => {
@@ -70337,7 +70398,7 @@
     event.stopPropagation();
   }
   function emptyCanvas() {
-    return domify$1$1('<canvas width="0" height="0" />');
+    return domify$3('<canvas width="0" height="0" />');
   }
   const noop$3 = () => {};
 
@@ -71257,9 +71318,12 @@
           disabled: feel !== 'optional' || disabled,
           onClick: handleFeelToggle
         }), feelActive ? e(CodeEditor, {
-          id: prefixId$5(id),
           name: id,
           onInput: handleLocalInput,
+          contentAttributes: {
+            'id': prefixId$5(id),
+            'aria-label': label
+          },
           disabled: disabled,
           popupOpen: popuOpen,
           onFeelToggle: () => {
@@ -73190,7 +73254,7 @@
       } = propertiesPanelConfig || {};
       this._eventBus = eventBus;
       this._injector = injector;
-      this._container = domify$1$1('<div class="fjs-properties-container" input-handle-modified-keys="y,z"></div>');
+      this._container = domify$3('<div class="fjs-properties-container" input-handle-modified-keys="y,z"></div>');
       if (parent) {
         this.attachTo(parent);
       }
@@ -74669,8 +74733,8 @@
   // helpers //////////
 
   const description = e(d$1, {
-    children: ["Podporuje HTML, styly a \u0161ablonov\xE1n\xED. ", e("a", {
-      href: "https://docs.camunda.io/docs/next/components/modeler/forms/form-element-library/forms-element-library-html/",
+    children: ["Podporuje HTML, styly a \u0161ablony. Styly jsou automaticky omezeny pro HTML komponent. ", e("a", {
+      href: "https://docs.camunda.io/docs/components/modeler/forms/form-element-library/forms-element-library-html/",
       target: "_blank",
       children: "Dokumentace"
     })]
@@ -77140,7 +77204,7 @@
           return groups;
         }
         const getService = (type, strict = true) => this._injector.get(type, strict);
-        groups = [...groups, GeneralGroup(field, editField, getService), ...TableHeaderGroups(field, editField), SecurityAttributesGroup(field, editField), ConditionGroup(field, editField), LayoutGroup(field, editField), AppearanceGroup(field, editField), SerializationGroup(field, editField), ...OptionsGroups(field, editField, getService), ConstraintsGroup(field, editField), ValidationGroup(field, editField), CustomPropertiesGroup(field, editField)].filter(group => group != null);
+        groups = [...groups, GeneralGroup(field, editField, getService), ...OptionsGroups(field, editField, getService), ...TableHeaderGroups(field, editField), SecurityAttributesGroup(field, editField), ConditionGroup(field, editField), LayoutGroup(field, editField), AppearanceGroup(field, editField), SerializationGroup(field, editField), ConstraintsGroup(field, editField), ValidationGroup(field, editField), CustomPropertiesGroup(field, editField)].filter(group => group != null);
         this._filterVisibleEntries(groups, field, getService);
 
         // contract: if a group has no entries or items, it should not be displayed at all
@@ -79192,16 +79256,6 @@
   ClassList.prototype.has = ClassList.prototype.contains = function (name) {
     return this.list.contains(name);
   };
-  var bugTestDiv;
-  if (typeof document !== 'undefined') {
-    bugTestDiv = document.createElement('div');
-    // Setup
-    bugTestDiv.innerHTML = '  <link/><table></table><a href="/a">a</a><input type="checkbox"/>';
-    // Make sure that link elements get serialized correctly by innerHTML
-    // This requires a wrapper element in IE
-    !bugTestDiv.getElementsByTagName('link').length;
-    bugTestDiv = undefined;
-  }
 
   const NO_LINT_CLS = 'fjs-cm-no-lint';
 

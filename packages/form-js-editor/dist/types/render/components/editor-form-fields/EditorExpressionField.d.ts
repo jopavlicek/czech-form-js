@@ -9,5 +9,6 @@ export namespace EditorExpressionField {
         label: string;
         group: string;
         keyed: boolean;
+        emptyValue: any;
     };
 }
