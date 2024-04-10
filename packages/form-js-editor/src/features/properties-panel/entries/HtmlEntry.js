@@ -63,7 +63,7 @@ function Content(props) {
 
 // helpers //////////
 
-const description = <>Podporuje HTML, styly a šablonování. <a href="https://docs.camunda.io/docs/next/components/modeler/forms/form-element-library/forms-element-library-html/" target="_blank">Dokumentace</a></>;
+const description = <>Podporuje HTML, styly a šablony. Styly jsou automaticky omezeny pro HTML komponent. <a href="https://docs.camunda.io/docs/components/modeler/forms/form-element-library/forms-element-library-html/" target="_blank">Dokumentace</a></>;
 
 /**
   * @param {string|void} value
