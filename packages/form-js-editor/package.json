@@ -1,9 +1,10 @@
 {
   "name": "@bpmn-io/form-js-editor",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Edit forms - powered by bpmn.io",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs"
     },
@@ -47,7 +48,7 @@
   },
   "dependencies": {
     "@bpmn-io/draggle": "^4.0.0",
-    "@bpmn-io/form-js-viewer": "^1.8.1",
+    "@bpmn-io/form-js-viewer": "^1.8.3",
     "@bpmn-io/properties-panel": "^3.18.1",
     "array-move": "^3.0.1",
     "big.js": "^6.2.1",

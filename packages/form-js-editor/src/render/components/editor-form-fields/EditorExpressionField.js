@@ -6,7 +6,7 @@ const type = 'expression';
 
 export function EditorExpressionField(props) {
   const { field } = props;
-  const { expression = '' } = field;
+  const { expression = '', key } = field;
 
   const Icon = iconsByType('expression');
   const expressionLanguage = useService('expressionLanguage');
@@ -14,7 +14,7 @@ export function EditorExpressionField(props) {
   let placeholderContent = 'Prázdný výraz';
 
   if (expression.trim() && expressionLanguage.isExpression(expression)) {
-    placeholderContent = 'Výraz';
+    placeholderContent = `Výraz pro '${key}'`;
   }
 
   return (
