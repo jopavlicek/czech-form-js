@@ -10,6 +10,7 @@ var preact = require('preact');
 var isEqual = require('lodash/isEqual');
 var flatpickr = require('flatpickr');
 var React = require('preact/compat');
+var cs_js = require('flatpickr/dist/l10n/cs.js');
 var DOMPurify = require('dompurify');
 var didi = require('didi');
 var feelin = require('feelin');
@@ -2257,7 +2258,8 @@ var CalendarIcon = SvgCalendar;
  * @returns {string} The date format for the locale.
  */
 function getLocaleDateFormat(locale = 'default') {
-  const parts = new Intl.DateTimeFormat(locale).formatToParts(new Date(Date.UTC(2020, 5, 5)));
+  // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech dd. mm. yyyy)
+  const parts = new Intl.DateTimeFormat('de').formatToParts(new Date(Date.UTC(2020, 5, 5)));
   return parts.map(part => {
     const len = part.value.length;
     switch (part.type) {
@@ -2397,6 +2399,7 @@ function Datepicker(props) {
       dateFormat: getLocaleDateFlatpickrConfig(),
       static: true,
       clickOpens: false,
+      locale: cs_js.Czech,
       // TODO: support dates prior to 1900 (https://github.com/bpmn-io/form-js/issues/533)
       minDate: disallowPassedDates ? 'today' : '01/01/1900',
       errorHandler: () => {/* do nothing, we expect the values to sometimes be erronous and we don't want warnings polluting the console */}
@@ -2631,7 +2634,7 @@ function Timepicker(props) {
     required,
     disabled,
     readonly,
-    use24h = false,
+    use24h = true,
     timeInterval,
     time,
     setTime

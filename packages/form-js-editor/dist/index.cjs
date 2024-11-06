@@ -11052,8 +11052,9 @@ function DateTimeSubtypeSelect(props) {
   };
   const initTimeConfig = () => {
     editField(field, formJsViewer.TIME_LABEL_PATH, 'Čas');
-    editField(field, formJsViewer.TIME_SERIALISING_FORMAT_PATH, formJsViewer.TIME_SERIALISING_FORMATS.UTC_OFFSET);
+    editField(field, formJsViewer.TIME_SERIALISING_FORMAT_PATH, formJsViewer.TIME_SERIALISING_FORMATS.NO_TIMEZONE);
     editField(field, formJsViewer.TIME_INTERVAL_PATH, 15);
+    editField(field, formJsViewer.TIME_USE24H_PATH, true);
   };
   const clearDateConfig = () => {
     const dateConfigPaths = [formJsViewer.DATE_LABEL_PATH, formJsViewer.DATE_DISALLOW_PAST_PATH];
@@ -11220,7 +11221,8 @@ function TimeFormatSelect(props) {
   const getValue = e => minDash.get(field, formJsViewer.TIME_SERIALISING_FORMAT_PATH);
   const setValue = value => editField(field, formJsViewer.TIME_SERIALISING_FORMAT_PATH, value);
   const getTimeSerialisingFormats = () => {
-    return Object.values(formJsViewer.TIME_SERIALISING_FORMATS).map(format => ({
+    return Object.values([formJsViewer.TIME_SERIALISING_FORMATS.NO_TIMEZONE]).map(format => ({
+      // FIX: no timezone as only option
       label: formJsViewer.TIME_SERIALISINGFORMAT_LABELS[format],
       value: format
     }));

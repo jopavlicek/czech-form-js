@@ -7042,6 +7042,49 @@
     K && K(n), n.__c;
   };
 
+  var cs = {exports: {}};
+
+  (function (module, exports) {
+  	(function (global, factory) {
+  	  factory(exports) ;
+  	})(commonjsGlobal, function (exports) {
+
+  	  var fp = typeof window !== "undefined" && window.flatpickr !== undefined ? window.flatpickr : {
+  	    l10ns: {}
+  	  };
+  	  var Czech = {
+  	    weekdays: {
+  	      shorthand: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
+  	      longhand: ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"]
+  	    },
+  	    months: {
+  	      shorthand: ["Led", "Ún", "Bře", "Dub", "Kvě", "Čer", "Čvc", "Srp", "Zář", "Říj", "Lis", "Pro"],
+  	      longhand: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"]
+  	    },
+  	    firstDayOfWeek: 1,
+  	    ordinal: function () {
+  	      return ".";
+  	    },
+  	    rangeSeparator: " do ",
+  	    weekAbbreviation: "Týd.",
+  	    scrollTitle: "Rolujte pro změnu",
+  	    toggleTitle: "Přepnout dopoledne/odpoledne",
+  	    amPM: ["dop.", "odp."],
+  	    yearAriaLabel: "Rok",
+  	    time_24hr: true
+  	  };
+  	  fp.l10ns.cs = Czech;
+  	  var cs = fp.l10ns;
+  	  exports.Czech = Czech;
+  	  exports.default = cs;
+  	  Object.defineProperty(exports, '__esModule', {
+  	    value: true
+  	  });
+  	}); 
+  } (cs, cs.exports));
+
+  var csExports = cs.exports;
+
   /*! @license DOMPurify 3.0.8 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.0.8/LICENSE */
 
   const {
@@ -52383,7 +52426,8 @@
    * @returns {string} The date format for the locale.
    */
   function getLocaleDateFormat(locale = 'default') {
-    const parts = new Intl.DateTimeFormat(locale).formatToParts(new Date(Date.UTC(2020, 5, 5)));
+    // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech dd. mm. yyyy)
+    const parts = new Intl.DateTimeFormat('de').formatToParts(new Date(Date.UTC(2020, 5, 5)));
     return parts.map(part => {
       const len = part.value.length;
       switch (part.type) {
@@ -52521,6 +52565,7 @@
         dateFormat: getLocaleDateFlatpickrConfig(),
         static: true,
         clickOpens: false,
+        locale: csExports.Czech,
         // TODO: support dates prior to 1900 (https://github.com/bpmn-io/form-js/issues/533)
         minDate: disallowPassedDates ? 'today' : '01/01/1900',
         errorHandler: () => {/* do nothing, we expect the values to sometimes be erronous and we don't want warnings polluting the console */}
@@ -52765,7 +52810,7 @@
       required,
       disabled,
       readonly,
-      use24h = false,
+      use24h = true,
       timeInterval,
       time,
       setTime
@@ -75039,8 +75084,9 @@
     };
     const initTimeConfig = () => {
       editField(field, TIME_LABEL_PATH, 'Čas');
-      editField(field, TIME_SERIALISING_FORMAT_PATH, TIME_SERIALISING_FORMATS.UTC_OFFSET);
+      editField(field, TIME_SERIALISING_FORMAT_PATH, TIME_SERIALISING_FORMATS.NO_TIMEZONE);
       editField(field, TIME_INTERVAL_PATH, 15);
+      editField(field, TIME_USE24H_PATH, true);
     };
     const clearDateConfig = () => {
       const dateConfigPaths = [DATE_LABEL_PATH, DATE_DISALLOW_PAST_PATH];
@@ -75205,7 +75251,8 @@
     const getValue = e => get(field, TIME_SERIALISING_FORMAT_PATH);
     const setValue = value => editField(field, TIME_SERIALISING_FORMAT_PATH, value);
     const getTimeSerialisingFormats = () => {
-      return Object.values(TIME_SERIALISING_FORMATS).map(format => ({
+      return Object.values([TIME_SERIALISING_FORMATS.NO_TIMEZONE]).map(format => ({
+        // FIX: no timezone as only option
         label: TIME_SERIALISINGFORMAT_LABELS[format],
         value: format
       }));
