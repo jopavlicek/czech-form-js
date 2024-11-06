@@ -6,7 +6,9 @@
  * @returns {string} The date format for the locale.
  */
 export function getLocaleDateFormat(locale = 'default') {
-  const parts = new Intl.DateTimeFormat(locale).formatToParts(new Date(Date.UTC(2020, 5, 5)));
+
+  // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech dd. mm. yyyy)
+  const parts = new Intl.DateTimeFormat('de').formatToParts(new Date(Date.UTC(2020, 5, 5)));
   return parts.map(part => {
     const len = part.value.length;
     switch (part.type) {

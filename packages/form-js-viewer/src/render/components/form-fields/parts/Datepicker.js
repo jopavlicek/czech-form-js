@@ -5,6 +5,7 @@ import { ENTER_KEYDOWN_EVENT, focusRelevantFlatpickerDay } from '../../util/date
 import { getLocaleReadableDateFormat, getLocaleDateFlatpickrConfig } from '../../util/localisationUtil';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useDeepCompareMemoize } from '../../../hooks';
+import { Czech } from 'flatpickr/dist/l10n/cs.js';
 
 import { InputAdorner } from './InputAdorner';
 import { Label } from '../../Label';
@@ -62,6 +63,7 @@ export function Datepicker(props) {
       dateFormat: getLocaleDateFlatpickrConfig(),
       static: true,
       clickOpens: false,
+      locale: Czech,
 
       // TODO: support dates prior to 1900 (https://github.com/bpmn-io/form-js/issues/533)
       minDate: disallowPassedDates ? 'today' : '01/01/1900',
