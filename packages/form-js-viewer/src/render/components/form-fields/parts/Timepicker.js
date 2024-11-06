@@ -18,7 +18,7 @@ export function Timepicker(props) {
     required,
     disabled,
     readonly,
-    use24h = false,
+    use24h = true,
     timeInterval,
     time,
     setTime

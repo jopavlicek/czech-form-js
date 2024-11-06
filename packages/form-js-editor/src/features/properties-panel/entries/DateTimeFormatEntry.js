@@ -40,7 +40,7 @@ function TimeFormatSelect(props) {
 
   const getTimeSerialisingFormats = () => {
 
-    return Object.values(TIME_SERIALISING_FORMATS).map((format) => ({
+    return Object.values([ TIME_SERIALISING_FORMATS.NO_TIMEZONE ]).map((format) => ({ // FIX: no timezone as only option
       label: TIME_SERIALISINGFORMAT_LABELS[format],
       value: format
     }));
