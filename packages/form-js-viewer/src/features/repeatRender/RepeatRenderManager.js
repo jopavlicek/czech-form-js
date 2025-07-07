@@ -179,7 +179,7 @@ export class RepeatRenderManager {
           </button>
         ) : null}
         {collapseEnabled ? (
-          <button type="button" class="fjs-repeat-render-collapse" onClick={toggle}>
+          <button type="button" class="fjs-repeat-render-collapse" data-collapsed={isCollapsed} onClick={toggle}>
             {isCollapsed ? (
               <>
                 <ExpandSvg /> {`Rozbalit vše (${values.length - 1})`}
