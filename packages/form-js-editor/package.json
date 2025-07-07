@@ -1,6 +1,6 @@
 {
   "name": "@bpmn-io/form-js-editor",
-  "version": "1.8.3",
+  "version": "1.15.3",
   "description": "Edit forms - powered by bpmn.io",
   "exports": {
     ".": {
@@ -10,7 +10,7 @@
     },
     "./dist/assets/form-js-editor.css": "./dist/assets/form-js-editor.css",
     "./dist/assets/form-js-editor-base.css": "./dist/assets/form-js-editor-base.css",
-    "./dist/assets/dragula.css": "./dist/assets/dragula.css",
+    "./dist/assets/dragula.css": "./dist/assets/draggle.css",
     "./dist/assets/properties-panel.css": "./dist/assets/properties-panel.css",
     "./package.json": "./package.json"
   },
@@ -47,14 +47,14 @@
     "url": "https://github.com/bpmn-io"
   },
   "dependencies": {
-    "@bpmn-io/draggle": "^4.0.0",
-    "@bpmn-io/form-js-viewer": "^1.8.3",
-    "@bpmn-io/properties-panel": "^3.18.1",
-    "array-move": "^3.0.1",
-    "big.js": "^6.2.1",
-    "ids": "^1.0.0",
-    "min-dash": "^4.2.1",
-    "min-dom": "^5.0.0",
+    "@bpmn-io/draggle": "^4.1.1",
+    "@bpmn-io/form-js-viewer": "^1.15.3",
+    "@bpmn-io/properties-panel": "^3.26.3",
+    "array-move": "^4.0.0",
+    "big.js": "^6.2.2",
+    "ids": "^1.0.5",
+    "min-dash": "^4.2.3",
+    "min-dom": "^4.1.0",
     "preact": "^10.5.14"
   },
   "sideEffects": [

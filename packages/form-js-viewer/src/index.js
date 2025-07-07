@@ -5,12 +5,9 @@ export * from './render';
 export * from './util';
 export * from './features';
 
-const schemaVersion = 16;
+const schemaVersion = 18;
 
-export {
-  Form,
-  schemaVersion
-};
+export { Form, schemaVersion };
 
 /**
  * @typedef { import('./types').CreateFormOptions } CreateFormOptions
@@ -24,15 +21,11 @@ export {
  * @return {Promise<Form>}
  */
 export function createForm(options) {
-  const {
-    data,
-    schema,
-    ...formOptions
-  } = options;
+  const { data, schema, ...formOptions } = options;
 
   const form = new Form(formOptions);
 
-  return form.importSchema(schema, data).then(function() {
+  return form.importSchema(schema, data).then(function () {
     return form;
   });
 }

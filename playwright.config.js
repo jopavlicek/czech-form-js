@@ -12,7 +12,8 @@ export default defineConfig({
   use: {
     actionTimeout: 0,
     baseURL: 'http://localhost:8080',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
@@ -31,4 +32,3 @@ export default defineConfig({
     },
   ],
 });
-

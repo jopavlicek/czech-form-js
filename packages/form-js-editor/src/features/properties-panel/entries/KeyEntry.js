@@ -7,13 +7,8 @@ import { useService } from '../hooks';
 import { TextFieldEntry, isTextFieldEntryEdited } from '@bpmn-io/properties-panel';
 import { useCallback } from 'preact/hooks';
 
-
 export function KeyEntry(props) {
-  const {
-    editField,
-    field,
-    getService
-  } = props;
+  const { editField, field, getService } = props;
 
   const entries = [];
 
@@ -27,24 +22,20 @@ export function KeyEntry(props) {
       const formFields = getService('formFields');
       const { config } = formFields.get(field.type);
       return config.keyed;
-    }
+    },
   });
 
   return entries;
 }
 
 function Key(props) {
-  const {
-    editField,
-    field,
-    id
-  } = props;
+  const { editField, field, id } = props;
 
   const pathRegistry = useService('pathRegistry');
 
   const debounce = useService('debounce');
 
-  const path = [ 'key' ];
+  const path = ['key'];
 
   const getValue = () => {
     return get(field, path, '');
@@ -58,42 +49,44 @@ function Key(props) {
     return editField(field, path, value);
   };
 
-  const validate = useCallback((value) => {
+  const validate = useCallback(
+    (value) => {
+      if (value === field.key) {
+        return null;
+      }
 
-    if (value === field.key) {
-      return null;
-    }
+      if (!isString(value) || value.length === 0) {
+        return 'Klíč nesmí být prázdný.';
+      }
 
-    if (!isString(value) || value.length === 0) {
-      return 'Klíč nesmí být prázdný.';
-    }
+      if (!isValidDotPath(value)) {
+        return 'Klíč musí být korektní proměnná nebo cesta oddělená tečkami.';
+      }
 
-    if (!isValidDotPath(value)) {
-      return 'Klíč musí být korektní proměnná nebo cesta oddělená tečkami.';
-    }
+      if (hasIntegerPathSegment(value)) {
+        return 'Klíč nesmí obsahovat pouze čísla.';
+      }
 
-    if (hasIntegerPathSegment(value)) {
-      return 'Klíč nesmí obsahovat pouze čísla.';
-    }
+      if (isProhibitedPath(value)) {
+        return 'Must not be a prohibited path.';
+      }
 
-    if (isProhibitedPath(value)) {
-      return 'Must not be a prohibited path.';
-    }
+      const replacements = {
+        [field.id]: value.split('.'),
+      };
 
-    const replacements = {
-      [ field.id ]: value.split('.')
-    };
+      const oldPath = pathRegistry.getValuePath(field);
+      const newPath = pathRegistry.getValuePath(field, { replacements });
 
-    const oldPath = pathRegistry.getValuePath(field);
-    const newPath = pathRegistry.getValuePath(field, { replacements });
+      // unclaim temporarily to avoid self-conflicts
+      pathRegistry.unclaimPath(oldPath);
+      const canClaim = pathRegistry.canClaimPath(newPath, { isClosed: true, claimerId: field.id });
+      pathRegistry.claimPath(oldPath, { isClosed: true, claimerId: field.id });
 
-    // unclaim temporarily to avoid self-conflicts
-    pathRegistry.unclaimPath(oldPath);
-    const canClaim = pathRegistry.canClaimPath(newPath, { isClosed: true, claimerId: field.id });
-    pathRegistry.claimPath(oldPath, { isClosed: true, claimerId: field.id });
-
-    return canClaim ? null : 'Klíč se nesmí shodovat s již existujícím klíčem/cestou.';
-  }, [ field, pathRegistry ]);
+      return canClaim ? null : 'Klíč se nesmí shodovat s již existujícím klíčem/cestou.';
+    },
+    [field, pathRegistry],
+  );
 
   return TextFieldEntry({
     debounce,
@@ -102,8 +95,9 @@ function Key(props) {
     getValue,
     id,
     label: 'Klíč',
-    tooltip: 'Klíč slouží k identifikaci pole a jeho hodnoty v datovém schématu.',
+    tooltip:
+      'Klíč slouží k identifikaci pole a jeho hodnoty v datovém schématu.',
     setValue,
-    validate
+    validate,
   });
 }

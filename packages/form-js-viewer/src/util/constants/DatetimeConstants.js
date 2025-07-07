@@ -5,31 +5,31 @@ export const MINUTES_IN_DAY = 60 * 24;
 export const DATETIME_SUBTYPES = {
   DATE: 'date',
   TIME: 'time',
-  DATETIME: 'datetime'
+  DATETIME: 'datetime',
 };
 
 export const TIME_SERIALISING_FORMATS = {
   UTC_OFFSET: 'utc_offset',
   UTC_NORMALIZED: 'utc_normalized',
-  NO_TIMEZONE: 'no_timezone'
+  NO_TIMEZONE: 'no_timezone',
 };
 
 export const DATETIME_SUBTYPES_LABELS = {
   [DATETIME_SUBTYPES.DATE]: 'Datum',
   [DATETIME_SUBTYPES.TIME]: 'Čas',
-  [DATETIME_SUBTYPES.DATETIME]: 'Datum a čas'
+  [DATETIME_SUBTYPES.DATETIME]: 'Datum a čas',
 };
 
 export const TIME_SERIALISINGFORMAT_LABELS = {
   [TIME_SERIALISING_FORMATS.UTC_OFFSET]: 'Posun UTC',
   [TIME_SERIALISING_FORMATS.UTC_NORMALIZED]: 'Normalizované UTC',
-  [TIME_SERIALISING_FORMATS.NO_TIMEZONE]: 'Bez časové zóny'
+  [TIME_SERIALISING_FORMATS.NO_TIMEZONE]: 'Bez časové zóny',
 };
 
-export const DATETIME_SUBTYPE_PATH = [ 'subtype' ];
-export const DATE_LABEL_PATH = [ 'dateLabel' ];
-export const DATE_DISALLOW_PAST_PATH = [ 'disallowPassedDates' ];
-export const TIME_LABEL_PATH = [ 'timeLabel' ];
-export const TIME_USE24H_PATH = [ 'use24h' ];
-export const TIME_INTERVAL_PATH = [ 'timeInterval' ];
-export const TIME_SERIALISING_FORMAT_PATH = [ 'timeSerializingFormat' ];
+export const DATETIME_SUBTYPE_PATH = ['subtype'];
+export const DATE_LABEL_PATH = ['dateLabel'];
+export const DATE_DISALLOW_PAST_PATH = ['disallowPassedDates'];
+export const TIME_LABEL_PATH = ['timeLabel'];
+export const TIME_USE24H_PATH = ['use24h'];
+export const TIME_INTERVAL_PATH = ['timeInterval'];
+export const TIME_SERIALISING_FORMAT_PATH = ['timeSerializingFormat'];

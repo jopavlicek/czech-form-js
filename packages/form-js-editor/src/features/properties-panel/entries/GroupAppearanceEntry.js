@@ -1,25 +1,21 @@
 import { simpleBoolEntryFactory } from './factories';
 
 export function GroupAppearanceEntry(props) {
-  const {
-    field,
-  } = props;
+  const { field } = props;
 
-  const {
-    type
-  } = field;
+  const { type } = field;
 
-  if (![ 'group', 'dynamiclist' ].includes(type)) {
+  if (!['group', 'dynamiclist'].includes(type)) {
     return [];
   }
 
   const entries = [
     simpleBoolEntryFactory({
       id: 'showOutline',
-      path: [ 'showOutline' ],
+      path: ['showOutline'],
       label: 'Obrys sekce',
-      props
-    })
+      props,
+    }),
   ];
 
   return entries;

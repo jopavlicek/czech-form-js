@@ -3,9 +3,8 @@ import { formFieldClasses } from '../Util';
 const type = 'separator';
 
 export function Separator() {
-
   return (
-    <div class={ formFieldClasses(type) }>
+    <div class={formFieldClasses(type)}>
       <hr />
     </div>
   );
@@ -14,9 +13,9 @@ export function Separator() {
 Separator.config = {
   type,
   keyed: false,
-  label: 'Oddělovač',
+  name: 'Oddělovač',
   group: 'presentation',
   create: (options = {}) => ({
-    ...options
-  })
+    ...options,
+  }),
 };

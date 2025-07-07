@@ -7,66 +7,66 @@ export const SECURITY_ATTRIBUTES_DEFINITIONS = [
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-scripts',
     property: 'allowScripts',
-    label: 'Spouštění skriptů'
+    label: 'Spouštění skriptů',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-same-origin',
     property: 'allowSameOrigin',
-    label: 'Povolit stejný původ'
+    label: 'Povolit stejný původ',
   },
   {
     attribute: ALLOW_ATTRIBUTE,
     directive: 'fullscreen',
     property: 'fullscreen',
-    label: 'Otevřít na celé obrazovce'
+    label: 'Otevřít na celé obrazovce',
   },
   {
     attribute: ALLOW_ATTRIBUTE,
     directive: 'geolocation',
     property: 'geolocation',
-    label: 'Geolokační služby'
+    label: 'Geolokační služby',
   },
   {
     attribute: ALLOW_ATTRIBUTE,
     directive: 'camera',
     property: 'camera',
-    label: 'Přístup ke kaměře'
+    label: 'Přístup ke kaměře',
   },
   {
     attribute: ALLOW_ATTRIBUTE,
     directive: 'microphone',
     property: 'microphone',
-    label: 'Přístup k mikrofonu'
+    label: 'Přístup k mikrofonu',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-forms',
     property: 'allowForms',
-    label: 'Odesílání formulářů'
+    label: 'Odesílání formulářů',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-modals',
     property: 'allowModals',
-    label: 'Otevírat modální okna'
+    label: 'Otevírat modální okna',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-popups',
     property: 'allowPopups',
-    label: 'Otevírat vyskakovací okna'
+    label: 'Otevírat vyskakovací okna',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-top-navigation',
     property: 'allowTopNavigation',
-    label: 'Top-level navigace'
+    label: 'Top-level navigace',
   },
   {
     attribute: SANDBOX_ATTRIBUTE,
     directive: 'allow-storage-access-by-user-activation',
     property: 'allowStorageAccessByUserActivation',
-    label: 'Přístup k úložišti uživatelem'
-  }
+    label: 'Přístup k úložišti uživatelem',
+  },
 ];

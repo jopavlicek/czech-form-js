@@ -4,14 +4,10 @@ import { useService, useVariables } from '../hooks';
 
 import { FeelTemplatingEntry, isFeelEntryEdited } from '@bpmn-io/properties-panel';
 
-const HTTPS_PATTERN = /^(https):\/\/*/i; // eslint-disable-line no-useless-escape
-
+const HTTPS_PATTERN = /^(https):\/\/*/i;
 
 export function IFrameUrlEntry(props) {
-  const {
-    editField,
-    field
-  } = props;
+  const { editField, field } = props;
 
   const entries = [];
   entries.push({
@@ -20,24 +16,20 @@ export function IFrameUrlEntry(props) {
     editField: editField,
     field: field,
     isEdited: isFeelEntryEdited,
-    isDefaultVisible: (field) => field.type === 'iframe'
+    isDefaultVisible: (field) => field.type === 'iframe',
   });
 
   return entries;
 }
 
 function Url(props) {
-  const {
-    editField,
-    field,
-    id
-  } = props;
+  const { editField, field, id } = props;
 
   const debounce = useService('debounce');
 
-  const variables = useVariables().map(name => ({ name }));
+  const variables = useVariables().map((name) => ({ name }));
 
-  const path = [ 'url' ];
+  const path = ['url'];
 
   const getValue = () => {
     return get(field, path, '');
@@ -58,7 +50,7 @@ function Url(props) {
     singleLine: true,
     tooltip: getTooltip(),
     validate,
-    variables
+    variables,
   });
 }
 
@@ -70,20 +62,25 @@ function getTooltip() {
       <p>
         Jako zdroj použijte HTTPS URL adresu, šablonu nebo výraz (pro předání hodnoty skrz proměnnou).
       </p>
+      <p> Ujistěte se, že je URL adresa bezpečná, protože může představovat bezpečnostní riziko.</p>
       <p>
-        Ujistěte se, že je URL adresa bezpečná, protože může představovat bezpečnostní riziko.
-      </p>
-      <p>
-        Ne všechny externí zdroje mohou být zobrazeny skrz iFrame. Více informací najdete v <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">dokumentaci X-FRAME-OPTIONS</a>.
+        Ne všechny externí zdroje mohou být zobrazeny skrz iFrame. Více informací najdete v{' '}
+        <a
+          target="_blank"
+          href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options"
+          rel="noreferrer">
+          X-FRAME-OPTIONS dokumentaci
+        </a>
+        .
       </p>
     </>
   );
 }
 
 /**
-  * @param {string|void} value
-  * @returns {string|null}
-  */
+ * @param {string|void} value
+ * @returns {string|null}
+ */
 const validate = (value) => {
   if (!value || value.startsWith('=')) {
     return;

@@ -6,8 +6,26 @@
         "$ref": "../field-types/inputs.json"
       },
       "then": {
-        "required": [
-          "key"
+        "required": ["key"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "table"
+          }
+        },
+        "required": ["type"]
+      },
+      "then": {
+        "oneOf": [
+          {
+            "required": ["dataSource", "columns"]
+          },
+          {
+            "required": ["dataSource", "columnsExpression"]
+          }
         ]
       }
     },
@@ -16,20 +34,7 @@
         "$ref": "../field-types/presentation-components.json"
       },
       "then": {
-        "oneOf": [
-          {
-            "required": [
-              "dataSource",
-              "columns"
-            ]
-          },
-          {
-            "required": [
-              "dataSource",
-              "columnsExpression"
-            ]
-          }
-        ]
+        "required": ["dataSource"]
       }
     },
     {
@@ -39,15 +44,10 @@
             "const": "expression"
           }
         },
-        "required": [
-          "type"
-        ]
+        "required": ["type"]
       },
       "then": {
-        "required": [
-          "expression",
-          "computeOn"
-        ]
+        "required": ["expression", "computeOn"]
       }
     }
   ]

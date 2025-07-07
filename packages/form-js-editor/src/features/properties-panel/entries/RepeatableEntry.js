@@ -1,14 +1,9 @@
 import { simpleRangeIntegerEntryFactory, simpleBoolEntryFactory } from './factories';
 
 export function RepeatableEntry(props) {
-  const {
-    field,
-    getService
-  } = props;
+  const { field, getService } = props;
 
-  const {
-    type
-  } = field;
+  const { type } = field;
 
   const formFieldDefinition = getService('formFields').get(type);
 
@@ -19,34 +14,34 @@ export function RepeatableEntry(props) {
   const entries = [
     simpleRangeIntegerEntryFactory({
       id: 'defaultRepetitions',
-      path: [ 'defaultRepetitions' ],
+      path: ['defaultRepetitions'],
       label: 'Výchozí počet položek',
       min: 1,
       max: 20,
-      props
+      props,
     }),
     simpleBoolEntryFactory({
       id: 'allowAddRemove',
-      path: [ 'allowAddRemove' ],
+      path: ['allowAddRemove'],
       label: 'Povolit přidání/mazání',
-      props
+      props,
     }),
     simpleBoolEntryFactory({
       id: 'disableCollapse',
-      path: [ 'disableCollapse' ],
+      path: ['disableCollapse'],
       label: 'Zakázat sbalení seznamu',
-      props
-    })
+      props,
+    }),
   ];
 
   if (!field.disableCollapse) {
     const nonCollapseItemsEntry = simpleRangeIntegerEntryFactory({
       id: 'nonCollapsedItems',
-      path: [ 'nonCollapsedItems' ],
+      path: ['nonCollapsedItems'],
       label: 'Počet rozbalených položek',
       min: 1,
       defaultValue: 5,
-      props
+      props,
     });
 
     entries.push(nonCollapseItemsEntry);

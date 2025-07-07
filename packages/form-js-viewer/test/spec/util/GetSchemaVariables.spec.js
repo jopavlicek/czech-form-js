@@ -1,6 +1,4 @@
-import {
-  getSchemaVariables
-} from '../../../src';
+import { getSchemaVariables } from '../../../src';
 
 import schema from '../form.json';
 import dynamicSchema from '../dynamic.json';
@@ -20,131 +18,130 @@ import groupsSchema from '../groups.json';
 import shipsExampleSchema from '../ships-example.json';
 import iframesSchema from '../iframes.json';
 import htmlSchema from '../html.json';
+import expressionFieldSchema from '../expressionField.json';
+import filepickerSchema from '../filepicker.json';
+import documentPreviewSchema from '../documentPreview.json';
 
-describe('util/getSchemaVariables', () => {
-
-  it('should include form field keys', () => {
-
+describe('util/getSchemaVariables', function () {
+  it('should include form field keys', function () {
     const variables = getSchemaVariables(schema);
 
-    expect(variables).to.eql([ 'invoiceDetails', 'clients', 'creditor', 'invoiceNumber', 'amount', 'approved', 'approvedBy', 'approverComments', 'product', 'mailto', 'language', 'conversation', 'tags' ]);
+    expect(variables).to.eql([
+      'invoiceDetails',
+      'clients',
+      'creditor',
+      'invoiceNumber',
+      'amount',
+      'approved',
+      'approvedBy',
+      'approverComments',
+      'product',
+      'mailto',
+      'language',
+      'conversation',
+      'tags',
+    ]);
   });
 
-
-  it('should include form field keys when requesting output vars', () => {
-
+  it('should include form field keys when requesting output vars', function () {
     const variables = getSchemaVariables(schema, { inputs: false });
 
-    expect(variables).to.eql([ 'invoiceDetails', 'clients', 'creditor', 'invoiceNumber', 'amount', 'approved', 'approvedBy', 'approverComments', 'product', 'mailto', 'language', 'conversation', 'tags' ]);
+    expect(variables).to.eql([
+      'invoiceDetails',
+      'clients',
+      'creditor',
+      'invoiceNumber',
+      'amount',
+      'approved',
+      'approvedBy',
+      'approverComments',
+      'product',
+      'mailto',
+      'language',
+      'conversation',
+      'tags',
+    ]);
   });
 
-
-  it('should include values formfields valuesKeys', () => {
-
+  it('should include values formfields valuesKeys', function () {
     const variables = getSchemaVariables(dynamicSchema);
 
-    expect(variables).to.eql([ 'xyzData', 'product', 'mailto', 'language', 'tags' ]);
+    expect(variables).to.eql(['xyzData', 'product', 'mailto', 'language', 'tags']);
   });
 
-
-  it('should NOT include values formfields valuesKeys when requesting output vars', () => {
-
+  it('should NOT include values formfields valuesKeys when requesting output vars', function () {
     const variables = getSchemaVariables(dynamicSchema, { inputs: false });
 
-    expect(variables).to.eql([ 'product', 'mailto', 'language', 'tags' ]);
+    expect(variables).to.eql(['product', 'mailto', 'language', 'tags']);
   });
 
-
-  it('should include variables in valuesExpression', () => {
-
+  it('should include variables in valuesExpression', function () {
     const variables = getSchemaVariables(valuesExpressionSchema);
 
-    expect(variables).to.eql([ 'myList', 'concatenate', 'myList2', 'myList3', 'myList4', 'product', 'mailto', 'foo' ]);
+    expect(variables).to.eql(['myList', 'concatenate', 'myList2', 'myList3', 'myList4', 'product', 'mailto', 'foo']);
   });
 
-
-  it('should include variables in conditions', () => {
-
+  it('should include variables in conditions', function () {
     const variables = getSchemaVariables(conditionalSchema);
 
-    expect(variables).to.eql([ 'externalVariable', 'amount', 'textfield' ]);
+    expect(variables).to.eql(['externalVariable', 'amount', 'textfield']);
   });
 
-
-  it('should NOT include variables in conditions when requesting output vars', () => {
-
+  it('should NOT include variables in conditions when requesting output vars', function () {
     const variables = getSchemaVariables(conditionalSchema, { inputs: false });
 
-    expect(variables).to.eql([ 'amount', 'textfield' ]);
+    expect(variables).to.eql(['amount', 'textfield']);
   });
 
-
-  it('should include variables in expressions', () => {
-
+  it('should include variables in expressions', function () {
     const variables = getSchemaVariables(expressionSchema);
 
-    expect(variables).to.eql([ 'logo', 'alt', 'myText' ]);
+    expect(variables).to.eql(['logo', 'alt', 'myText']);
   });
 
-
-  it('should NOT include variables in expressions when requesting output vars', () => {
-
+  it('should NOT include variables in expressions when requesting output vars', function () {
     const variables = getSchemaVariables(expressionSchema, { inputs: false });
 
     expect(variables).to.eql([]);
   });
 
-
-  it('should include variables in root of templates', () => {
-
+  it('should include variables in root of templates', function () {
     const variables = getSchemaVariables(templateSchema);
 
-    expect(variables).to.eql([ 'myText', 'greeting', 'name', 'showAge', 'age', 'hobbies' ]);
+    expect(variables).to.eql(['myText', 'greeting', 'name', 'showAge', 'age', 'hobbies']);
   });
 
-
-  it('should handle complex template cases', () => {
-
+  it('should handle complex template cases', function () {
     const variables = getSchemaVariables(complexTemplateSchema);
 
-    expect(variables).to.eql([ 'value', 'minimum', 'display', 'orgs', 'external1', 'external2', 'parent', 'this' ]);
+    expect(variables).to.eql(['value', 'minimum', 'display', 'orgs', 'external1', 'external2', 'parent', 'this']);
   });
 
-
-  it('should NOT include variables - no expression', () => {
-
+  it('should NOT include variables - no expression', function () {
     const variables = getSchemaVariables(expressionSchema);
 
-    expect(variables).to.not.have.members([ 'This', 'is', 'just', 'an', 'image' ]);
+    expect(variables).to.not.have.members(['This', 'is', 'just', 'an', 'image']);
   });
 
-
-  it('should include variables in readonly expressions', () => {
-
+  it('should include variables in readonly expressions', function () {
     const variables = getSchemaVariables(readonlyExpressionSchema);
 
-    expect(variables).to.eql([ 'foo', 'bar', 'amount', 'text' ]);
+    expect(variables).to.eql(['foo', 'bar', 'amount', 'text']);
   });
 
-
-  it('should include variables in labels', () => {
-
+  it('should include variables in labels', function () {
     const variables = getSchemaVariables(labelsSchema);
 
-    expect(variables).to.eql([ 'foo', 'bar', 'label_var', 'template', 'expression' ]);
+    expect(variables).to.eql(['foo', 'bar', 'label_var', 'template', 'expression']);
   });
 
-
-  it('should include variables in descriptions', () => {
-
+  it('should include variables in descriptions', function () {
     const variables = getSchemaVariables(descriptionsSchema);
 
-    expect(variables).to.eql([ 'foo', 'bar', 'description_var', 'template', 'expression' ]);
+    expect(variables).to.eql(['foo', 'bar', 'description_var', 'template', 'expression']);
   });
 
-
-  it('should include variables in adorners', () => {
-
+  it('should include variables in adorners', function () {
     const variables = getSchemaVariables(adornersSchema);
 
     expect(variables).to.eql([
@@ -153,91 +150,47 @@ describe('util/getSchemaVariables', () => {
       'prefix_template',
       'suffix_template',
       'adorner_expression',
-      'adorner_template'
+      'adorner_template',
     ]);
   });
 
-
-  it('should include variables in images', () => {
-
+  it('should include variables in images', function () {
     const variables = getSchemaVariables(imagesSchema);
 
-    expect(variables).to.eql([
-      'logo_expression',
-      'alt_expression',
-      'logo_template',
-      'alt_template'
-    ]);
+    expect(variables).to.eql(['logo_expression', 'alt_expression', 'logo_template', 'alt_template']);
   });
 
-
-  it('should include variables in validate', () => {
-
+  it('should include variables in validate', function () {
     const variables = getSchemaVariables(validateSchema);
 
-    expect(variables).to.eql([
-      'min',
-      'max',
-      'minLength',
-      'maxLength',
-      'number_expression',
-      'textfield_expression',
-    ]);
+    expect(variables).to.eql(['min', 'max', 'minLength', 'maxLength', 'number_expression', 'textfield_expression']);
   });
 
-
-  it('should include variables in iframes', () => {
-
+  it('should include variables in iframes', function () {
     const variables = getSchemaVariables(iframesSchema);
 
-    expect(variables).to.eql([
-      'projectPage',
-      'url',
-      'domain',
-      'page'
-    ]);
-
+    expect(variables).to.eql(['projectPage', 'url', 'domain', 'page']);
   });
 
-
-  it('should include variables in html', () => {
-
+  it('should include variables in html', function () {
     const variables = getSchemaVariables(htmlSchema);
 
-    expect(variables).to.eql([
-      'heading',
-      'description'
-    ]);
-
+    expect(variables).to.eql(['heading', 'description']);
   });
 
-
-  it('should include variables in ships example', () => {
-
+  it('should include variables in ships example', function () {
     const variables = getSchemaVariables(shipsExampleSchema);
 
-    expect(variables).to.eql([
-      'selectedShip',
-      'shipsForSale'
-    ]);
+    expect(variables).to.eql(['selectedShip', 'shipsForSale']);
   });
 
-
-  it('should include variables in complex conditions example', () => {
-
+  it('should include variables in complex conditions example', function () {
     const variables = getSchemaVariables(complexConditionExpressionSchema);
 
-    expect(variables).to.eql([
-      'loanOptions',
-      'remainingAllowance',
-      'offeredAdditionalLoan',
-      'c1'
-    ]);
+    expect(variables).to.eql(['loanOptions', 'remainingAllowance', 'offeredAdditionalLoan', 'c1']);
   });
 
-
-  it('should only include root keys in nested components, but all variable references', () => {
-
+  it('should only include root keys in nested components, but all variable references', function () {
     const variables = getSchemaVariables(groupsSchema);
 
     expect(variables).to.eql([
@@ -251,9 +204,35 @@ describe('util/getSchemaVariables', () => {
       'text_nested',
       'pathed',
       'separated',
-      'separated2'
+      'separated2',
     ]);
-
   });
 
+  it('should include variables in complex templates', function () {
+    const variables = getSchemaVariables(expressionFieldSchema);
+
+    expect(variables).to.include.members(['exp_expression', 'data', 'selected', 'filter']);
+  });
+
+  it('should include variables in filepickers', function () {
+    const variables = getSchemaVariables(filepickerSchema);
+
+    expect(variables).to.eql([
+      'root_multiple',
+      'root_formats',
+      'group_multiple',
+      'group_formats',
+      'list_multiple',
+      'list_formats',
+      'root_filepicker',
+      'group_path',
+      'dynamiclist_path',
+    ]);
+  });
+
+  it('should include variables in document preview', function () {
+    const variables = getSchemaVariables(documentPreviewSchema);
+
+    expect(variables).to.eql(['my_documents', 'case_id']);
+  });
 });

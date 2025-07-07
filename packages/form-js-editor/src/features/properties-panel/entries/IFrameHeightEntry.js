@@ -5,7 +5,7 @@ export function IFrameHeightEntry(props) {
     ...HeightEntry({
       ...props,
       description: 'Výška okna v pixelech.',
-      isDefaultVisible: (field) => field.type === 'iframe'
-    })
+      isDefaultVisible: (field) => field.type === 'iframe',
+    }),
   ];
 }

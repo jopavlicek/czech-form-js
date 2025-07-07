@@ -22,14 +22,17 @@ import {
   DateTimeEntry,
   TableDataSourceEntry,
   PaginationEntry,
-  RowCountEntry
+  RowCountEntry,
+  VersionTagEntry,
+  AcceptEntry,
+  MultipleEntry,
+  DocumentsDataSourceEntry,
 } from '../entries';
 
-
 export function GeneralGroup(field, editField, getService) {
-
   const entries = [
     ...IdEntry({ field, editField }),
+    ...VersionTagEntry({ field, editField }),
     ...LabelEntry({ field, editField }),
     ...DescriptionEntry({ field, editField }),
     ...KeyEntry({ field, editField, getService }),
@@ -48,11 +51,14 @@ export function GeneralGroup(field, editField, getService) {
     ...ImageSourceEntry({ field, editField }),
     ...AltTextEntry({ field, editField }),
     ...SelectEntries({ field, editField }),
+    ...AcceptEntry({ field, editField }),
+    ...MultipleEntry({ field, editField }),
     ...DisabledEntry({ field, editField }),
     ...ReadonlyEntry({ field, editField }),
     ...TableDataSourceEntry({ field, editField }),
     ...PaginationEntry({ field, editField }),
-    ...RowCountEntry({ field, editField })
+    ...RowCountEntry({ field, editField }),
+    ...DocumentsDataSourceEntry({ field, editField }),
   ];
 
   if (entries.length === 0) {
@@ -62,6 +68,6 @@ export function GeneralGroup(field, editField, getService) {
   return {
     id: 'general',
     label: 'Obecné',
-    entries
+    entries,
   };
 }

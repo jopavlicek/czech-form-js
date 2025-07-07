@@ -25,7 +25,7 @@
       "description": "The schema version of a form",
       "type": "integer",
       "minimum": 1,
-      "maximum": 15
+      "maximum": 18
     },
     "executionPlatform": {
       "$id": "#/executionPlatform",
@@ -35,6 +35,11 @@
     "executionPlatformVersion": {
       "$id": "#/executionPlatformVersion",
       "description": "The target execution platform version of a form",
+      "type": "string"
+    },
+    "versionTag": {
+      "$id": "#/versionTag",
+      "description": "The version tag of a form",
       "type": "string"
     },
     "exporter": {
@@ -57,8 +62,5 @@
       ]
     }
   },
-  "required": [
-    "type",
-    "components"
-  ]
+  "required": ["type", "components"]
 }

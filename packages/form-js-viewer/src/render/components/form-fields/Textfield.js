@@ -11,37 +11,26 @@ import { useFlushDebounce } from '../../hooks/useFlushDebounce';
 const type = 'textfield';
 
 export function Textfield(props) {
-  const {
-    disabled,
-    errors = [],
-    domId,
-    onBlur,
-    onFocus,
-    field,
-    readonly,
-    value = ''
-  } = props;
+  const { disabled, errors = [], domId, onBlur, onFocus, field, readonly, value = '' } = props;
 
-  const {
-    description,
-    label,
-    appearance = {},
-    validate = {}
-  } = field;
+  const { description, label, appearance = {}, validate = {} } = field;
 
-  const {
-    prefixAdorner,
-    suffixAdorner
-  } = appearance;
+  const { prefixAdorner, suffixAdorner } = appearance;
 
   const { required } = validate;
 
-  const [ onInputChange, flushOnChange ] = useFlushDebounce(({ target }) => {
+  const [onChange, flushOnChange] = useFlushDebounce(({ target }) => {
     props.onChange({
-      field,
-      value: target.value
+      value: target.value,
     });
   });
+
+  /**
+   * @param {import('preact').JSX.TargetedEvent<HTMLInputElement, Event>} event
+   */
+  const onInputChange = (event) => {
+    onChange({ target: event.target });
+  };
 
   const onInputBlur = () => {
     flushOnChange && flushOnChange();
@@ -55,35 +44,35 @@ export function Textfield(props) {
   const descriptionId = `${domId}-description`;
   const errorMessageId = `${domId}-error-message`;
 
-  return <div class={ formFieldClasses(type, { errors, disabled, readonly }) }>
-    <Label
-      htmlFor={ domId }
-      label={ label }
-      required={ required } />
-    <TemplatedInputAdorner disabled={ disabled } readonly={ readonly } pre={ prefixAdorner } post={ suffixAdorner }>
-      <input
-        class="fjs-input"
-        disabled={ disabled }
-        readOnly={ readonly }
-        id={ domId }
-        onInput={ onInputChange }
-        onBlur={ onInputBlur }
-        onFocus={ onInputFocus }
-        type="text"
-        value={ value }
-        aria-describedby={ [ descriptionId, errorMessageId ].join(' ') }
-        required={ required }
-        aria-invalid={ errors.length > 0 } />
-    </TemplatedInputAdorner>
-    <Description id={ descriptionId } description={ description } />
-    <Errors id={ errorMessageId } errors={ errors } />
-  </div>;
+  return (
+    <div class={formFieldClasses(type, { errors, disabled, readonly })}>
+      <Label htmlFor={domId} label={label} required={required} />
+      <TemplatedInputAdorner disabled={disabled} readonly={readonly} pre={prefixAdorner} post={suffixAdorner}>
+        <input
+          class="fjs-input"
+          disabled={disabled}
+          readOnly={readonly}
+          id={domId}
+          onInput={onInputChange}
+          onBlur={onInputBlur}
+          onFocus={onInputFocus}
+          type="text"
+          value={value}
+          aria-describedby={[descriptionId, errorMessageId].join(' ')}
+          required={required}
+          aria-invalid={errors.length > 0}
+        />
+      </TemplatedInputAdorner>
+      <Description id={descriptionId} description={description} />
+      <Errors id={errorMessageId} errors={errors} />
+    </div>
+  );
 }
 
 Textfield.config = {
   type,
   keyed: true,
-  label: 'Text',
+  name: 'Text',
   group: 'basic-input',
   emptyValue: '',
   sanitizeValue: ({ value }) => {
@@ -98,5 +87,5 @@ Textfield.config = {
 
     return String(value);
   },
-  create: (options = {}) => ({ ...options })
+  create: (options = {}) => ({ label: 'Text field', ...options }),
 };

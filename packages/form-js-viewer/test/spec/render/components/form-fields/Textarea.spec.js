@@ -1,14 +1,9 @@
-import {
-  fireEvent,
-  render
-} from '@testing-library/preact/pure';
+import { render, fireEvent } from '@testing-library/preact/pure';
+import userEvent from '@testing-library/user-event';
 
 import { Textarea } from '../../../../../src/render/components/form-fields/Textarea';
 
-import {
-  createFormContainer,
-  expectNoViolations
-} from '../../../../TestHelper';
+import { createFormContainer, expectNoViolations } from '../../../../TestHelper';
 
 import { MockFormContext } from '../helper';
 
@@ -16,23 +11,19 @@ const spy = sinon.spy;
 
 let container;
 
-
-describe('Textarea', function() {
-
-  beforeEach(function() {
+describe('Textarea', function () {
+  beforeEach(function () {
     container = createFormContainer();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     container.remove();
   });
 
-
-  it('should render', function() {
-
+  it('should render', function () {
     // when
     const { container } = createTextarea({
-      value: 'This is a sample comment in a text area /nIt includes a line break'
+      value: 'This is a sample comment in a text area /nIt includes a line break',
     });
 
     // then
@@ -54,18 +45,16 @@ describe('Textarea', function() {
     expect(label.htmlFor).to.equal('test-textarea');
   });
 
-
-  it('should render required label', function() {
-
+  it('should render required label', function () {
     // when
     const { container } = createTextarea({
       field: {
         ...defaultField,
         label: 'Required',
         validate: {
-          required: true
-        }
-      }
+          required: true,
+        },
+      },
     });
 
     // then
@@ -75,9 +64,7 @@ describe('Textarea', function() {
     expect(label.textContent).to.equal('Required*');
   });
 
-
-  it('should render default value (\'\')', function() {
-
+  it("should render default value ('')", function () {
     // when
     const { container } = createTextarea();
 
@@ -88,37 +75,32 @@ describe('Textarea', function() {
     expect(input.value).to.equal('');
   });
 
-
-  it('should render default value on value removed', function() {
-
+  it('should render default value on value removed', function () {
     // given
     const props = {
       disabled: false,
       errors: [],
       field: defaultField,
-      onChange: () => {}
+      onChange: () => {},
     };
 
     createTextarea({
       ...props,
-      value: 'foo'
+      value: 'foo',
     });
 
     const textarea = container.querySelector('textarea');
-
-    fireEvent.change(textarea, { target: { value: null } });
+    userEvent.clear(textarea);
 
     // then
     expect(textarea).to.exist;
     expect(textarea.value).to.equal('');
   });
 
-
-  it('should render disabled', function() {
-
+  it('should render disabled', function () {
     // when
     const { container } = createTextarea({
-      disabled: true
+      disabled: true,
     });
 
     // then
@@ -128,12 +110,10 @@ describe('Textarea', function() {
     expect(textarea.disabled).to.be.true;
   });
 
-
-  it('should render readonly', function() {
-
+  it('should render readonly', function () {
     // when
     const { container } = createTextarea({
-      readonly: true
+      readonly: true,
     });
 
     // then
@@ -143,15 +123,13 @@ describe('Textarea', function() {
     expect(textarea.readOnly).to.be.true;
   });
 
-
-  it('should render description', function() {
-
+  it('should render description', function () {
     // when
     const { container } = createTextarea({
       field: {
         ...defaultField,
-        description: 'foo'
-      }
+        description: 'foo',
+      },
     });
 
     // then
@@ -161,38 +139,32 @@ describe('Textarea', function() {
     expect(description.textContent).to.equal('foo');
   });
 
-
-  describe('change handling', function() {
-
-    it('should change text', function() {
-
+  describe('change handling', function () {
+    it('should change text', async function () {
       // given
       const onChangeSpy = spy();
 
       const { container } = createTextarea({
         onChange: onChangeSpy,
-        value: 'A text area value'
+        value: 'A text area value',
       });
 
       // when
       const textarea = container.querySelector('textarea');
-
-      fireEvent.input(textarea, { target: { value: 'A different text area value' } });
+      await userEvent.clear(textarea);
+      await userEvent.type(textarea, 'A different text area value');
 
       // then
-      expect(onChangeSpy).to.have.been.calledWith({
-        field: defaultField,
-        value: 'A different text area value'
+      expect(onChangeSpy).to.have.been.calledWithMatch({
+        value: 'A different text area value',
       });
     });
 
-
-    it('should autosize', function() {
-
+    it('should autosize', async function () {
       // given
       const { container } = createTextarea({
         value: '',
-        onChange: () => { }
+        onChange: () => {},
       });
 
       // when
@@ -209,41 +181,34 @@ describe('Textarea', function() {
 
       fireEvent.input(textarea, { target: { value: '\n'.repeat(200) } });
       expect(textarea.style.height === '350px');
-
     });
 
-
-    it('should clear', function() {
-
+    it('should clear', async function () {
       // given
       const onChangeSpy = spy();
 
       const { container } = createTextarea({
         onChange: onChangeSpy,
-        value: 'A text area value'
+        value: 'A text area value',
       });
 
       // when
       const textarea = container.querySelector('textarea');
 
-      fireEvent.input(textarea, { target: { value: '' } });
+      await userEvent.clear(textarea);
 
       // then
-      expect(onChangeSpy).to.have.been.calledWith({
-        field: defaultField,
-        value: ''
+      expect(onChangeSpy).to.have.been.calledWithMatch({
+        value: '',
       });
     });
-
   });
 
-
-  it('#create', function() {
-
+  it('#create', function () {
     // assume
     const { config } = Textarea;
     expect(config.type).to.eql('textarea');
-    expect(config.label).to.eql('Text area');
+    expect(config.name).to.eql('Text area');
     expect(config.group).to.eql('basic-input');
     expect(config.keyed).to.be.true;
 
@@ -251,24 +216,23 @@ describe('Textarea', function() {
     const field = config.create();
 
     // then
-    expect(field).to.eql({});
+    expect(field).to.eql({
+      label: 'Text area',
+    });
 
     // but when
     const customField = config.create({
-      custom: true
+      custom: true,
     });
 
     // then
     expect(customField).to.contain({
-      custom: true
+      custom: true,
     });
   });
 
-
-  describe('#sanitizeValue', function() {
-
-    it('should convert integers', function() {
-
+  describe('#sanitizeValue', function () {
+    it('should convert integers', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
@@ -281,12 +245,9 @@ describe('Textarea', function() {
       expect(sanitizedValue1).to.equal('1');
       expect(sanitizedValue2).to.equal('0');
       expect(sanitizedValue3).to.equal('-1');
-
     });
 
-
-    it('should convert booleans', function() {
-
+    it('should convert booleans', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
@@ -297,12 +258,9 @@ describe('Textarea', function() {
       // then
       expect(sanitizedValue1).to.equal('true');
       expect(sanitizedValue2).to.equal('false');
-
     });
 
-
-    it('should convert floats', function() {
-
+    it('should convert floats', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
@@ -315,12 +273,9 @@ describe('Textarea', function() {
       expect(sanitizedValue1).to.equal('1.1');
       expect(sanitizedValue2).to.equal('0');
       expect(sanitizedValue3).to.equal('-1.1');
-
     });
 
-
-    it('should sanitize null', function() {
-
+    it('should sanitize null', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
@@ -329,12 +284,9 @@ describe('Textarea', function() {
 
       // then
       expect(sanitizedValue).to.equal('');
-
     });
 
-
-    it('should sanitize undefined', function() {
-
+    it('should sanitize undefined', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
@@ -343,75 +295,61 @@ describe('Textarea', function() {
 
       // then
       expect(sanitizedValue).to.equal('');
-
     });
 
-
-    it('should sanitize arrays', function() {
-
+    it('should sanitize arrays', function () {
       // given
       const { sanitizeValue } = Textarea.config;
 
       // when
       const sanitizedValue1 = sanitizeValue({ value: [] });
-      const sanitizedValue2 = sanitizeValue({ value: [ 1, 2, 3 ] });
+      const sanitizedValue2 = sanitizeValue({ value: [1, 2, 3] });
 
       // then
       expect(sanitizedValue1).to.equal('');
       expect(sanitizedValue2).to.equal('');
-
     });
-
   });
 
-
-  describe('a11y', function() {
-
-    it('should have no violations', async function() {
-
-      // given
-      this.timeout(10000);
-
-      const { container } = createTextarea({
-        value: 'This is a textarea value /nFollowed by a newline'
-      });
-
-      // then
-      await expectNoViolations(container);
-    });
-
-
-    it('should have no violations for readonly', async function() {
-
+  describe('a11y', function () {
+    it('should have no violations', async function () {
       // given
       this.timeout(10000);
 
       const { container } = createTextarea({
         value: 'This is a textarea value /nFollowed by a newline',
-        readonly: true
       });
 
       // then
       await expectNoViolations(container);
     });
 
-
-    it('should have no violations for errors', async function() {
-
+    it('should have no violations for readonly', async function () {
       // given
       this.timeout(10000);
 
       const { container } = createTextarea({
         value: 'This is a textarea value /nFollowed by a newline',
-        errors: [ 'Something went wrong' ]
+        readonly: true,
       });
 
       // then
       await expectNoViolations(container);
     });
 
-  });
+    it('should have no violations for errors', async function () {
+      // given
+      this.timeout(10000);
 
+      const { container } = createTextarea({
+        value: 'This is a textarea value /nFollowed by a newline',
+        errors: ['Something went wrong'],
+      });
+
+      // then
+      await expectNoViolations(container);
+    });
+  });
 });
 
 // helpers //////////
@@ -421,7 +359,7 @@ const defaultField = {
   key: 'approverComments',
   label: 'Approver Comments',
   description: 'textarea',
-  type: 'textarea'
+  type: 'textarea',
 };
 
 function createTextarea({ services, ...restOptions } = {}) {
@@ -429,16 +367,15 @@ function createTextarea({ services, ...restOptions } = {}) {
     domId: 'test-textarea',
     field: defaultField,
     onChange: () => {},
-    ...restOptions
+    ...restOptions,
   };
 
   return render(
-    <MockFormContext
-      services={ services }
-      options={ options }>
-      <Textarea { ...options } />
-    </MockFormContext>, {
-      container: options.container || container.querySelector('.fjs-form')
-    }
+    <MockFormContext services={services} options={options}>
+      <Textarea {...options} />
+    </MockFormContext>,
+    {
+      container: options.container || container.querySelector('.fjs-form'),
+    },
   );
 }

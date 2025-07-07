@@ -1,7 +1,4 @@
-import {
-  cleanup,
-  render
-} from '@testing-library/preact/pure';
+import { cleanup, render } from '@testing-library/preact/pure';
 
 import { AppearanceGroup } from '../../../../../src/features/properties-panel/groups';
 
@@ -9,14 +6,12 @@ import { MockPropertiesPanelContext, TestPropertiesPanel } from '../helper';
 
 import { setEditorValue } from '../../../../helper';
 
+describe('AppearanceGroup', function () {
+  afterEach(function () {
+    return cleanup();
+  });
 
-describe('AppearanceGroup', function() {
-
-  afterEach(() => cleanup());
-
-
-  it('should NOT render for checkbox', function() {
-
+  it('should NOT render for checkbox', function () {
     // given
     const field = { type: 'checkbox' };
 
@@ -26,11 +21,8 @@ describe('AppearanceGroup', function() {
     expect(findGroup('appearance', document.body)).to.not.exist;
   });
 
-
-  describe('suffixAdorner', function() {
-
-    it('should render for textfield', function() {
-
+  describe('suffixAdorner', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -43,15 +35,13 @@ describe('AppearanceGroup', function() {
       expect(input).to.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          suffixAdorner: 'foo'
-        }
+          suffixAdorner: 'foo',
+        },
       };
 
       // when
@@ -65,15 +55,13 @@ describe('AppearanceGroup', function() {
       expect(input.textContent).to.eql('foo');
     });
 
-
-    it('should write', async function() {
-
+    it('should write', async function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          suffixAdorner: 'foo'
-        }
+          suffixAdorner: 'foo',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -91,15 +79,13 @@ describe('AppearanceGroup', function() {
       expect(field.appearance.suffixAdorner).to.eql('newVal');
     });
 
-
-    it('should write expression', async function() {
-
+    it('should write expression', async function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          suffixAdorner: '=foo'
-        }
+          suffixAdorner: '=foo',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -115,14 +101,10 @@ describe('AppearanceGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.appearance.suffixAdorner).to.eql('=newVal');
     });
-
   });
 
-
-  describe('prefixAdorner', function() {
-
-    it('should render for textfield', function() {
-
+  describe('prefixAdorner', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -135,15 +117,13 @@ describe('AppearanceGroup', function() {
       expect(input).to.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          prefixAdorner: 'foo'
-        }
+          prefixAdorner: 'foo',
+        },
       };
 
       // when
@@ -157,15 +137,13 @@ describe('AppearanceGroup', function() {
       expect(input.textContent).to.eql('foo');
     });
 
-
-    it('should write', async function() {
-
+    it('should write', async function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          prefixAdorner: 'foo'
-        }
+          prefixAdorner: 'foo',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -184,15 +162,13 @@ describe('AppearanceGroup', function() {
       expect(field.appearance.prefixAdorner).to.eql('newVal');
     });
 
-
-    it('should write expression', async function() {
-
+    it('should write expression', async function () {
       // given
       const field = {
         type: 'textfield',
         appearance: {
-          prefixAdorner: '=foo'
-        }
+          prefixAdorner: '=foo',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -208,26 +184,20 @@ describe('AppearanceGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.appearance.prefixAdorner).to.eql('=newVal');
     });
-
   });
-
 });
-
 
 // helper ///////////////
 
 function renderAppearanceGroup(options) {
-  const {
-    editField,
-    field
-  } = options;
+  const { editField, field } = options;
 
-  const groups = [ AppearanceGroup(field, editField) ];
+  const groups = [AppearanceGroup(field, editField)];
 
   return render(
-    <MockPropertiesPanelContext options={ options }>
-      <TestPropertiesPanel field={ field } groups={ groups } />
-    </MockPropertiesPanelContext>
+    <MockPropertiesPanelContext options={options}>
+      <TestPropertiesPanel field={field} groups={groups} />
+    </MockPropertiesPanelContext>,
   );
 }
 

@@ -1,36 +1,37 @@
 import { formFieldClasses } from '../Util';
+import { useSingleLineTemplateEvaluation } from '../../hooks';
 
 const type = 'button';
 
 export function Button(props) {
-  const {
-    disabled,
-    onFocus,
-    onBlur,
-    field
-  } = props;
+  const { disabled, onFocus, onBlur, field } = props;
 
   const { action = 'submit' } = field;
 
-  return <div class={ formFieldClasses(type) }>
-    <button
-      class="fjs-button"
-      type={ action }
-      disabled={ disabled }
-      onFocus={ () => onFocus && onFocus() }
-      onBlur={ () => onBlur && onBlur() }>
-      { field.label }
-    </button>
-  </div>;
+  const evaluatedLabel = useSingleLineTemplateEvaluation(field.label || '', { debug: true });
+
+  return (
+    <div class={formFieldClasses(type)}>
+      <button
+        class="fjs-button"
+        type={action}
+        disabled={disabled}
+        onFocus={() => onFocus && onFocus()}
+        onBlur={() => onBlur && onBlur()}>
+        {evaluatedLabel}
+      </button>
+    </div>
+  );
 }
 
 Button.config = {
   type,
   keyed: false,
-  label: 'Tlačítko',
+  name: 'Tlačítko',
   group: 'action',
   create: (options = {}) => ({
+    label: 'Button',
     action: 'submit',
-    ...options
-  })
+    ...options,
+  }),
 };

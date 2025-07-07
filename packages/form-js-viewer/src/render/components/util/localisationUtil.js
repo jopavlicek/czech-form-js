@@ -9,15 +9,21 @@ export function getLocaleDateFormat(locale = 'default') {
 
   // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech dd. mm. yyyy)
   const parts = new Intl.DateTimeFormat('de').formatToParts(new Date(Date.UTC(2020, 5, 5)));
-  return parts.map(part => {
-    const len = part.value.length;
-    switch (part.type) {
-    case 'day': return 'd'.repeat(len);
-    case 'month': return 'M'.repeat(len);
-    case 'year': return 'y'.repeat(len);
-    default: return part.value;
-    }
-  }).join('');
+  return parts
+    .map((part) => {
+      const len = part.value.length;
+      switch (part.type) {
+        case 'day':
+          return 'd'.repeat(len);
+        case 'month':
+          return 'M'.repeat(len);
+        case 'year':
+          return 'y'.repeat(len);
+        default:
+          return part.value;
+      }
+    })
+    .join('');
 }
 
 /**
@@ -55,11 +61,10 @@ export function getLocaleDateFlatpickrConfig(locale) {
 }
 
 function flatpickerizeDateFormat(dateFormat) {
-
   const useLeadingZero = {
     day: dateFormat.includes('dd'),
     month: dateFormat.includes('MM'),
-    year: dateFormat.includes('yyyy')
+    year: dateFormat.includes('yyyy'),
   };
 
   dateFormat = useLeadingZero.day ? dateFormat.replace('dd', 'd') : dateFormat.replace('d', 'j');

@@ -68,7 +68,7 @@ const MARKDOWN_STYLES = css`
       letter-spacing: var(--cds-body-long-01-letter-spacing);
       margin-bottom: var(--cds-spacing-05);
     }
-  
+
     & h1 {
       font-size: var(--cds-productive-heading-06-font-size);
       font-weight: var(--cds-productive-heading-06-font-weight);
@@ -178,7 +178,7 @@ const MARKDOWN_STYLES = css`
     pre {
       margin-bottom: var(--cds-spacing-05);
     }
-  
+
     div > :last-child {
       margin-bottom: 0;
     }
@@ -301,8 +301,7 @@ const READONLY_STYLES = css`
             }
           }
 
-          &.fjs-checked .fjs-input[type='checkbox'],
-          .fjs-form-field-label.fjs-checked .fjs-input[type='checkbox'] {
+          &.fjs-checked .fjs-input[type='checkbox'] {
             &:before {
               border: 1px solid var(--cds-icon-disabled);
               background: transparent;
@@ -387,10 +386,7 @@ const DISABLED_STYLES = css`
       }
     }
 
-    .fjs-form-field-datetime.fjs-disabled
-      .fjs-input-group
-      .fjs-input-adornment
-      svg {
+    .fjs-form-field-datetime.fjs-disabled .fjs-input-group .fjs-input-adornment svg {
       color: var(--cds-icon-disabled);
       cursor: var(--cursor-disabled, not-allowed);
     }
@@ -416,22 +412,18 @@ const LABEL_DESCRIPTION_ERROR_STYLES = css`
       letter-spacing: var(--cds-label-01-letter-spacing);
     }
 
-    .fjs-form-field:not(.fjs-form-field-checkbox, .fjs-form-field-grouplike)
-      .fjs-form-field-label:first-child {
+    .fjs-form-field:not(.fjs-form-field-checkbox, .fjs-form-field-grouplike) .fjs-form-field-label:first-child {
       margin: 0;
       margin-bottom: var(--cds-spacing-03);
     }
 
-    .fjs-form-field.fjs-form-field-radio
-      .fjs-form-field-label:not(:first-of-type),
-    .fjs-form-field.fjs-form-field-checklist
-      .fjs-form-field-label:not(:first-of-type) {
+    .fjs-form-field.fjs-form-field-radio .fjs-inline-label,
+    .fjs-form-field.fjs-form-field-checklist .fjs-inline-label {
       margin: 0;
       margin-bottom: 0.1875rem;
     }
 
-    .fjs-form-field.fjs-form-field-radio
-      .fjs-form-field-label:not(:first-of-type) {
+    .fjs-form-field.fjs-form-field-radio .fjs-form-field-label:not(:first-of-type) {
       min-height: ${rem(27)};
     }
 
@@ -522,9 +514,7 @@ const CHECKBOX_STYLES = css`
     }
 
     .fjs-form-field.fjs-checked .fjs-input[type='checkbox'],
-    .fjs-form-field
-      .fjs-form-field-label.fjs-checked
-      .fjs-input[type='checkbox'] {
+    .fjs-form-field .fjs-inline-label.fjs-checked .fjs-input[type='checkbox'] {
       &:before {
         border: none;
         border-width: 1px;
@@ -686,7 +676,8 @@ const RADIO_STYLES = css`
 
 const BUTTON_STYLES = css`
   .fjs-container {
-    .fjs-form-field.fjs-form-field-button .fjs-button {
+    .fjs-form-field.fjs-form-field-button .fjs-button,
+    .fjs-form-field.fjs-form-field-filepicker .fjs-button {
       font-size: var(--cds-body-short-01-font-size);
       font-weight: var(--cds-body-short-01-font-weight);
       line-height: var(--cds-body-short-01-line-height);
@@ -708,7 +699,8 @@ const BUTTON_STYLES = css`
 
     .fjs-form-field.fjs-form-field-button .fjs-button:focus {
       border-color: var(--cds-focus);
-      box-shadow: inset 0 0 0 1px var(--cds-focus),
+      box-shadow:
+        inset 0 0 0 1px var(--cds-focus),
         inset 0 0 0 2px var(--cds-background);
       color: var(--cds-text-inverse);
       background-color: var(--cds-button-tertiary);
@@ -853,9 +845,9 @@ const DATETIME_INPUTS = css`
         select {
           ${getBaseInputStyles({ height: '1.5rem' })};
           ${getSelectArrowStyles({
-    arrowRightPosition: 'var(--cds-spacing-03)',
-    color: theme.iconPrimary,
-  })};
+            arrowRightPosition: 'var(--cds-spacing-03)',
+            color: theme.iconPrimary,
+          })};
           border-bottom: none;
           padding-right: 2rem;
         }
@@ -942,9 +934,9 @@ const SELECT_STYLES = css`
       .fjs-form-field-select .fjs-input-group {
         ${getBaseInputStyles({ height: '2.5rem' })}
         ${getSelectArrowStyles({
-    arrowRightPosition: 'var(--cds-spacing-05)',
-    color: theme.iconPrimary,
-  })}
+          arrowRightPosition: 'var(--cds-spacing-05)',
+          color: theme.iconPrimary,
+        })}
 
         .fjs-select-display {
           display: flex;
@@ -998,9 +990,9 @@ const SELECT_STYLES = css`
 
       .fjs-form-field-select.fjs-disabled .fjs-input-group {
         ${getSelectArrowStyles({
-    arrowRightPosition: 'var(--cds-spacing-05)',
-    color: theme.iconDisabled,
-  })}
+          arrowRightPosition: 'var(--cds-spacing-05)',
+          color: theme.iconDisabled,
+        })}
       }
 
       .fjs-has-errors.fjs-form-field-select .fjs-input-group:focus-within {

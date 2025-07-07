@@ -6,18 +6,16 @@ export function Spacer(props) {
   const { field } = props;
   const { height = 60 } = field;
 
-  return (
-    <div class={ formFieldClasses(type) } style={ { height: height } } />
-  );
+  return <div class={formFieldClasses(type)} style={{ height: height }} />;
 }
 
 Spacer.config = {
   type,
   keyed: false,
-  label: 'Mezera',
+  name: 'Mezera',
   group: 'presentation',
   create: (options = {}) => ({
     height: 60,
-    ...options
-  })
+    ...options,
+  }),
 };

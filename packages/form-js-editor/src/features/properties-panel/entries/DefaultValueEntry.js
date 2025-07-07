@@ -4,7 +4,7 @@ import {
   isTextAreaEntryEdited,
   SelectEntry,
   TextFieldEntry,
-  TextAreaEntry
+  TextAreaEntry,
 } from '@bpmn-io/properties-panel';
 
 import { get } from 'min-dash';
@@ -16,104 +16,90 @@ import { useService } from '../hooks';
 import { countDecimals, INPUTS, isValidNumber, OPTIONS_INPUTS } from '../Util';
 import { useCallback } from 'preact/hooks';
 
-export const EMPTY_OPTION = null;
+export const EMPTY_OPTION = '';
 
 export function DefaultValueEntry(props) {
-  const {
-    editField,
-    field
-  } = props;
+  const { editField, field } = props;
 
-  const {
-    type
-  } = field;
+  const { type } = field;
 
   const entries = [];
 
   function isDefaultVisible(matchers) {
     return (field) => {
-
       // Only make default values available when they are statically defined
-      if (!INPUTS.includes(type) || OPTIONS_INPUTS.includes(type) && !field.values) {
+      if (!INPUTS.includes(type) || (OPTIONS_INPUTS.includes(type) && !field.values)) {
         return false;
       }
 
       return matchers(field);
     };
-
   }
 
-  const defaulValueBase = {
+  const defaultValueBase = {
     editField,
     field,
     id: 'defaultValue',
-    label: 'Výchozí hodnota'
+    label: 'Výchozí hodnota',
   };
 
   entries.push({
-    ...defaulValueBase,
+    ...defaultValueBase,
     component: DefaultValueCheckbox,
     isEdited: isSelectEntryEdited,
-    isDefaultVisible: isDefaultVisible((field) => field.type === 'checkbox')
+    isDefaultVisible: isDefaultVisible((field) => field.type === 'checkbox'),
   });
 
   entries.push({
-    ...defaulValueBase,
+    ...defaultValueBase,
     component: DefaultValueNumber,
     isEdited: isTextFieldEntryEdited,
-    isDefaultVisible: isDefaultVisible((field) => field.type === 'number')
+    isDefaultVisible: isDefaultVisible((field) => field.type === 'number'),
   });
 
   entries.push({
-    ...defaulValueBase,
+    ...defaultValueBase,
     component: DefaultValueSingleSelect,
     isEdited: isSelectEntryEdited,
-    isDefaultVisible: isDefaultVisible((field) => field.type === 'radio' || field.type === 'select')
+    isDefaultVisible: isDefaultVisible((field) => field.type === 'radio' || field.type === 'select'),
   });
 
   // todo(Skaiir): implement a multiselect equivalent (cf. https://github.com/bpmn-io/form-js/issues/265)
 
   entries.push({
-    ...defaulValueBase,
+    ...defaultValueBase,
     component: DefaultValueTextfield,
     isEdited: isTextFieldEntryEdited,
-    isDefaultVisible: isDefaultVisible((field) => field.type === 'textfield')
+    isDefaultVisible: isDefaultVisible((field) => field.type === 'textfield'),
   });
 
   entries.push({
-    ...defaulValueBase,
+    ...defaultValueBase,
     component: DefaultValueTextarea,
     isEdited: isTextAreaEntryEdited,
-    isDefaultVisible: isDefaultVisible((field) => field.type === 'textarea')
+    isDefaultVisible: isDefaultVisible((field) => field.type === 'textarea'),
   });
 
   return entries;
 }
 
 function DefaultValueCheckbox(props) {
-  const {
-    editField,
-    field,
-    id,
-    label
-  } = props;
+  const { editField, field, id, label } = props;
 
-  const {
-    defaultValue
-  } = field;
+  const { defaultValue } = field;
 
-  const path = [ 'defaultValue' ];
+  const path = ['defaultValue'];
 
   const getOptions = () => {
     return [
       {
         label: 'Zaškrtnuto',
-        value: 'true'
+        value: 'true',
       },
       {
         label: 'Nezaškrtnuto',
-        value: 'false'
-      }
+        value: 'false',
+      },
     ];
   };
 
@@ -131,29 +117,20 @@ function DefaultValueCheckbox(props) {
     getValue,
     id,
     label,
-    setValue
+    setValue,
   });
 }
 
 function DefaultValueNumber(props) {
-  const {
-    editField,
-    field,
-    id,
-    label
-  } = props;
+  const { editField, field, id, label } = props;
 
-  const {
-    decimalDigits,
-    serializeToString = false
-  } = field;
+  const { decimalDigits, serializeToString = false } = field;
 
   const debounce = useService('debounce');
 
-  const path = [ 'defaultValue' ];
+  const path = ['defaultValue'];
 
   const getValue = (e) => {
-
     let value = get(field, path);
 
     if (!isValidNumber(value)) return;
@@ -163,7 +140,6 @@ function DefaultValueNumber(props) {
   };
 
   const setValue = (value, error) => {
-
     if (error) {
       return;
     }
@@ -192,7 +168,7 @@ function DefaultValueNumber(props) {
         return `Hodnota nesmí obsahovat více než ${decimalDigits} desetinných míst`;
       }
     },
-    [ decimalDigitsSet, decimalDigits ],
+    [decimalDigitsSet, decimalDigits],
   );
 
   return TextFieldEntry({
@@ -202,32 +178,24 @@ function DefaultValueNumber(props) {
     getValue,
     id,
     setValue,
-    validate
+    validate,
   });
 }
 
 function DefaultValueSingleSelect(props) {
-  const {
-    editField,
-    field,
-    id,
-    label
-  } = props;
+  const { editField, field, id, label } = props;
 
-  const {
-    defaultValue = EMPTY_OPTION,
-    values = []
-  } = field;
+  const { defaultValue = EMPTY_OPTION, values = [] } = field;
 
-  const path = [ 'defaultValue' ];
+  const path = ['defaultValue'];
 
   const getOptions = () => {
     return [
       {
         label: '<neurčeno>',
-        value: EMPTY_OPTION
+        value: EMPTY_OPTION,
       },
-      ...values
+      ...values,
     ];
   };
 
@@ -245,21 +213,16 @@ function DefaultValueSingleSelect(props) {
     getValue,
     id,
     label,
-    setValue
+    setValue,
   });
 }
 
 function DefaultValueTextfield(props) {
-  const {
-    editField,
-    field,
-    id,
-    label
-  } = props;
+  const { editField, field, id, label } = props;
 
   const debounce = useService('debounce');
 
-  const path = [ 'defaultValue' ];
+  const path = ['defaultValue'];
 
   const getValue = () => {
     return get(field, path, '');
@@ -275,21 +238,16 @@ function DefaultValueTextfield(props) {
     getValue,
     id,
     label,
-    setValue
+    setValue,
   });
 }
 
 function DefaultValueTextarea(props) {
-  const {
-    editField,
-    field,
-    id,
-    label
-  } = props;
+  const { editField, field, id, label } = props;
 
   const debounce = useService('debounce');
 
-  const path = [ 'defaultValue' ];
+  const path = ['defaultValue'];
 
   const getValue = () => {
     return get(field, path, '');
@@ -305,7 +263,7 @@ function DefaultValueTextarea(props) {
     getValue,
     id,
     label,
-    setValue
+    setValue,
   });
 }
 

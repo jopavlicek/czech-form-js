@@ -1,79 +1,38 @@
-import {
-  textToLabel
-} from './Util';
-
 import { iconsByType } from '../../render/components/icons';
-
 import { getPaletteIcon } from '../palette/components/Palette';
 
-import { useService } from './hooks';
+export function getPropertiesPanelHeaderProvider(options = {}) {
+  const { getDocumentationRef, formFields } = options;
 
-const headerlessTypes = [
-  'spacer',
-  'separator',
-  'expression',
-  'html'
-];
+  return {
+    getElementLabel: (field) => {
+      const { type } = field;
+      const fieldDefinition = formFields.get(type).config;
+      return fieldDefinition.getSubheading ? fieldDefinition.getSubheading(field) : field.label;
+    },
 
-export const PropertiesPanelHeaderProvider = {
+    getElementIcon: (field) => {
+      const { type } = field;
+      const fieldDefinition = formFields.get(type).config;
+      const Icon = fieldDefinition.icon || iconsByType(type);
+      if (Icon) {
+        return function IconComponent() {
+          return <Icon width="36" height="36" viewBox="0 0 54 54" />;
+        };
+      } else if (fieldDefinition.iconUrl) {
+        return getPaletteIcon({ iconUrl: fieldDefinition.iconUrl, label: fieldDefinition.label });
+      }
+    },
 
-  getElementLabel: (field) => {
-    const {
-      type
-    } = field;
+    getTypeLabel: (field) => {
+      const { type } = field;
+      if (type === 'default') {
+        return 'Formulář';
+      }
+      const fieldDefinition = formFields.get(type).config;
+      return fieldDefinition.name || fieldDefinition.label || type;
+    },
 
-    if (headerlessTypes.includes(type)) {
-      return '';
-    }
-
-    if (type === 'text') {
-      return textToLabel(field.text);
-    }
-
-    if (type === 'image') {
-      return field.alt;
-    }
-
-    if (type === 'default') {
-      return field.id;
-    }
-
-    return field.label;
-  },
-
-  getElementIcon: (field) => {
-    const {
-      type
-    } = field;
-
-    // @Note: We know that we are inside the properties panel context,
-    // so we can savely use the hook here.
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const fieldDefinition = useService('formFields').get(type).config;
-
-    const Icon = fieldDefinition.icon || iconsByType(type);
-
-    if (Icon) {
-      return () => <Icon width="36" height="36" viewBox="0 0 54 54" />;
-    } else if (fieldDefinition.iconUrl) {
-      return getPaletteIcon({ iconUrl: fieldDefinition.iconUrl, label: fieldDefinition.label });
-    }
-  },
-
-  getTypeLabel: (field) => {
-    const {
-      type
-    } = field;
-
-    if (type === 'default') {
-      return 'Formulář';
-    }
-
-    // @Note: We know that we are inside the properties panel context,
-    // so we can savely use the hook here.
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const fieldDefinition = useService('formFields').get(type).config;
-
-    return fieldDefinition.label || type;
-  }
-};
+    getDocumentationRef,
+  };
+}

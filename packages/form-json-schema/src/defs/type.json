@@ -22,6 +22,8 @@
     "separator",
     "table",
     "iframe",
-    "expression"
+    "expression",
+    "filepicker",
+    "documentPreview"
   ]
 }

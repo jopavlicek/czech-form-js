@@ -1,8 +1,4 @@
-import {
-  cleanup,
-  fireEvent,
-  render
-} from '@testing-library/preact/pure';
+import { cleanup, fireEvent, render } from '@testing-library/preact/pure';
 
 import { ValidationGroup } from '../../../../../src/features/properties-panel/groups';
 
@@ -10,15 +6,13 @@ import { TestPropertiesPanel, MockPropertiesPanelContext } from '../helper';
 
 import { setEditorValue } from '../../../../helper';
 
+describe('ValidationGroup', function () {
+  afterEach(function () {
+    return cleanup();
+  });
 
-describe('ValidationGroup', function() {
-
-  afterEach(() => cleanup());
-
-  describe('required', function() {
-
-    it('should render for textfield', function() {
-
+  describe('required', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -31,15 +25,13 @@ describe('ValidationGroup', function() {
       expect(requiredInput).to.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          required: true
-        }
+          required: true,
+        },
       };
 
       // when
@@ -53,15 +45,13 @@ describe('ValidationGroup', function() {
       expect(requiredInput.checked).to.be.true;
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          required: true
-        }
+          required: true,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -77,14 +67,10 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.required).to.be.false;
     });
-
   });
 
-
-  describe('validationType', function() {
-
-    it('should render for textfield', function() {
-
+  describe('validationType', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -97,15 +83,13 @@ describe('ValidationGroup', function() {
       expect(requiredSelect).to.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          validationType: 'email'
-        }
+          validationType: 'email',
+        },
       };
 
       // when
@@ -119,15 +103,13 @@ describe('ValidationGroup', function() {
       expect(requiredSelect.value).to.equal('email');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          validationType: 'email'
-        }
+          validationType: 'email',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -140,19 +122,17 @@ describe('ValidationGroup', function() {
       fireEvent.input(requiredSelect, { target: { value: 'phone' } });
 
       // then
-      expect(editFieldSpy).to.have.been.calledWith(field, [ 'validate' ], { validationType: 'phone' });
+      expect(editFieldSpy).to.have.been.calledWith(field, ['validate'], { validationType: 'phone' });
       expect(field.validate.validationType).to.equal('phone');
     });
 
-
-    it('should write - empty', function() {
-
+    it('should write - empty', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          validationType: 'email'
-        }
+          validationType: 'email',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -165,17 +145,13 @@ describe('ValidationGroup', function() {
       fireEvent.input(requiredSelect, { target: { value: '' } });
 
       // then
-      expect(editFieldSpy).to.have.been.calledWith(field, [ 'validate' ], {});
+      expect(editFieldSpy).to.have.been.calledWith(field, ['validate'], {});
       expect(field.validate.validationType).to.not.exist;
     });
-
   });
 
-
-  describe('minLength', function() {
-
-    it('should render for textfield', function() {
-
+  describe('minLength', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -188,9 +164,7 @@ describe('ValidationGroup', function() {
       expect(minLengthInput).to.exist;
     });
 
-
-    it('should NOT render for number', function() {
-
+    it('should NOT render for number', function () {
       // given
       const field = { type: 'number' };
 
@@ -203,15 +177,13 @@ describe('ValidationGroup', function() {
       expect(minLengthInput).to.not.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          minLength: 3
-        }
+          minLength: 3,
+        },
       };
 
       // when
@@ -224,15 +196,13 @@ describe('ValidationGroup', function() {
       expect(minLengthInput.value).to.equal('3');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          minLength: 3
-        }
+          minLength: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -248,14 +218,10 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.minLength).to.equal(2);
     });
-
   });
 
-
-  describe('maxLength', function() {
-
-    it('should render for textfield', function() {
-
+  describe('maxLength', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -268,9 +234,7 @@ describe('ValidationGroup', function() {
       expect(maxLengthInput).to.exist;
     });
 
-
-    it('should NOT render for number', function() {
-
+    it('should NOT render for number', function () {
       // given
       const field = { type: 'number' };
 
@@ -283,15 +247,13 @@ describe('ValidationGroup', function() {
       expect(maxLengthInput).to.not.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          maxLength: 3
-        }
+          maxLength: 3,
+        },
       };
 
       // when
@@ -304,15 +266,13 @@ describe('ValidationGroup', function() {
       expect(maxLengthInput.value).to.equal('3');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          maxLength: 3
-        }
+          maxLength: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -328,14 +288,10 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.maxLength).to.equal(2);
     });
-
   });
 
-
-  describe('pattern', function() {
-
-    it('should render for textfield', function() {
-
+  describe('pattern', function () {
+    it('should render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -348,9 +304,7 @@ describe('ValidationGroup', function() {
       expect(patternInput).to.exist;
     });
 
-
-    it('should NOT render for number', function() {
-
+    it('should NOT render for number', function () {
       // given
       const field = { type: 'number' };
 
@@ -363,15 +317,13 @@ describe('ValidationGroup', function() {
       expect(patternInput).to.not.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          pattern: 'myPattern'
-        }
+          pattern: 'myPattern',
+        },
       };
 
       // when
@@ -384,15 +336,13 @@ describe('ValidationGroup', function() {
       expect(patternInput.value).to.equal('myPattern');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'textfield',
         validate: {
-          pattern: 'myPattern'
-        }
+          pattern: 'myPattern',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -408,14 +358,10 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.pattern).to.equal('foo');
     });
-
   });
 
-
-  describe('min', function() {
-
-    it('should render for number', function() {
-
+  describe('min', function () {
+    it('should render for number', function () {
       // given
       const field = { type: 'number' };
 
@@ -428,9 +374,7 @@ describe('ValidationGroup', function() {
       expect(minInput).to.exist;
     });
 
-
-    it('should NOT render for textfield', function() {
-
+    it('should NOT render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -443,15 +387,13 @@ describe('ValidationGroup', function() {
       expect(minInput).to.not.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          min: 3
-        }
+          min: 3,
+        },
       };
 
       // when
@@ -464,9 +406,7 @@ describe('ValidationGroup', function() {
       expect(minInput.value).to.equal('3');
     });
 
-
-    it('should read (expression)', function() {
-
+    it('should read (expression)', function () {
       // given
       const field = { type: 'number', validate: { min: '=2' } };
 
@@ -479,15 +419,13 @@ describe('ValidationGroup', function() {
       expect(minInput.textContent).to.eql('2');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          min: 3
-        }
+          min: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -504,15 +442,13 @@ describe('ValidationGroup', function() {
       expect(field.validate.min).to.equal(2);
     });
 
-
-    it('should write (expression)', async function() {
-
+    it('should write (expression)', async function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          min: '=3'
-        }
+          min: '=3',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -532,15 +468,13 @@ describe('ValidationGroup', function() {
       expect(field.validate.min).to.equal('=2');
     });
 
-
-    it('should write decimal', function() {
-
+    it('should write decimal', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          min: 3
-        }
+          min: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -556,14 +490,10 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.min).to.equal(2.25);
     });
-
   });
 
-
-  describe('max', function() {
-
-    it('should render for number', function() {
-
+  describe('max', function () {
+    it('should render for number', function () {
       // given
       const field = { type: 'number' };
 
@@ -576,9 +506,7 @@ describe('ValidationGroup', function() {
       expect(maxInput).to.exist;
     });
 
-
-    it('should NOT render for textfield', function() {
-
+    it('should NOT render for textfield', function () {
       // given
       const field = { type: 'textfield' };
 
@@ -591,15 +519,13 @@ describe('ValidationGroup', function() {
       expect(maxInput).to.not.exist;
     });
 
-
-    it('should read', function() {
-
+    it('should read', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          max: 3
-        }
+          max: 3,
+        },
       };
 
       // when
@@ -612,9 +538,7 @@ describe('ValidationGroup', function() {
       expect(maxInput.value).to.equal('3');
     });
 
-
-    it('should read (expression)', function() {
-
+    it('should read (expression)', function () {
       // given
       const field = { type: 'number', validate: { max: '=2' } };
 
@@ -627,15 +551,13 @@ describe('ValidationGroup', function() {
       expect(maxInput.textContent).to.eql('2');
     });
 
-
-    it('should write', function() {
-
+    it('should write', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          max: 3
-        }
+          max: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -652,15 +574,13 @@ describe('ValidationGroup', function() {
       expect(field.validate.max).to.equal(2);
     });
 
-
-    it('should write (expression)', async function() {
-
+    it('should write (expression)', async function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          max: '=3'
-        }
+          max: '=3',
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -680,15 +600,13 @@ describe('ValidationGroup', function() {
       expect(field.validate.max).to.equal('=2');
     });
 
-
-    it('should write decimal', function() {
-
+    it('should write decimal', function () {
       // given
       const field = {
         type: 'number',
         validate: {
-          max: 3
-        }
+          max: 3,
+        },
       };
 
       const editFieldSpy = sinon.spy();
@@ -704,28 +622,20 @@ describe('ValidationGroup', function() {
       expect(editFieldSpy).to.have.been.calledOnce;
       expect(field.validate.max).to.equal(2.25);
     });
-
   });
-
 });
-
 
 // helper ///////////////
 
 function renderValidationGroup(options) {
-  const {
-    editField,
-    field
-  } = options;
+  const { editField, field } = options;
 
-  const groups = [ ValidationGroup(field, editField) ];
+  const groups = [ValidationGroup(field, editField)];
 
   return render(
     <MockPropertiesPanelContext>
-      <TestPropertiesPanel
-        field={ field }
-        groups={ groups } />
-    </MockPropertiesPanelContext>
+      <TestPropertiesPanel field={field} groups={groups} />
+    </MockPropertiesPanelContext>,
   );
 }
 

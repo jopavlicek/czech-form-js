@@ -17,26 +17,25 @@ export const OPTIONS_SOURCES_LABELS = {
 };
 
 export const OPTIONS_SOURCES_PATHS = {
-  [OPTIONS_SOURCES.STATIC]: [ 'values' ],
-  [OPTIONS_SOURCES.INPUT]: [ 'valuesKey' ],
-  [OPTIONS_SOURCES.EXPRESSION]: [ 'valuesExpression' ],
+  [OPTIONS_SOURCES.STATIC]: ['values'],
+  [OPTIONS_SOURCES.INPUT]: ['valuesKey'],
+  [OPTIONS_SOURCES.EXPRESSION]: ['valuesExpression'],
 };
 
 export const OPTIONS_SOURCES_DEFAULTS = {
   [OPTIONS_SOURCES.STATIC]: [
     {
       label: 'Možnost',
-      value: 'moznost'
-    }
+      value: 'moznost',
+    },
   ],
   [OPTIONS_SOURCES.INPUT]: '',
-  [OPTIONS_SOURCES.EXPRESSION]: '='
+  [OPTIONS_SOURCES.EXPRESSION]: '=',
 };
 
 // helpers ///////////////////
 
 export function getOptionsSource(field) {
-
   for (const source of Object.values(OPTIONS_SOURCES)) {
     if (get(field, OPTIONS_SOURCES_PATHS[source]) !== undefined) {
       return source;

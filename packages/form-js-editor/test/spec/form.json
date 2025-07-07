@@ -239,9 +239,24 @@
       "type": "image"
     },
     {
+      "label": "Image files",
+      "type": "filepicker",
+      "id": "files",
+      "key": "files",
+      "multiple": true,
+      "accept": ".jpg,.png"
+    },
+    {
+      "label": "My documents",
+      "type": "documentPreview",
+      "id": "myDocuments",
+      "dataSource": "=myDocuments",
+      "maxHeight": 500
+    },
+    {
       "id": "Spacer_1",
       "type": "spacer",
-      "height":60
+      "height": 60
     },
     {
       "id": "Button_1",

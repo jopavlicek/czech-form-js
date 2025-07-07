@@ -12,39 +12,23 @@ import { sanitizeSingleSelectValue } from '../util/sanitizerUtil';
 
 import { createEmptyOptions } from '../util/optionsUtil';
 
-import {
-  formFieldClasses
-} from '../Util';
+import { formFieldClasses } from '../Util';
 
 const type = 'radio';
 
-
 export function Radio(props) {
-  const {
-    disabled,
-    errors = [],
-    domId,
-    onBlur,
-    onFocus,
-    field,
-    readonly,
-    value
-  } = props;
+  const { disabled, errors = [], domId, onBlur, onFocus, field, readonly, value } = props;
 
-  const {
-    description,
-    label,
-    validate = {}
-  } = field;
+  const { description, label, validate = {} } = field;
 
+  /** @type {import("preact").RefObject<HTMLDivElement>} */
   const outerDivRef = useRef();
 
   const { required } = validate;
 
   const onChange = (v) => {
     props.onChange({
-      field,
-      value: v
+      value: v,
     });
   };
 
@@ -64,67 +48,72 @@ export function Radio(props) {
     onFocus && onFocus();
   };
 
-  const {
-    loadState,
-    options
-  } = useOptionsAsync(field);
+  const { loadState, options } = useOptionsAsync(field);
 
   useCleanupSingleSelectValue({
     field,
     loadState,
     options,
     value,
-    onChange: props.onChange
+    onChange: props.onChange,
   });
 
   const descriptionId = `${domId}-description`;
   const errorMessageId = `${domId}-error-message`;
 
-  return <div class={ formFieldClasses(type, { errors, disabled, readonly }) } ref={ outerDivRef }>
-    <Label
-      label={ label }
-      required={ required } />
-    {
-      loadState == LOAD_STATES.LOADED && options.map((option, index) => {
+  return (
+    <div class={formFieldClasses(type, { errors, disabled, readonly })} ref={outerDivRef}>
+      <Label label={label} required={required} />
+      {loadState == LOAD_STATES.LOADED &&
+        options.map((option, index) => {
+          const itemDomId = `${domId}-${index}`;
+          const isChecked = isEqual(option.value, value);
 
-        const itemDomId = `${domId}-${index}`;
-        const isChecked = isEqual(option.value, value);
-
-        return (
-          <Label
-            htmlFor={ itemDomId }
-            key={ index }
-            label={ option.label }
-            class={ classNames({ 'fjs-checked': isChecked }) }
-            required={ false }>
-            <input
-              checked={ isChecked }
-              class="fjs-input"
-              disabled={ disabled }
-              readOnly={ readonly }
-              id={ itemDomId }
-              type="radio"
-              onClick={ () => onChange(option.value) }
-              onBlur={ onRadioBlur }
-              onFocus={ onRadioFocus }
-              aria-describedby={ [ descriptionId, errorMessageId ].join(' ') }
-              required={ required }
-              aria-invalid={ errors.length > 0 } />
-          </Label>
-        );
-      })
-    }
-    <Description id={ descriptionId } description={ description } />
-    <Errors id={ errorMessageId } errors={ errors } />
-  </div>;
+          return (
+            <div
+              className={classNames('fjs-inline-label', {
+                'fjs-checked': isChecked,
+              })}
+              key={option.value}>
+              <input
+                checked={isChecked}
+                class="fjs-input"
+                disabled={disabled}
+                readOnly={readonly}
+                name={domId}
+                id={itemDomId}
+                type="radio"
+                onClick={() => onChange(option.value)}
+                onBlur={onRadioBlur}
+                onFocus={onRadioFocus}
+                aria-describedby={[descriptionId, errorMessageId].join(' ')}
+                required={required}
+                aria-invalid={errors.length > 0}
+              />
+              <Label
+                htmlFor={itemDomId}
+                label={option.label}
+                class={classNames({ 'fjs-checked': isChecked })}
+                required={false}
+              />
+            </div>
+          );
+        })}
+      <Description id={descriptionId} description={description} />
+      <Errors id={errorMessageId} errors={errors} />
+    </div>
+  );
 }
 
 Radio.config = {
   type,
   keyed: true,
-  label: 'Výběr z možností',
+  name: 'Výběr z možností',
   group: 'selection',
   emptyValue: null,
   sanitizeValue: sanitizeSingleSelectValue,
-  create: createEmptyOptions
+  create: (options = {}) => ({
+    label: 'Radio group',
+    ...createEmptyOptions(options),
+  }),
 };

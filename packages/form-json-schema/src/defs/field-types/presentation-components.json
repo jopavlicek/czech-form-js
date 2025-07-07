@@ -1,12 +1,8 @@
 {
   "properties": {
     "type": {
-      "enum": [
-        "table"
-      ]
+      "enum": ["table", "documentPreview"]
     }
   },
-  "required": [
-    "type"
-  ]
+  "required": ["type"]
 }

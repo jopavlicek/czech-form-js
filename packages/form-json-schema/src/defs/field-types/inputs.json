@@ -11,11 +11,10 @@
         "taglist",
         "textfield",
         "textarea",
-        "expression"
+        "expression",
+        "filepicker"
       ]
     }
   },
-  "required": [
-    "type"
-  ]
+  "required": ["type"]
 }

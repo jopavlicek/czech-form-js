@@ -3,13 +3,8 @@ import { get } from 'min-dash';
 import { useService } from '../hooks';
 import { OPTIONS_SOURCES, OPTIONS_SOURCES_PATHS } from '@bpmn-io/form-js-viewer';
 
-
 export function InputKeyOptionsSourceEntry(props) {
-  const {
-    editField,
-    field,
-    id
-  } = props;
+  const { editField, field, id } = props;
 
   return [
     {
@@ -18,16 +13,12 @@ export function InputKeyOptionsSourceEntry(props) {
       isEdited: isTextFieldEntryEdited,
       editField,
       field,
-    }
+    },
   ];
 }
 
 function InputValuesKey(props) {
-  const {
-    editField,
-    field,
-    id
-  } = props;
+  const { editField, field, id } = props;
 
   const debounce = useService('debounce');
 
@@ -35,10 +26,14 @@ function InputValuesKey(props) {
 
   const schema = '[\n  {\n    "label": "dollar",\n    "value": "$"\n  }\n]';
 
-  const tooltip = <div>
-    Vstup může být pole jednoduchých hodnot nebo musí podléhat následujícímu schématu:
-    <pre><code>{schema}</code></pre>
-  </div>;
+  const tooltip = (
+    <div>
+      Vstup může být pole jednoduchých hodnot nebo musí podléhat následujícímu schématu:
+      <pre>
+        <code>{schema}</code>
+      </pre>
+    </div>
+  );
 
   const getValue = () => get(field, path, '');
 
@@ -59,17 +54,16 @@ function InputValuesKey(props) {
     id,
     label: 'Klíč vstupních hodnot',
     setValue,
-    validate
+    validate,
   });
 }
-
 
 // helpers //////////
 
 /**
-  * @param {string|void} value
-  * @returns {string|null}
-  */
+ * @param {string|void} value
+ * @returns {string|null}
+ */
 const validate = (value) => {
   if (typeof value !== 'string' || value.length === 0) {
     return 'Hodnota nesmí být prázdná.';

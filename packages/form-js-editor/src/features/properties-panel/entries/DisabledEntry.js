@@ -4,12 +4,8 @@ import { INPUTS } from '../Util';
 
 import { ToggleSwitchEntry, isToggleSwitchEntryEdited } from '@bpmn-io/properties-panel';
 
-
 export function DisabledEntry(props) {
-  const {
-    editField,
-    field
-  } = props;
+  const { editField, field } = props;
 
   const entries = [];
 
@@ -19,20 +15,16 @@ export function DisabledEntry(props) {
     editField: editField,
     field: field,
     isEdited: isToggleSwitchEntryEdited,
-    isDefaultVisible: (field) => INPUTS.includes(field.type)
+    isDefaultVisible: (field) => INPUTS.includes(field.type),
   });
 
   return entries;
 }
 
 function Disabled(props) {
-  const {
-    editField,
-    field,
-    id
-  } = props;
+  const { editField, field, id } = props;
 
-  const path = [ 'disabled' ];
+  const path = ['disabled'];
 
   const getValue = () => {
     return get(field, path, '');
@@ -49,6 +41,6 @@ function Disabled(props) {
     label: 'Deaktivováno',
     tooltip: 'Obsah pole nelze upravit a data se neodešlou. Má přednost před volbou "pouze pro čtení".',
     inline: true,
-    setValue
+    setValue,
   });
 }

@@ -19,6 +19,8 @@ import { ExpressionField } from './form-fields/ExpressionField';
 import { Textfield } from './form-fields/Textfield';
 import { Textarea } from './form-fields/Textarea';
 import { Table } from './form-fields/Table';
+import { FilePicker } from './form-fields/FilePicker';
+import { DocumentPreview } from './form-fields/DocumentPreview';
 
 import { Label } from './Label';
 import { Description } from './Description';
@@ -26,11 +28,7 @@ import { Errors } from './Errors';
 import { FormComponent } from './FormComponent';
 import { FormField } from './FormField';
 
-export {
-  Label,
-  Description,
-  Errors
-};
+export { Label, Description, Errors };
 
 export {
   Button,
@@ -55,17 +53,19 @@ export {
   Html,
   Textfield,
   Textarea,
-  Table
+  Table,
+  FilePicker,
+  DocumentPreview,
 };
 
 export const formFields = [
-
   /* Input */
   Textfield,
   Textarea,
   Numberfield,
   Datetime,
   ExpressionField,
+  FilePicker,
 
   /* Selection */
   Checkbox,
@@ -79,6 +79,7 @@ export const formFields = [
   Image,
   Table,
   Html,
+  DocumentPreview,
   Spacer,
   Separator,
 
@@ -89,7 +90,7 @@ export const formFields = [
 
   /* Other */
   Button,
-  Default
+  Default,
 ];
 
 export * from './icons';
