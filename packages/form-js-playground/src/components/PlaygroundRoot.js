@@ -237,9 +237,9 @@ export function PlaygroundRoot(config) {
     setShowEmbed(false);
   }, []);
 
-  // const showEmbedModal = useCallback(() => {
-  //   setShowEmbed(true);
-  // }, []);
+  const showEmbedModal = useCallback(() => {
+    setShowEmbed(true);
+  }, []);
 
   return (
     <div class={classNames('fjs-container', 'fjs-pgl-root')}>

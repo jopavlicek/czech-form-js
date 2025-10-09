@@ -7,18 +7,18 @@
  */
 export function getLocaleDateFormat(locale = 'default') {
 
-  // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech dd. mm. yyyy)
+  // FIX: flatpickr wrong serialization, use de (german dd.mm.yyyy) insted of cs (czech d. mm. yyyy)
   const parts = new Intl.DateTimeFormat('de').formatToParts(new Date(Date.UTC(2020, 5, 5)));
   return parts
     .map((part) => {
       const len = part.value.length;
       switch (part.type) {
         case 'day':
-          return 'd'.repeat(len);
+          return 'dd';
         case 'month':
-          return 'M'.repeat(len);
+          return 'MM';
         case 'year':
-          return 'y'.repeat(len);
+          return part.value.length === 2 ? 'yy' : 'yyyy';
         default:
           return part.value;
       }
