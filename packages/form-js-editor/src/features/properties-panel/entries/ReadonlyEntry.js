@@ -51,7 +51,7 @@ function Readonly(props) {
     getValue,
     id,
     label: 'Pouze pro čtení',
-    tooltip: 'Obsah pole nelze upravit, ale data se odešlou.',
+    tooltip: 'Pro případy, kdy uživatel může číst obsah pole, ale ne upravit. Data v poli budou i přesto odeslána.',
     setValue,
     variables,
   });

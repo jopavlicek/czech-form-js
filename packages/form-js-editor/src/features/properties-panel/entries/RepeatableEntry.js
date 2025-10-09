@@ -17,7 +17,7 @@ export function RepeatableEntry(props) {
       path: ['defaultRepetitions'],
       label: 'Výchozí počet položek',
       min: 1,
-      max: 20,
+      max: 100,
       props,
     }),
     simpleBoolEntryFactory({

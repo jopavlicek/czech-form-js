@@ -128,7 +128,7 @@ function runPresetValidation(field, validation, value) {
   const errors = [];
 
   if (validation.pattern && value && !new RegExp(validation.pattern).test(value)) {
-    errors.push(`Hodnota splňovat regulární výraz ${validation.pattern}.`);
+    errors.push(validation.patternErrorMessage || `Hodnota splňovat regulární výraz ${validation.pattern}.`);
   }
 
   if (validation.required) {

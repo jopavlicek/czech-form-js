@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup NPM cache
         uses: actions/setup-node@v4
         with:
@@ -31,6 +31,6 @@ jobs:
       - name: Run Playwright tests
         run: npm run test:visual -- --update-snapshots
       - name: Commit screenshots
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'chore: updated snapshots'

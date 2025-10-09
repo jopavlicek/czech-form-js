@@ -39,7 +39,7 @@ function Disabled(props) {
     getValue,
     id,
     label: 'Deaktivováno',
-    tooltip: 'Obsah pole nelze upravit a data se neodešlou. Má přednost před volbou "pouze pro čtení".',
+    tooltip: 'Obsah pole nepůjde upravit a data se neodešlou. Má přednost před volbou "pouze pro čtení".',
     inline: true,
     setValue,
   });
